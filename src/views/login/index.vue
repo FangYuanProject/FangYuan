@@ -25,10 +25,9 @@
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
           <el-input
-            :key="passwordType"
             ref="password"
             v-model="loginForm.password"
-            type="passwordType"
+            type="password"
             placeholder="请输入密码"
             name="password"
             tabindex="2"
@@ -47,7 +46,8 @@
 </template>
 
 <script>
-import { validEmail, validPhone } from '@/utils/validate'
+import { validUsername } from '@/utils/validate'
+//  validPhone, validEmail,
 // import SocialSign from './components/SocialSignin'
 
 export default {
@@ -55,9 +55,12 @@ export default {
   // components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validEmail(value) && !validPhone(value)) {
-        callback(new Error('请输入手机号码或邮箱'))
-      } else {
+      // if (!validEmail(value) && !validPhone(value)) {
+      //   callback(new Error('请输入手机号码或邮箱'))
+      // } else {
+      //   callback()
+      // }
+      if (validUsername(value)) {
         callback()
       }
     }

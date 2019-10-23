@@ -42,41 +42,41 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
+  // {
+  //   path: '/',
+  //   component: () => import('@/views/news/newList'),
+  //   meta: { title: '新闻管理', icon: 'dashboard', affix: true }
+
+  // },
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        path: 'new-list',
+        component: () => import('@/views/news/newList'),
+        name: 'new-list',
+        meta: { title: '新闻管理', icon: 'documentation', affix: true }
       }
     ]
   },
   {
-    path: '/documentation',
+    path: '/user',
     component: Layout,
+    redirect: 'user',
+    meta: { title: '用户管理', icon: 'guide', noCache: true },
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'Documentation', icon: 'documentation', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    children: [
+        path: '/user',
+        component: () => import('@/views/user/list'),
+        name: 'user-list',
+        meta: { title: '用户列表', icon: 'guide', noCache: true }
+      },
       {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'Guide', icon: 'guide', noCache: true }
+        path: '/user/analysis',
+        component: () => import('@/views/user/analysis'),
+        name: 'user-analysis',
+        meta: { title: '用户分析', icon: 'guide', noCache: true }
       }
     ]
   },
