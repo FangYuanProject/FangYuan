@@ -85,3 +85,12 @@ export function isArray(arg) {
   }
   return Array.isArray(arg)
 }
+
+/**
+ * @param {string} phone
+ * @returns {Boolean}
+ */
+export function validPhone(phone) {
+  const isPhone = /^1[0-9]{10}$/
+  return isPhone.test(phone)
+}

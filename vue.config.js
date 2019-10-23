@@ -1,6 +1,7 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+// const StyleLintPlugin = require('stylelint-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -57,7 +58,15 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
-    }
+    },
+    plugins: [
+      // new StyleLintPlugin({
+      //   // 正则匹配想要lint监测的文件
+      //   files: ['src/**/*.vue', 'static/styles/*.l?(e|c)ss'],
+      //   fix: true,
+      //   cache: true
+      // })
+    ]
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
