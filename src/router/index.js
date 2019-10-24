@@ -49,7 +49,7 @@ export const constantRoutes = [
 
   // },
   {
-    path: '/user',
+    path: '/',
     component: Layout,
     redirect: 'user',
     meta: { title: '用户管理', icon: 'guide', noCache: true },
@@ -83,7 +83,7 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/',
+    path: '/new-list',
     component: Layout,
     children: [
       {
@@ -115,7 +115,7 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/',
+    path: '/document',
     component: Layout,
     children: [
       {
@@ -127,7 +127,7 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/',
+    path: '/forum',
     component: Layout,
     children: [
       {
@@ -139,7 +139,7 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/',
+    path: '/course',
     component: Layout,
     children: [
       {
@@ -171,7 +171,7 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/',
+    path: '/opinion',
     component: Layout,
     children: [
       {
