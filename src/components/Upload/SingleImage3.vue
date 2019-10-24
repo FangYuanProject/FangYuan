@@ -127,9 +127,6 @@ export default {
       font-size: 20px;
       line-height: 200px;
       color: #fff;
-      text-align: center;
-      text-align: center;
-      cursor: default;
       cursor: pointer;
       background-color: rgba(0, 0, 0, .5);
       opacity: 0;

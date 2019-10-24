@@ -267,31 +267,31 @@ export default {
       }
     }
 
-    .material-input {
-      display: block;
-      width: 100%;
-      padding: $spacer $spacer $spacer - $apixel * 10 $spacer / 2;
-      font-size: $font-size-base;
-      line-height: 1;
-      border: none;
-      border-radius: 0;
+    // .material-input {
+    //   display: block;
+    //   width: 100%;
+    //   padding: $spacer $spacer $spacer - $apixel * 10 $spacer / 2;
+    //   font-size: $font-size-base;
+    //   line-height: 1;
+    //   border: none;
+    //   border-radius: 0;
 
-      &:focus {
-        border: none;
-        border-bottom: 1px solid transparent; // fixes the height issue
-        outline: none;
-      }
-    }
+    //   &:focus {
+    //     border: none;
+    //     border-bottom: 1px solid transparent; // fixes the height issue
+    //     outline: none;
+    //   }
+    // }
 
-    .material-label {
-      position: absolute;
-      top: 0;
-      left: $index;
-      font-size: $font-size-small;
-      font-weight: $font-weight-normal;
-      pointer-events: none;
-      transition: $transition;
-    }
+    // .material-label {
+    //   position: absolute;
+    //   top: 0;
+    //   left: $index;
+    //   font-size: $font-size-small;
+    //   font-weight: $font-weight-normal;
+    //   pointer-events: none;
+    //   transition: $transition;
+    // }
 
     .material-input-bar {
       position: relative;
@@ -333,44 +333,44 @@ export default {
     }
   }
 
-  .material-input__component {
-    background: $color-white;
+  // .material-input__component {
+  //   background: $color-white;
 
-    .material-input {
-      color: $color-black;
-      text-indent: $index;
-      background: none;
-      border-bottom: 1px solid $color-grey-light;
-    }
+  //   .material-input {
+  //     color: $color-black;
+  //     text-indent: $index;
+  //     background: none;
+  //     border-bottom: 1px solid $color-grey-light;
+  //   }
 
-    .material-label {
-      color: $color-grey;
-    }
+  //   .material-label {
+  //     color: $color-grey;
+  //   }
 
-    .material-input-bar {
-      &::before,
-      &::after {
-        background: $color-blue;
-      }
-    }
-    // Active state:
-    &.material--active {
-      .material-label {
-        color: $color-blue;
-      }
-    }
-    // Errors:
-    &.material--has-errors {
-      &.material--active .material-label {
-        color: $color-red;
-      }
+  //   .material-input-bar {
+  //     &::before,
+  //     &::after {
+  //       background: $color-blue;
+  //     }
+  //   }
+  //   // Active state:
+  //   &.material--active {
+  //     .material-label {
+  //       color: $color-blue;
+  //     }
+  //   }
+  //   // Errors:
+  //   &.material--has-errors {
+  //     &.material--active .material-label {
+  //       color: $color-red;
+  //     }
 
-      .material-input-bar {
-        &::before,
-        &::after {
-          background: transparent;
-        }
-      }
-    }
-  }
+  //     .material-input-bar {
+  //       &::before,
+  //       &::after {
+  //         background: transparent;
+  //       }
+  //     }
+  //   }
+  // }
 </style>

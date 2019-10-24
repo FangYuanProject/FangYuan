@@ -28,7 +28,7 @@ export default {
   position: relative;
   display: inline-block;
   overflow: hidden;
-  font-family: 'Dosis', sans-serif;
+  font-family: sans-serif;
   font-weight: 800;
   line-height: 1;
   color: #4dd9d5;

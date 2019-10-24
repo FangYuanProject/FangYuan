@@ -37,12 +37,20 @@ export default {
   },
   data() {
     return {
-
+      currentPage2: 1
     }
   },
 
   mounted() {
     console.log(this.tableData)
+  },
+  methods: {
+    handleCurrentChange() {
+
+    },
+    handleSizeChange() {
+
+    }
   }
 }
 </script>
@@ -59,7 +67,12 @@ export default {
 }
 
 .el-pagination {
+  position: absolute;
+  bottom: 88px;
+  left: 50%;
+  width: 100%;
   margin-top: 41px;
+  margin-left: -50%;
   line-height: 39px;
   text-align: center;
 }
@@ -79,6 +92,10 @@ export default {
   margin-right: 43px;
   font-size: 14px;
   color: #606266;
+}
+
+.el-table .cell {
+  font-size: 14px;
 }
 
 </style>
