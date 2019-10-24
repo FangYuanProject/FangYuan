@@ -49,18 +49,6 @@ export const constantRoutes = [
 
   // },
   {
-    path: '/',
-    component: Layout,
-    children: [
-      {
-        path: 'new-list',
-        component: () => import('@/views/news/newList'),
-        name: 'new-list',
-        meta: { title: '新闻管理', icon: 'documentation', affix: true }
-      }
-    ]
-  },
-  {
     path: '/user',
     component: Layout,
     redirect: 'user',
@@ -81,19 +69,133 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/profile',
+    path: '/user',
     component: Layout,
-    redirect: '/profile/index',
+    redirect: '/user/home',
     hidden: true,
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
+        path: '/user/home',
+        component: () => import('@/views/user/home'),
+        name: 'user-home',
+        meta: { title: '用户主页', icon: 'user', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
+        path: 'new-list',
+        component: () => import('@/views/news/newList'),
+        name: 'new-list',
+        meta: { title: '新闻管理', icon: 'documentation', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/school',
+    component: Layout,
+    redirect: '/school',
+    meta: { title: '学校管理', icon: 'user', noCache: true },
+    children: [
+      {
+        path: '/school',
+        component: () => import('@/views/school/list'),
+        name: 'school-list',
+        meta: { title: '学校列表', icon: 'user', noCache: true }
+      },
+      {
+        path: '/school/detail',
+        component: () => import('@/views/school/detail'),
+        name: 'school-detail',
+        meta: { title: '学校主页', icon: 'user', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
+        path: '/document',
+        component: () => import('@/views/documents/list'),
+        name: 'document-list',
+        meta: { title: '真题管理', icon: 'documentation', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
+        path: '/forum',
+        component: () => import('@/views/forum/list'),
+        name: 'forum-list',
+        meta: { title: '论坛管理', icon: 'documentation', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
+        path: '/course',
+        component: () => import('@/views/courses/list'),
+        name: 'course-list',
+        meta: { title: '课程管理', icon: 'documentation', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/systems',
+    component: Layout,
+    redirect: '/systems',
+    meta: { title: '系统管理', icon: 'user', noCache: true },
+    children: [
+      {
+        path: '/systems/role',
+        component: () => import('@/views/systems/role-list'),
+        name: 'role-list',
+        meta: { title: '角色管理', icon: 'user', noCache: true }
+      },
+      {
+        path: '/systems/menu',
+        component: () => import('@/views/systems/menu-list'),
+        name: 'menu-list',
+        meta: { title: '菜单管理', icon: 'user', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    children: [
+      {
+        path: '/opinion',
+        component: () => import('@/views/opinion/list'),
+        name: 'course-list',
+        meta: { title: '意见反馈', icon: 'documentation', affix: true }
       }
     ]
   }
+  // {
+  //   path: '/profile',
+  //   component: Layout,
+  //   redirect: '/profile/index',
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/profile/index'),
+  //       name: 'Profile',
+  //       meta: { title: 'Profile', icon: 'user', noCache: true }
+  //     }
+  //   ]
+  // }
 ]
 
 /**

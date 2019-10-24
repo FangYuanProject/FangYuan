@@ -107,7 +107,6 @@ export default {
           path: path.resolve(basePath, router.path),
           title: [...prefixTitle]
         }
-
         if (router.meta && router.meta.title) {
           data.title = [...data.title, router.meta.title]
 
@@ -117,7 +116,6 @@ export default {
             res.push(data)
           }
         }
-
         // recursive child routes
         if (router.children) {
           const tempRoutes = this.generateRoutes(router.children, data.path, data.title)
