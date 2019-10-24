@@ -181,58 +181,60 @@ $light_gray:#eee;
 
 .login-container {
   position: relative;
+  width: 100%;
   min-height: 100%;
-  width:100%;
   margin: 0 auto;
-  background-color: $bg;
   overflow: hidden;
+  background-color: $bg;
 
   .login-form {
-    position:absolute;
+    position: absolute;
     top: 50%;
     left: 50%;
     width: 388px;
-    height:536px;
+    height: 536px;
     padding: 0 40px;
-    margin-top:-269px;
+    margin-top: -269px;
     margin-left: -194px;
-    background-color:#fff;
-    border-radius:0px 6px 6px 0px;
-    box-shadow: 0px 2px 15px 0px rgba(0,0,0,0.15);
+    background-color: #fff;
+    border-radius: 0 6px 6px 0;
+    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, .15);
   }
 
   .title-container {
     position: relative;
 
     .logo_img {
-      margin: 40px auto 50px auto;
+      margin: 40px auto 50px;
       text-align: center;
     }
   }
+
   .sub-title-container {
     margin-bottom: 40px;
 
     .sub_title {
-      font-size:24px;
-      font-weight:600;
-      color:rgba(32,36,49,1);
-      margin:0;
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: rgba(32, 36, 49, 1);
     }
-    .text_tip{
-      color:#333333;
-      font-size:16px;
+
+    .text_tip {
+      font-size: 16px;
+      color: #333;
     }
   }
 
-  .login-btn{
-    width:294px;
-    height:36px;
+  .login-btn {
+    width: 294px;
+    height: 36px;
     margin-top: 35px;
-    background:#455A64;
-    border-radius:18px;
-    border:1px solid #455A64;
     font-size: 14px;
-    color:#fff;
+    color: #fff;
+    background: #455a64;
+    border: 1px solid #455a64;
+    border-radius: 18px;
   }
 
   .thirdparty-button {
@@ -249,25 +251,28 @@ $light_gray:#eee;
 }
 </style>
 <style lang="scss">
-  .login-container .el-checkbox__input.is-checked+.el-checkbox__label,
-  .el-checkbox__input.is-checked .el-checkbox__inne{
-    color:#676767
+  .login-container .el-checkbox__input.is-checked + .el-checkbox__label,
+  .el-checkbox__input.is-checked .el-checkbox__inne {
+    color: #676767;
   }
-  .login-container .el-checkbox__input.is-checked .el-checkbox__inner{
+
+  .login-container .el-checkbox__input.is-checked .el-checkbox__inner {
     background-color: #676767;
     border-color: #676767;
   }
- .login-container .el-checkbox{
-   margin-top:34px;
- }
+
+  .login-container .el-checkbox {
+    margin-top: 34px;
+  }
+
+  .login-container .el-input__inner,
   .login-container .el-form-item.is-error .el-input__inner,
   .login-container .el-form-item.is-error .el-input__inner:focus,
   .login-container .el-form-item.is-error .el-textarea__inner,
-  .login-container .el-form-item.is-error .el-textarea__inner:focus,
-  .login-container .el-input__inner{
-   border-left:none;
-   border-top:none;
-   border-right:none;
-   border-radius:0px;
- }
+  .login-container .el-form-item.is-error .el-textarea__inner:focus {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-radius: 0;
+  }
 </style>

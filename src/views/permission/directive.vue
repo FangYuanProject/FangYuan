@@ -1,7 +1,7 @@
-<template>
+<!--<template>
   <div class="app-container">
     <switch-roles @change="handleRolesChange" />
-    <div :key="key" style="margin-top:30px;">
+    <div :key="key" style="margin-top: 30px;">
       <div>
         <span v-permission="['admin']" class="permission-alert">
           Only
@@ -34,13 +34,13 @@
       </div>
     </div>
 
-    <div :key="'checkPermission'+key" style="margin-top:60px;">
+    <div :key="'checkPermission'+key" style="margin-top: 60px;">
       <aside>
         In some cases, using v-permission will have no effect. For example: Element-UI's Tab component or el-table-column and other scenes that dynamically render dom. You can only do this with v-if.
         <br> e.g.
       </aside>
 
-      <el-tabs type="border-card" style="width:550px;">
+      <el-tabs type="border-card" style="width: 550px;">
         <el-tab-pane v-if="checkPermission(['admin'])" label="Admin">
           Admin can see this
           <el-tag class="permission-sourceCode" type="info">
@@ -66,46 +66,48 @@
   </div>
 </template>
 
-<script>
-import permission from '@/directive/permission/index.js' // 权限判断指令
-import checkPermission from '@/utils/permission' // 权限判断函数
-import SwitchRoles from './components/SwitchRoles'
+// <script>
+// import permission from '@/directive/permission/index.js' // 权限判断指令
+// import checkPermission from '@/utils/permission' // 权限判断函数
+// import SwitchRoles from './components/SwitchRoles'
 
-export default {
-  name: 'DirectivePermission',
-  components: { SwitchRoles },
-  directives: { permission },
-  data() {
-    return {
-      key: 1 // 为了能每次切换权限的时候重新初始化指令
-    }
-  },
-  methods: {
-    checkPermission,
-    handleRolesChange() {
-      this.key++
-    }
-  }
-}
-</script>
+// export default {
+//   name: 'DirectivePermission',
+//   components: { SwitchRoles },
+//   directives: { permission },
+//   data() {
+//     return {
+//       key: 1 // 为了能每次切换权限的时候重新初始化指令
+//     }
+//   },
+//   methods: {
+//     checkPermission,
+//     handleRolesChange() {
+//       this.key++
+//     }
+//   }
+// }
+// </script>
 
-<style lang="scss" scoped>
-.app-container {
-  /deep/ .permission-alert {
-    width: 320px;
-    margin-top: 15px;
-    background-color: #f0f9eb;
-    color: #67c23a;
-    padding: 8px 16px;
-    border-radius: 4px;
-    display: inline-block;
-  }
-  /deep/ .permission-sourceCode {
-    margin-left: 15px;
-  }
-  /deep/ .permission-tag {
-    background-color: #ecf5ff;
-  }
-}
-</style>
+// <style lang="scss" scoped>
+// .app-container {
+//   /deep/ .permission-alert {
+//     display: inline-block;
+//     width: 320px;
+//     padding: 8px 16px;
+//     margin-top: 15px;
+//     color: #67c23a;
+//     background-color: #f0f9eb;
+//     border-radius: 4px;
+//   }
+
+//   /deep/ .permission-sourceCode {
+//     margin-left: 15px;
+//   }
+
+//   /deep/ .permission-tag {
+//     background-color: #ecf5ff;
+//   }
+// }
+// </style>
 

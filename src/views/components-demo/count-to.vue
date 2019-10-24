@@ -1,4 +1,4 @@
-<template>
+<!--<template>
   <div class="components-container">
     <aside>
       <a href="https://github.com/PanJiaChen/vue-countTo" target="_blank">countTo-component</a>
@@ -15,7 +15,7 @@
       :autoplay="false"
       class="example"
     />
-    <div style="margin-left: 25%;margin-top: 40px;">
+    <div style="margin-top: 40px; margin-left: 25%;">
       <label class="label" for="startValInput">startVal:
         <input v-model.number="setStartVal" type="number" name="startValInput">
       </label>
@@ -124,64 +124,65 @@ export default {
 
 <style scoped>
 .example-btn {
+  position: relative;
   display: inline-block;
+  padding: 4px 15px;
   margin-bottom: 0;
+  font-size: 12px;
   font-weight: 500;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, .65);
   text-align: center;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
+  white-space: nowrap;
   cursor: pointer;
+  background-color: #fff;
   background-image: none;
   border: 1px solid transparent;
-  white-space: nowrap;
-  line-height: 1.5;
-  padding: 4px 15px;
-  font-size: 12px;
+  border-color: #d9d9d9;
   border-radius: 4px;
+  -webkit-transition: all .3s cubic-bezier(.645, .045, .355, 1);
+  transition: all .3s cubic-bezier(.645, .045, .355, 1);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  -webkit-transition: all .3s cubic-bezier(.645, .045, .355, 1);
-  transition: all .3s cubic-bezier(.645, .045, .355, 1);
-  position: relative;
-  color: rgba(0, 0, 0, .65);
-  background-color: #fff;
-  border-color: #d9d9d9;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
 }
 
 .example-btn:hover {
-  color: #4AB7BD;
+  color: #4ab7bd;
   background-color: #fff;
-  border-color: #4AB7BD;
+  border-color: #4ab7bd;
 }
+
 .example {
-  font-size: 50px;
-  color: #F6416C;
   display: block;
   margin: 10px 0;
-  text-align: center;
+  font-size: 50px;
   font-size: 80px;
   font-weight: 500;
+  color: #f6416c;
+  text-align: center;
 }
 
 .label {
-  color: #2f4f4f;
-  font-size: 16px;
   display: inline-block;
   margin: 15px 30px 15px 0;
+  font-size: 16px;
+  color: #2f4f4f;
 }
 
 input {
   position: relative;
   display: inline-block;
-  padding: 4px 7px;
   width: 70px;
   height: 28px;
-  cursor: text;
+  padding: 4px 7px;
   font-size: 12px;
   line-height: 1.5;
   color: rgba(0, 0, 0, .65);
+  cursor: text;
   background-color: #fff;
   background-image: none;
   border: 1px solid #d9d9d9;
@@ -193,26 +194,26 @@ input {
 .startBtn {
   margin-left: 20px;
   font-size: 20px;
-  color: #30B08F;
+  color: #30b08f;
   background-color: #fff;
 }
 
 .startBtn:hover {
-  background-color: #30B08F;
   color: #fff;
-  border-color: #30B08F;
+  background-color: #30b08f;
+  border-color: #30b08f;
 }
 
 .pause-resume-btn {
   font-size: 20px;
-  color: #E65D6E;
+  color: #e65d6e;
   background-color: #fff;
 }
 
 .pause-resume-btn:hover {
-  background-color: #E65D6E;
   color: #fff;
-  border-color: #E65D6E;
+  background-color: #e65d6e;
+  border-color: #e65d6e;
 }
 </style>
 

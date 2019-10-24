@@ -1,5 +1,5 @@
 <template>
-  <el-card style="margin-bottom:20px;">
+  <el-card style="margin-bottom: 20px;">
     <div slot="header" class="clearfix">
       <span>About me</span>
     </div>
@@ -74,61 +74,61 @@ export default {
 </script>
 
 <style lang="scss" scoped>
- .box-center {
-   margin: 0 auto;
-   display: table;
- }
+  .box-center {
+    display: table;
+    margin: 0 auto;
+  }
 
- .text-muted {
-   color: #777;
- }
+  .text-muted {
+    color: #777;
+  }
 
- .user-profile {
-   .user-name {
-     font-weight: bold;
-   }
+  .user-profile {
+    .user-name {
+      font-weight: bold;
+    }
 
-   .box-center {
-     padding-top: 10px;
-   }
+    .box-center {
+      padding-top: 10px;
+    }
 
-   .user-role {
-     padding-top: 10px;
-     font-weight: 400;
-     font-size: 14px;
-   }
+    .user-role {
+      padding-top: 10px;
+      font-size: 14px;
+      font-weight: 400;
+    }
 
-   .box-social {
-     padding-top: 30px;
+    .box-social {
+      padding-top: 30px;
 
-     .el-table {
-       border-top: 1px solid #dfe6ec;
-     }
-   }
+      .el-table {
+        border-top: 1px solid #dfe6ec;
+      }
+    }
 
-   .user-follow {
-     padding-top: 20px;
-   }
- }
+    .user-follow {
+      padding-top: 20px;
+    }
+  }
 
- .user-bio {
-   margin-top: 20px;
-   color: #606266;
+  .user-bio {
+    margin-top: 20px;
+    color: #606266;
 
-   span {
-     padding-left: 4px;
-   }
+    span {
+      padding-left: 4px;
+    }
 
-   .user-bio-section {
-     font-size: 14px;
-     padding: 15px 0;
+    .user-bio-section {
+      padding: 15px 0;
+      font-size: 14px;
 
-     .user-bio-section-header {
-       border-bottom: 1px solid #dfe6ec;
-       padding-bottom: 10px;
-       margin-bottom: 10px;
-       font-weight: bold;
-     }
-   }
- }
+      .user-bio-section-header {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        border-bottom: 1px solid #dfe6ec;
+      }
+    }
+  }
 </style>

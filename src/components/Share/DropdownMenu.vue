@@ -40,58 +40,66 @@ export default {
 <style lang="scss" >
 $n: 9; //和items.length 相同
 $t: .1s;
+
 .share-dropdown-menu {
-  width: 250px;
   position: relative;
   z-index: 1;
+  width: 250px;
+
   &-title {
-    width: 100%;
+    z-index: 2;
     display: block;
+    width: 100%;
+    height: 60px;
+    font-size: 20px;
+    line-height: 60px;
+    color: white;
+    text-align: center;
     cursor: pointer;
     background: black;
-    color: white;
-    height: 60px;
-    line-height: 60px;
-    font-size: 20px;
-    text-align: center;
-    z-index: 2;
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
   }
+
   &-wrapper {
     position: relative;
   }
+
   &-item {
-    text-align: center;
     position: absolute;
     width: 100%;
-    background: #e0e0e0;
-    line-height: 60px;
     height: 60px;
-    cursor: pointer;
     font-size: 20px;
+    line-height: 60px;
+    text-align: center;
+    cursor: pointer;
+    background: #e0e0e0;
     opacity: 1;
-    transition: transform 0.28s ease;
+    transition: transform .28s ease;
+
     &:hover {
-      background: black;
       color: white;
+      background: black;
     }
+
     @for $i from 1 through $n {
       &:nth-of-type(#{$i}) {
         z-index: -1;
-        transition-delay: $i*$t;
         transform: translate3d(0, -60px, 0);
+        transition-delay: $i*$t;
       }
     }
   }
+
   &.active {
     .share-dropdown-menu-wrapper {
       z-index: 1;
     }
+
     .share-dropdown-menu-item {
       @for $i from 1 through $n {
         &:nth-of-type(#{$i}) {
-         transition-delay: ($n - $i)*$t;
-          transform: translate3d(0, ($i - 1)*60px, 0);
+          transform: translate3d(0, ($i - 1) *60px, 0);
+          transition-delay: ($n - $i) *$t;
         }
       }
     }

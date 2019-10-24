@@ -55,18 +55,21 @@ export default {
 </script>
 
 <style scoped>
-.json-editor{
-  height: 100%;
+.json-editor {
   position: relative;
+  height: 100%;
 }
+
 .json-editor >>> .CodeMirror {
   height: auto;
   min-height: 300px;
 }
-.json-editor >>> .CodeMirror-scroll{
+
+.json-editor >>> .CodeMirror-scroll {
   min-height: 300px;
 }
+
 .json-editor >>> .cm-s-rubyblue span.cm-string {
-  color: #F08047;
+  color: #f08047;
 }
 </style>

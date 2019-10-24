@@ -15,7 +15,7 @@
       target="_blank"
       href="https://panjiachen.gitee.io/vue-element-admin-site/zh/"
     >国内文档</a>
-    <dropdown-menu :items="articleList" style="float:left;margin-left:50px;" title="系列文章" />
+    <dropdown-menu :items="articleList" style="float: left; margin-left: 50px;" title="系列文章" />
     <a
       class="document-btn"
       target="_blank"
@@ -50,21 +50,22 @@ export default {
 
 <style lang="scss" scoped>
 .documentation-container {
-  margin: 50px;
   display: flex;
+  margin: 50px;
   flex-wrap: wrap;
+
   .document-btn {
-    margin-left: 50px;
     display: block;
+    width: 200px;
+    height: 60px;
+    margin-bottom: 16px;
+    margin-left: 50px;
+    font-size: 20px;
+    line-height: 60px;
+    color: white;
+    text-align: center;
     cursor: pointer;
     background: black;
-    color: white;
-    height: 60px;
-    width: 200px;
-    margin-bottom: 16px;
-    line-height: 60px;
-    font-size: 20px;
-    text-align: center;
   }
 }
 </style>

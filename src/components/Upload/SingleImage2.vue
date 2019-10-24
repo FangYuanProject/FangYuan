@@ -78,48 +78,55 @@ export default {
 
 <style lang="scss" scoped>
 .upload-container {
+  position: relative;
   width: 100%;
   height: 100%;
-  position: relative;
+
   .image-uploader {
     height: 100%;
   }
+
   .image-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    position: absolute;
-    left: 0px;
-    top: 0px;
     border: 1px dashed #d9d9d9;
+
     .image-preview-wrapper {
       position: relative;
       width: 100%;
       height: 100%;
+
       img {
         width: 100%;
         height: 100%;
       }
     }
+
     .image-preview-action {
       position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      left: 0;
-      top: 0;
-      cursor: default;
-      text-align: center;
-      color: #fff;
-      opacity: 0;
       font-size: 20px;
-      background-color: rgba(0, 0, 0, .5);
-      transition: opacity .3s;
-      cursor: pointer;
-      text-align: center;
       line-height: 200px;
+      color: #fff;
+      text-align: center;
+      text-align: center;
+      cursor: default;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, .5);
+      opacity: 0;
+      transition: opacity .3s;
+
       .el-icon-delete {
         font-size: 36px;
       }
     }
+
     &:hover {
       .image-preview-action {
         opacity: 1;

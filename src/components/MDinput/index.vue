@@ -207,23 +207,23 @@ export default {
   $apixel: 1px;
   // Utils
   $spacer: 12px;
-  $transition: 0.2s ease all;
-  $index: 0px;
+  $transition: .2s ease all;
+  $index: 0;
   $index-has-icon: 30px;
   // Theme:
   $color-white: white;
-  $color-grey: #9E9E9E;
-  $color-grey-light: #E0E0E0;
-  $color-blue: #2196F3;
-  $color-red: #F44336;
+  $color-grey: #9e9e9e;
+  $color-grey-light: #e0e0e0;
+  $color-blue: #2196f3;
+  $color-red: #f44336;
   $color-black: black;
   // Base clases:
   %base-bar-pseudo {
-    content: '';
-    height: 1px;
-    width: 0;
-    bottom: 0;
     position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    content: '';
     transition: $transition;
   }
 
@@ -237,64 +237,76 @@ export default {
 
   // Component:
   .material-input__component {
-    margin-top: 36px;
     position: relative;
+    margin-top: 36px;
+
     * {
       box-sizing: border-box;
     }
+
     .iconClass {
       .material-input__icon {
         position: absolute;
-        left: 0;
-        line-height: $font-size-base;
-        color: $color-blue;
         top: $spacer;
+        left: 0;
         width: $index-has-icon;
         height: $font-size-base;
         font-size: $font-size-base;
         font-weight: $font-weight-normal;
+        line-height: $font-size-base;
+        color: $color-blue;
         pointer-events: none;
       }
+
       .material-label {
         left: $index-has-icon;
       }
+
       .material-input {
         text-indent: $index-has-icon;
       }
     }
+
     .material-input {
-      font-size: $font-size-base;
-      padding: $spacer $spacer $spacer - $apixel * 10 $spacer / 2;
       display: block;
       width: 100%;
-      border: none;
+      padding: $spacer $spacer $spacer - $apixel * 10 $spacer / 2;
+      font-size: $font-size-base;
       line-height: 1;
+      border: none;
       border-radius: 0;
+
       &:focus {
-        outline: none;
         border: none;
         border-bottom: 1px solid transparent; // fixes the height issue
+        outline: none;
       }
     }
+
     .material-label {
-      font-weight: $font-weight-normal;
       position: absolute;
-      pointer-events: none;
-      left: $index;
       top: 0;
-      transition: $transition;
+      left: $index;
       font-size: $font-size-small;
+      font-weight: $font-weight-normal;
+      pointer-events: none;
+      transition: $transition;
     }
+
     .material-input-bar {
       position: relative;
       display: block;
       width: 100%;
-      &:before {
+
+      &::before {
         @extend %base-bar-pseudo;
+
         left: 50%;
       }
-      &:after {
+
+      &::after {
         @extend %base-bar-pseudo;
+
         right: 50%;
       }
     }
@@ -313,8 +325,8 @@ export default {
     // Active state:
     &.material--active {
       .material-input-bar {
-        &:before,
-        &:after {
+        &::before,
+        &::after {
           width: 50%;
         }
       }
@@ -323,18 +335,21 @@ export default {
 
   .material-input__component {
     background: $color-white;
+
     .material-input {
-      background: none;
       color: $color-black;
       text-indent: $index;
+      background: none;
       border-bottom: 1px solid $color-grey-light;
     }
+
     .material-label {
       color: $color-grey;
     }
+
     .material-input-bar {
-      &:before,
-      &:after {
+      &::before,
+      &::after {
         background: $color-blue;
       }
     }
@@ -349,9 +364,10 @@ export default {
       &.material--active .material-label {
         color: $color-red;
       }
+
       .material-input-bar {
-        &:before,
-        &:after {
+        &::before,
+        &::after {
           background: transparent;
         }
       }

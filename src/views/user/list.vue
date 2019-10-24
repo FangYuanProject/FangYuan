@@ -21,7 +21,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" class="searchBtn" @click="submitForm('ruleForm')">查询</el-button>
+        <el-button type="primary" class="search-btn" @click="submitForm('ruleForm')">查询</el-button>
         <el-button type="primary" class="add-user">+&nbsp;新建用户</el-button>
 
       </el-form-item>
@@ -106,47 +106,49 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .title{
-        font-size: 20px;
-        color:#202431;
-        margin: 26px 0 69px 30px;
-    }
-    .searchBtn{
-      width:87px;
-      height:40px;
-      color:#455A64;
-      font-size:14px;
-      background:rgba(241,241,241,1);
-      border-radius:4px;
-      border:1px solid rgba(69,90,100,1);
-      margin-left: 30px;
-    }
-  .add-user{
-    width:109px;
-    height:40px;
-    background:rgba(69,90,100,1);
-    border-radius:4px;
-    border-color:rgba(69,90,100,1);
-    font-size:14px;
-    margin-left:123px;
+  .title {
+    margin: 26px 0 69px 30px;
+    font-size: 20px;
+    color: #202431;
+  }
+
+  .search-btn {
+    width: 87px;
+    height: 40px;
+    margin-left: 30px;
+    font-size: 14px;
+    color: #455a64;
+    background: rgba(241, 241, 241, 1);
+    border: 1px solid rgba(69, 90, 100, 1);
+    border-radius: 4px;
+  }
+
+  .add-user {
+    width: 109px;
+    height: 40px;
+    margin-left: 123px;
+    font-size: 14px;
+    background: rgba(69, 90, 100, 1);
+    border-color: rgba(69, 90, 100, 1);
+    border-radius: 4px;
   }
 </style>
 
 <style>
- /*修改elemnt-ui样式*/
- .el-input--medium .el-input__inner{
-   width:170px;
-   height:40px;
- }
- .el-form-item__label{
-   font-size: 14px;
-   color:#757575;
-   text-align: right;
- }
- .el-form-item.el-form-item--medium{
-   margin-right: 0;
- }
- .el-form-item.el-form-item--medium{
-   margin-left:30px;
- }
+  /* 修改elemnt-ui样式 */
+  .el-input--medium .el-input__inner {
+    width: 170px;
+    height: 40px;
+  }
+
+  .el-form-item__label {
+    font-size: 14px;
+    color: #757575;
+    text-align: right;
+  }
+
+  .el-form-item.el-form-item--medium {
+    margin-right: 0;
+    margin-left: 30px;
+  }
 </style>

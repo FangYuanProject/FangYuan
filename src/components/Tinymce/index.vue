@@ -214,23 +214,29 @@ export default {
   position: relative;
   line-height: normal;
 }
-.tinymce-container>>>.mce-fullscreen {
+
+.tinymce-container >>> .mce-fullscreen {
   z-index: 10000;
 }
+
 .tinymce-textarea {
-  visibility: hidden;
   z-index: -1;
+  visibility: hidden;
 }
+
 .editor-custom-btn-container {
   position: absolute;
-  right: 4px;
   top: 4px;
-  /*z-index: 2005;*/
+  right: 4px;
+
+  /* z-index: 2005; */
 }
+
 .fullscreen .editor-custom-btn-container {
-  z-index: 10000;
   position: fixed;
+  z-index: 10000;
 }
+
 .editor-upload-btn {
   display: inline-block;
 }

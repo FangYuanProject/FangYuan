@@ -53,45 +53,45 @@ export default {
 </script>
 <style lang="scss" scoped>
 .board-column {
+  height: auto;
   min-width: 300px;
   min-height: 100px;
-  height: auto;
   overflow: hidden;
   background: #f0f0f0;
   border-radius: 3px;
 
   .board-column-header {
     height: 50px;
-    line-height: 50px;
-    overflow: hidden;
     padding: 0 20px;
+    overflow: hidden;
+    line-height: 50px;
+    color: #fff;
     text-align: center;
     background: #333;
-    color: #fff;
     border-radius: 3px 3px 0 0;
   }
 
   .board-column-content {
+    display: flex;
     height: auto;
+    min-height: 60px;
     overflow: hidden;
     border: 10px solid transparent;
-    min-height: 60px;
-    display: flex;
     justify-content: flex-start;
     flex-direction: column;
     align-items: center;
 
     .board-item {
-      cursor: pointer;
       width: 100%;
       height: 64px;
-      margin: 5px 0;
-      background-color: #fff;
-      text-align: left;
-      line-height: 54px;
       padding: 5px 10px;
+      margin: 5px 0;
+      line-height: 54px;
+      text-align: left;
+      cursor: pointer;
+      background-color: #fff;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2);
       box-sizing: border-box;
-      box-shadow: 0px 1px 3px 0 rgba(0, 0, 0, 0.2);
     }
   }
 }

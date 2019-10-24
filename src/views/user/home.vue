@@ -20,10 +20,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .title{
-        font-size: 20px;
-        color:#202431;
-        margin: 26px 0 69px 30px;
+    .title {
+      margin: 26px 0 69px 30px;
+      font-size: 20px;
+      color: #202431;
     }
 </style>
 
