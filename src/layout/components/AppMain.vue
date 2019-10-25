@@ -24,8 +24,6 @@ export default {
 
 <style lang="scss" scoped>
 .app-main {
-  position: relative;
-
   /* 50= navbar  50  */
   // min-height: calc(100vh - 50px);
   width: 95%;
@@ -58,5 +56,11 @@ export default {
   .fixed-header {
     padding-right: 15px;
   }
+}
+</style>
+<style>
+.search-form {
+  display: inline-block;
+  width: 90%;
 }
 </style>

@@ -46,7 +46,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" class="search-btn" @click="submitForm('ruleForm')">查询</el-button>
-        <el-button type="primary" class="add-user" @click="addUser">+&nbsp;新建用户</el-button>
+        <el-button type="primary" class="add-new" @click="addUser">+&nbsp;新建新闻</el-button>
       </el-form-item>
     </el-form>
     <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :dialog-type="changeRoleVisible" @changeRole="changeUserRole" />
@@ -219,11 +219,12 @@ export default {
   border-radius: 4px;
 }
 
-.add-user {
+.add-new {
   width: 109px;
   height: 40px;
   margin-left: 123px;
   font-size: 14px;
+  color: #fff;
   background: rgba(69, 90, 100, 1);
   border-color: rgba(69, 90, 100, 1);
   border-radius: 4px;
@@ -288,6 +289,7 @@ export default {
 
 .el-form-item.el-form-item--medium {
   margin-right: 0;
+  margin-bottom: 20px;
   margin-left: 30px;
 }
 
@@ -328,7 +330,7 @@ export default {
   border-radius: 4px;
 }
 
-.el-table__body tr td:nth-of-type(2),
+.el-table__body tr td:nth-of-type(1),
 .el-table__body tr td:last-child {
   color: #0266d6;
 }
