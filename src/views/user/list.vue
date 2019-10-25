@@ -25,8 +25,8 @@
         <el-button type="primary" class="add-user" @click="addUser">+&nbsp;新建用户</el-button>
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" />
-    <el-dialog title="新增用户" :visible.sync="dialogVisible" width="508px" class="add-user-modal">
+    <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :dialog-type="changeRoleVisible" @changeRole="changeUserRole" />
+    <el-dialog title="新增用户" :visible.sync="changeRoleVisible" width="508px" class="add-user-modal">
       <el-form :model="form">
         <el-form-item label="头像">
           <span class="user-head">
@@ -56,6 +56,25 @@
         <el-button type="primary" class="submit-data-btn" @click="dialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="更换角色" :visible.sync="dialogVisible" width="508px" class="add-user-modal">
+      <el-form :model="form">
+        <el-form-item label="用户ID">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="用户名">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="角色">
+          <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+            <el-option label="普通角色1" value="shanghai" />
+            <el-option label="普通角色2" value="beijing" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" class="submit-data-btn" @click="changeRole">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -66,7 +85,9 @@ export default {
   },
   data() {
     return {
+      tableOperation: [{ name: '更换角色', clickEvent: 'changeRole' }],
       dialogVisible: false,
+      changeRoleVisible: false,
       ruleForm: {
         name: '',
         region: '',
@@ -93,8 +114,7 @@ export default {
         { name: '手机号', indexs: 'pone' },
         { name: '邮箱', indexs: 'email' },
         { name: '注册时间', indexs: 'publish' },
-        { name: '角色', indexs: 'undercarriage' },
-        { name: '操作', indexs: 'operate' }
+        { name: '角色', indexs: 'undercarriage' }
       ],
       tableData: [
         {
@@ -103,8 +123,7 @@ export default {
           pone: '18825055554',
           email: '1758265002@qq.com',
           publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员',
-          operate: '更换角色'
+          undercarriage: '普通管理员'
         },
         {
           id: '0001',
@@ -112,8 +131,7 @@ export default {
           pone: '18825055554',
           email: '1758265002@qq.com',
           publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员',
-          operate: '更换角色'
+          undercarriage: '普通管理员'
         },
         {
           id: '0001',
@@ -121,8 +139,7 @@ export default {
           pone: '18825055554',
           email: '1758265002@qq.com',
           publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员',
-          operate: '更换角色'
+          undercarriage: '普通管理员'
         }
       ]
     }
@@ -143,6 +160,11 @@ export default {
     },
     addUser() {
       this.dialogVisible = true
+    },
+    changeUserRole(data) {
+      console.log(data)
+      console.log('这是')
+      this.changeRoleVisible = true
     }
   }
 }
@@ -276,5 +298,10 @@ export default {
   background-color: #fff;
   border: 1px solid rgba(69, 90, 100, 1);
   border-radius: 4px;
+}
+
+.el-table__body tr td:nth-of-type(2),
+.el-table__body tr td:last-child {
+  color: #0266d6;
 }
 </style>

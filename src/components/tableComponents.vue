@@ -6,6 +6,11 @@
           <span>{{ scope.row[item.indexs] }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="操作" align="center">
+        <template>
+          <el-button v-for="(item,index) in tableOperation" :key="index+1" type="primary" class="submit-data-btn" @click="clickEvent(item.clickEvent)">{{ item.name }}</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       :current-page.sync="currentPage2"
@@ -33,6 +38,18 @@ export default {
       default: () => {
         return []
       }
+    },
+    tableOperation: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
+    dialogType: {
+      type: Boolean,
+      default: () => {
+        return []
+      }
     }
   },
   data() {
@@ -42,7 +59,7 @@ export default {
   },
 
   mounted() {
-    console.log(this.tableData)
+    console.log(this.tableOperation)
   },
   methods: {
     handleCurrentChange() {
@@ -50,52 +67,65 @@ export default {
     },
     handleSizeChange() {
 
+    },
+    clickEvent(type) {
+      console.log(type)
+      this.$emit(type, this.dialogType)
     }
   }
 }
 </script>
-<style>
-.el-table__header-wrapper,
-.el-table__footer-wrapper {
-  height: 53px;
-  background: rgba(251, 251, 251, 1);
-}
+<style lang="scss">
 
-.el-table tbody tr {
-  height: 58px;
-  line-height: 58px;
-}
+#table-render {
+  .el-table__header-wrapper,
+  .el-table__footer-wrapper {
+    height: 53px;
+    background: rgba(251, 251, 251, 1);
+  }
 
-.el-pagination {
-  position: absolute;
-  bottom: 88px;
-  left: 50%;
-  width: 100%;
-  margin-top: 41px;
-  margin-left: -50%;
-  line-height: 39px;
-  text-align: center;
-}
+  .el-table tbody tr {
+    height: 58px;
+    line-height: 58px;
+  }
 
-.el-input--mini .el-input__inner {
-  width: 100px;
-  height: 39px;
-}
+  .el-pagination {
+    position: absolute;
+    bottom: 88px;
+    left: 50%;
+    width: 100%;
+    margin-top: 41px;
+    margin-left: -50%;
+    line-height: 39px;
+    text-align: center;
+  }
 
-.el-pager,
-.btn-next,
-.btn-prev {
-  vertical-align: sub !important;
-}
+  .el-input--mini .el-input__inner {
+    width: 100px;
+    height: 39px;
+  }
 
-.el-pager li {
-  margin-right: 43px;
-  font-size: 14px;
-  color: #606266;
-}
+  .el-pager,
+  .btn-next,
+  .btn-prev {
+    vertical-align: sub !important;
+  }
 
-.el-table .cell {
-  font-size: 14px;
+  .el-pager li {
+    margin-right: 43px;
+    font-size: 14px;
+    color: #606266;
+  }
+
+  .el-table .cell {
+    font-size: 14px;
+  }
+
+  .el-button--primary {
+    color: #0266d6;
+    background-color: transparent;
+    border-color: transparent;
+  }
 }
 
 </style>
