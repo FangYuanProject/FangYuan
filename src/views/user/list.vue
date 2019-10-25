@@ -26,7 +26,7 @@
       </el-form-item>
     </el-form>
     <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :dialog-type="changeRoleVisible" @changeRole="changeUserRole" />
-    <el-dialog title="新增用户" :visible.sync="changeRoleVisible" width="508px" class="add-user-modal">
+    <el-dialog title="新增用户" :visible.sync="dialogVisible" width="508px" class="add-user-modal">
       <el-form :model="form">
         <el-form-item label="头像">
           <span class="user-head">
@@ -56,7 +56,7 @@
         <el-button type="primary" class="submit-data-btn" @click="dialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="更换角色" :visible.sync="dialogVisible" width="508px" class="add-user-modal">
+    <el-dialog title="更换角色" :visible.sync="changeRoleVisible" width="508px" class="add-user-modal">
       <el-form :model="form">
         <el-form-item label="用户ID">
           <el-input v-model="form.name" autocomplete="off" />
@@ -72,7 +72,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="submit-data-btn" @click="changeRole">确 定</el-button>
+        <el-button type="primary" class="submit-data-btn" @click="submitChangeRoleInfo">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -165,6 +165,10 @@ export default {
       console.log(data)
       console.log('这是')
       this.changeRoleVisible = true
+      this.dialogVisible = false
+    },
+    submitChangeRoleInfo() {
+      this.changeRoleVisible = false
     }
   }
 }
