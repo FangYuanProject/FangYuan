@@ -8,19 +8,19 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template>
-          <el-button v-for="(item,index) in tableOperation" :key="index+1" type="primary" class="submit-data-btn" @click="clickEvent(item.clickEvent)">{{ item.name }}</el-button>
+          <el-button v-for="(item,index) in tableOperation" :key="index+1" type="primary" class="submit-data-btn" @click="clickEvent">{{ item.name }}</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
+    <!-- <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
       :current-page.sync="currentPage2"
       :page-sizes="[100, 200, 300, 400]"
       :page-size="100"
       layout="sizes, prev, pager, next"
-      :total="1000"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+      :total="1000">
+    </el-pagination> -->
   </div>
 </template>
 <script>
@@ -44,12 +44,6 @@ export default {
       default: () => {
         return []
       }
-    },
-    dialogType: {
-      type: Boolean,
-      default: () => {
-        return []
-      }
     }
   },
   data() {
@@ -68,9 +62,8 @@ export default {
     handleSizeChange() {
 
     },
-    clickEvent(type) {
-      console.log(type)
-      this.$emit(type, this.dialogType)
+    clickEvent() {
+      this.$emit('click')
     }
   }
 }
@@ -78,6 +71,8 @@ export default {
 <style lang="scss">
 
 #table-render {
+  margin-top:40px;
+
   .el-table__header-wrapper,
   .el-table__footer-wrapper {
     height: 53px;
@@ -91,10 +86,8 @@ export default {
 
   .el-pagination {
     position: absolute;
-    bottom: 88px;
     left: 50%;
     width: 100%;
-    margin-top: 41px;
     margin-left: -50%;
     line-height: 39px;
     text-align: center;
@@ -125,6 +118,7 @@ export default {
     color: #0266d6;
     background-color: transparent;
     border-color: transparent;
+    padding: 0;
   }
 }
 

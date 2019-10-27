@@ -1,43 +1,29 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
-
-        <error-log class="errLog-container right-menu-item hover-effect" />
-
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
-
-        <el-tooltip content="Global Size" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
-
-      </template>
-
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/profile/index">
-            <el-dropdown-item>Profile</el-dropdown-item>
-          </router-link>
+        <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
-            <el-dropdown-item>当前所在位置:</el-dropdown-item>
+            <el-dropdown-item>
+              Home
+            </el-dropdown-item>
           </router-link>
-          <!-- <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
+          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
           <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
             <el-dropdown-item>Docs</el-dropdown-item>
-          </a> -->
+          </a>
           <el-dropdown-item divided>
-            <span style="display: block;" @click="logout">Log Out</span>
+            <span style="display:block;" @click="logout">Log Out</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -49,25 +35,16 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
-import Search from '@/components/HeaderSearch'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger,
-    ErrorLog,
-    Screenfull,
-    SizeSelect,
-    Search
+    Hamburger
   },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar',
-      'device'
+      'avatar'
     ])
   },
   methods: {
@@ -84,33 +61,28 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  position: relative;
   height: 50px;
   overflow: hidden;
+  position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
   .hamburger-container {
-    float: left;
-    height: 100%;
     line-height: 46px;
+    height: 100%;
+    float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color:transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025);
+      background: rgba(0, 0, 0, .025)
     }
   }
 
   .breadcrumb-container {
     float: left;
   }
-
-  // .errLog-container {
-  //   display: inline-block;
-  //   vertical-align: top;
-  // }
 
   .right-menu {
     float: right;
@@ -123,8 +95,8 @@ export default {
 
     .right-menu-item {
       display: inline-block;
-      height: 100%;
       padding: 0 8px;
+      height: 100%;
       font-size: 18px;
       color: #5a5e66;
       vertical-align: text-bottom;
@@ -134,7 +106,7 @@ export default {
         transition: background .3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025);
+          background: rgba(0, 0, 0, .025)
         }
       }
     }
@@ -143,22 +115,22 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        position: relative;
         margin-top: 5px;
+        position: relative;
 
         .user-avatar {
+          cursor: pointer;
           width: 40px;
           height: 40px;
-          cursor: pointer;
           border-radius: 10px;
         }
 
         .el-icon-caret-bottom {
-          position: absolute;
-          top: 25px;
-          right: -20px;
-          font-size: 12px;
           cursor: pointer;
+          position: absolute;
+          right: -20px;
+          top: 25px;
+          font-size: 12px;
         }
       }
     }
