@@ -3,8 +3,10 @@
     <div class="title">
       <span>新建新闻</span>
       <div>
-        <el-button type="primary" class="save-news">保存</el-button>
-        <el-button type="primary" class="publish-news">发布</el-button>
+        <button type="primary" class="del-news">删除</button>
+        <button type="primary" class="save-news">保存</button>
+        <button type="primary" class="publish-news"><span class="iconfont iconfabu"></span>&nbsp;发布</button>
+        <button type="primary" class="off-sale"><span class="iconfont iconxiajia"></span>&nbsp;下架</button>
       </div>
     </div>
     <div class="news-content">
@@ -52,6 +54,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+button {
+  outline: none;
+}
+
 .title {
   height: 64px;
   padding: 15px 0 0 30px;
@@ -59,7 +65,7 @@ export default {
   line-height: 0;
   border-bottom: 1px solid #ebeef5;
 
-  span {
+  & > span {
     display: inline-block;
     height: 80px;
     font-size: 20px;
@@ -71,6 +77,17 @@ export default {
   div {
     float: right;
     margin-right: 30px;
+
+    .del-news {
+      width: 87px;
+      height: 40px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 40px;
+      color: rgba(170, 170, 170, 1);
+      border: 1px solid rgba(170, 170, 170, 1);
+      border-radius: 4px;
+    }
   }
 }
 
@@ -83,17 +100,30 @@ export default {
   width: 87px;
   height: 40px;
   color: #455a64;
+  vertical-align: bottom;
   background: rgba(241, 241, 241, 1);
   border: 1px solid rgba(69, 90, 100, 1);
   border-radius: 4px;
 }
 
-.publish-news {
+.publish-news,
+.off-sale {
   width: 109px;
   height: 40px;
+  font-size: 14px;
+  line-height: 40px;
+  color: #fff;
+  vertical-align: top;
   background: rgba(69, 90, 100, 1);
   border-color: rgba(69, 90, 100, 1);
   border-radius: 4px;
+
+  .iconfabu,
+  .iconxiajia {
+    font-size: 14px;
+    line-height: 40px;
+    color: #fff;
+  }
 }
 
 .news-content .el-form-item__label {
