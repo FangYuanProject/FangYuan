@@ -12,8 +12,8 @@
         <el-input v-model="ruleForm.name" />
       </el-form-item>
       <el-form-item>
-        <search-form-btn></search-form-btn>
-        <add-method-btn name="帖子" @click="addForum"></add-method-btn>
+        <search-form-btn/>
+        <add-method-btn name="帖子" @click="addForum"/>
       </el-form-item>
     </el-form>
     <tableComponents
@@ -29,10 +29,10 @@
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
         <el-form-item label="帖子内容">
-          <el-input type="textarea" v-model="form.name" autocomplete="off" rows="5" />
+          <el-input v-model="form.name" type="textarea" autocomplete="off" rows="5" />
         </el-form-item>
         <el-form-item label="上传附件">
-          <el-input placeholder="支持扩展名pdf,jpg" v-model="input1">
+          <el-input v-model="input1" placeholder="支持扩展名pdf,jpg">
             <template slot="append">
               <el-button type="primary" class="submit-data-btn">选择</el-button>
             </template>
@@ -49,10 +49,10 @@
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
         <el-form-item label="帖子标题">
-          <el-input type="textarea" v-model="form.name" autocomplete="off" rows="5" />
+          <el-input v-model="form.name" type="textarea" autocomplete="off" rows="5" />
         </el-form-item>
         <el-form-item label="下架原因">
-          <el-input type="textarea" rows="5"></el-input>
+          <el-input type="textarea" rows="5"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -62,9 +62,9 @@
   </div>
 </template>
 <script>
-import tableComponents from "@/components/tableComponents";
-import AddMethodBtn from "@/components/AddMethodBtn";
-import SearchFormBtn from "@/components/SearchFormBtn";
+import tableComponents from '@/components/tableComponents';
+import AddMethodBtn from '@/components/AddMethodBtn';
+import SearchFormBtn from '@/components/SearchFormBtn';
 export default {
   components: {
     tableComponents,
@@ -73,59 +73,59 @@ export default {
   },
   data() {
     return {
-      tableOperation: [{ name: "置顶" }, { name: "删除" }, { name: "下架" }],
+      tableOperation: [{ name: '置顶' }, { name: '删除' }, { name: '下架' }],
       dialogVisible: false,
 
       ruleForm: {
-        name: "",
-        region: "",
-        date2: "",
+        name: '',
+        region: '',
+        date2: '',
         delivery: false,
         type: [],
-        resource: "",
-        desc: ""
+        resource: '',
+        desc: ''
       },
       form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
         delivery: false,
         type: [],
-        resource: "",
-        desc: ""
+        resource: '',
+        desc: ''
       },
       thData: [
-        { name: "帖子ID", indexs: "id" },
-        { name: "帖子标题", indexs: "title" },
-        { name: "帖子链接", indexs: "pone" },
-        { name: "创建人", indexs: "email" },
-        { name: "创建时间", indexs: "publish" }
+        { name: '帖子ID', indexs: 'id' },
+        { name: '帖子标题', indexs: 'title' },
+        { name: '帖子链接', indexs: 'pone' },
+        { name: '创建人', indexs: 'email' },
+        { name: '创建时间', indexs: 'publish' }
       ],
       tableData: [
         {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-          email: "1758265002@qq.com",
-          publish: "2019-10-21 10:00"
+          id: '0001',
+          title: '新闻标题1',
+          pone: '18825055554',
+          email: '1758265002@qq.com',
+          publish: '2019-10-21 10:00'
         },
         {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-          email: "1758265002@qq.com",
-          publish: "2019-10-21 10:00"
+          id: '0001',
+          title: '新闻标题1',
+          pone: '18825055554',
+          email: '1758265002@qq.com',
+          publish: '2019-10-21 10:00'
         },
         {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-          email: "1758265002@qq.com",
-          publish: "2019-10-21 10:00"
+          id: '0001',
+          title: '新闻标题1',
+          pone: '18825055554',
+          email: '1758265002@qq.com',
+          publish: '2019-10-21 10:00'
         }
       ]
-    };
+    }
   },
   methods: {
     submitForm(formName) {
@@ -139,16 +139,16 @@ export default {
       // })
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
     },
     addForum() {
-      this.dialogVisible = true;
+      this.dialogVisible = true
     },
     setTop() {
-      this.dialogVisible = true;
+      this.dialogVisible = true
     }
   }
-};
+}
 </script>
 
 <style lang='scss' scoped>
@@ -171,7 +171,6 @@ export default {
   border-color: rgba(69, 90, 100, 1);
   border-radius: 4px;
 }
-
 
 </style>
 

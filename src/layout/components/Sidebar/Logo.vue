@@ -64,7 +64,7 @@ export default {
     & .sidebar-title {
       display: inline-block;
       margin: 0;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      font-family: Avenir, Arial, Helvetica, sans-serif;
       font-size: 14px;
       font-weight: 600;
       line-height: 50px;

@@ -3,7 +3,7 @@
     <h2 class="title">学校主页</h2>
     <div class="school-content">
       <div class="school">
-        <img src="@/assets/schoolBadge@2x.png" alt />
+        <img src="@/assets/schoolBadge@2x.png" alt >
         <el-button type="primary" class="change-badge">更换校徽</el-button>
       </div>
       <div class="edit-scholl-info">
@@ -11,14 +11,14 @@
           <span class="school-name">北京大学</span>
           <span class="edit-btn">编辑资料</span>
         </div>
-         <div>
-        <p> <span class="label-name">所在地区:</span><span class="value-name">北京</span></p>
-        <p> <span class="label-name">公共科目:</span><span class="value-name"> 政治，数学，英语</span></p>
-        <p> <span class="label-name">专业科目:</span><span class="value-name">政治，数学，英语</span></p>
-        <p> <span class="label-name">初试分数线:</span><span class="value-name">425（2018），425（2018），425（2018），</span></p>
+        <div>
+          <p> <span class="label-name">所在地区:</span><span class="value-name">北京</span></p>
+          <p> <span class="label-name">公共科目:</span><span class="value-name"> 政治，数学，英语</span></p>
+          <p> <span class="label-name">专业科目:</span><span class="value-name">政治，数学，英语</span></p>
+          <p> <span class="label-name">初试分数线:</span><span class="value-name">425（2018），425（2018），425（2018），</span></p>
+        </div>
       </div>
-      </div>
-     
+
     </div>
   </div>
 </template>
@@ -28,10 +28,10 @@ export default {
   components: {},
   data() {
     return {
-      schoolName: "华农"
-    };
+      schoolName: '华农'
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -50,7 +50,6 @@ export default {
   height: 272px;
   padding: 42px 0 0 49px;
   text-align: center;
-
 
   .change-badge {
     display: block;

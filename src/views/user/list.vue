@@ -36,7 +36,7 @@
       <el-form :model="form">
         <el-form-item label="头像">
           <span class="user-head">
-            <img src="@/assets/user.png" alt />
+            <img src="@/assets/user.png" alt>
           </span>
           <el-button type="primary" class="upload-head" @click="dialogVisible = false">上传头像</el-button>
           <span class="tips">大小不得大于5M</span>
@@ -88,71 +88,71 @@
   </div>
 </template>
 <script>
-import tableComponents from "@/components/tableComponents";
+import tableComponents from '@/components/tableComponents'
 export default {
   components: {
     tableComponents
   },
   data() {
     return {
-      tableOperation: [{ name: "更换角色", clickEvent: "changeRole" }],
+      tableOperation: [{ name: '更换角色', clickEvent: 'changeRole' }],
       dialogVisible: false,
       changeRoleVisible: false,
       ruleForm: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
         delivery: false,
         type: [],
-        resource: "",
-        desc: ""
+        resource: '',
+        desc: ''
       },
       form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
         delivery: false,
         type: [],
-        resource: "",
-        desc: ""
+        resource: '',
+        desc: ''
       },
       thData: [
-        { name: "用户ID", indexs: "id" },
-        { name: "用户名", indexs: "title" },
-        { name: "手机号", indexs: "pone" },
-        { name: "邮箱", indexs: "email" },
-        { name: "注册时间", indexs: "publish" },
-        { name: "角色", indexs: "undercarriage" }
+        { name: '用户ID', indexs: 'id' },
+        { name: '用户名', indexs: 'title' },
+        { name: '手机号', indexs: 'pone' },
+        { name: '邮箱', indexs: 'email' },
+        { name: '注册时间', indexs: 'publish' },
+        { name: '角色', indexs: 'undercarriage' }
       ],
       tableData: [
         {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-          email: "1758265002@qq.com",
-          publish: "2019-10-21 10:00",
-          undercarriage: "普通管理员"
+          id: '0001',
+          title: '新闻标题1',
+          pone: '18825055554',
+          email: '1758265002@qq.com',
+          publish: '2019-10-21 10:00',
+          undercarriage: '普通管理员'
         },
         {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-          email: "1758265002@qq.com",
-          publish: "2019-10-21 10:00",
-          undercarriage: "普通管理员"
+          id: '0001',
+          title: '新闻标题1',
+          pone: '18825055554',
+          email: '1758265002@qq.com',
+          publish: '2019-10-21 10:00',
+          undercarriage: '普通管理员'
         },
         {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-          email: "1758265002@qq.com",
-          publish: "2019-10-21 10:00",
-          undercarriage: "普通管理员"
+          id: '0001',
+          title: '新闻标题1',
+          pone: '18825055554',
+          email: '1758265002@qq.com',
+          publish: '2019-10-21 10:00',
+          undercarriage: '普通管理员'
         }
       ]
-    };
+    }
   },
   methods: {
     submitForm(formName) {
@@ -166,21 +166,21 @@ export default {
       // })
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
     },
     addUser() {
-      this.dialogVisible = true;
+      this.dialogVisible = true
     },
     changeUserRole(data) {
-      console.log("123");
-      this.changeRoleVisible = true;
-      this.dialogVisible = false;
+      console.log('123')
+      this.changeRoleVisible = true
+      this.dialogVisible = false
     },
     submitChangeRoleInfo() {
-      this.changeRoleVisible = false;
+      this.changeRoleVisible = false
     }
   }
-};
+}
 </script>
 
 <style lang='scss' scoped>
@@ -209,16 +209,6 @@ export default {
   height: 40px;
   margin-left: 123px;
   font-size: 14px;
-  background: rgba(69, 90, 100, 1);
-  border-color: rgba(69, 90, 100, 1);
-  border-radius: 4px;
-}
-
-.submit-data-btn {
-  width: 86px;
-  height: 40px;
-  font-size: 14px;
-  color: #fff;
   background: rgba(69, 90, 100, 1);
   border-color: rgba(69, 90, 100, 1);
   border-radius: 4px;
@@ -256,71 +246,20 @@ export default {
 }
 
 .change-user-role {
-  .el-input {
-    width: 80%;
-  }
-
-  .el-form-item__label {
-    width: 60px;
-    font-size: 14px;
-    color: #757575;
-    text-align: right;
-  }
-
   .user-role .el-input {
     width: 377px;
   }
 }
 
 .add-user-modal {
-  .el-form-item__content:not(:first-child) {
-    height: 40px;
-  }
+  // .el-form-item__content:not(:first-child) {
+  //   height: 40px;
+  // }
 
   .el-form-item.el-form-item--medium {
     margin-right: 0;
     margin-left: 30px;
   }
-
-  .el-input {
-    width: 80%;
-  }
-
-  .el-form-item__label {
-    width: 60px;
-    font-size: 14px;
-    color: #757575;
-    text-align: right;
-  }
-}
-
-.add-user-modal .el-dialog__header,
-.change-user-role .el-dialog__header {
-  height: 56px;
-  border-bottom: 1px solid #ebeef5;
-}
-
-.add-user-modal .el-dialog__title,
-.change-user-role .el-dialog__title {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 16px;
-  color: rgba(32, 36, 49, 1);
-}
-
-.change-user-role .el-dialog__footer,
-.add-user-modal .el-dialog__footer {
-  width: 100%;
-  height: 80px;
-  line-height: 80px;
-  text-align: center;
-  border-top: 1px solid #ebeef5;
-}
-
-.add-user-modal .el-form-item--medium .el-form-item__label {
-  width: 61px;
-  font-size: 14px;
-  color: #757575;
 }
 
 .add-user-modal .upload-head {

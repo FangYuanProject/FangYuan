@@ -45,8 +45,8 @@
         />
       </el-form-item>
       <el-form-item>
-       <search-form-btn ></search-form-btn>
-        <add-method-btn name="新闻" @click="addNews"></add-method-btn>
+        <search-form-btn />
+        <add-method-btn name="新闻" @click="addNews" />
       </el-form-item>
     </el-form>
     <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :dialog-type="changeRoleVisible" @changeRole="changeUserRole" />
@@ -64,7 +64,7 @@ export default {
   },
   data() {
     return {
-      tableOperation: [{ name: '发布', clickEvent: 'publish' },{ name: '下架', clickEvent: 'publish' }],
+      tableOperation: [{ name: '发布', clickEvent: 'publish' }, { name: '下架', clickEvent: 'publish' }],
       ruleForm: {
         name: '',
         region: '',
@@ -91,7 +91,7 @@ export default {
         { name: '创建时间', indexs: 'email' },
         { name: '发布时间', indexs: 'publish' },
         { name: '下架时间', indexs: 'time' },
-        { name: '状态', indexs: 'status' },
+        { name: '状态', indexs: 'status' }
       ],
       tableData: [
         {
@@ -141,10 +141,10 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
-    addNews(){
-      this.$router.push({ path:'/news-detail'})
+    addNews() {
+      this.$router.push({ path: '/news-detail' })
     },
-    changeRoleVisible(){
+    changeRoleVisible() {
 
     }
   }
@@ -200,80 +200,51 @@ export default {
   height: 40px;
 }
 
-.add-news-modal .el-form-item__content:not(:first-child) {
-  height: 40px;
-}
+// .add-news-modal .el-form-item__content:not(:first-child) {
+//   height: 40px;
+// }
 
-.add-news-modal .el-form-item__label {
-  width: 85px;
-  font-size: 14px;
-  color: #757575;
-  text-align: right;
-}
+.add-news-modal {
+  .el-form-item.el-form-item--medium {
+    margin-right: 0;
+    margin-bottom: 20px;
+    margin-left: 30px;
+  }
 
-.add-news-modal .el-input {
-  width: 80%;
-}
+  .el-form-item--medium .el-form-item__label {
+    width: 61px;
+    font-size: 14px;
+    color: #757575;
+  }
 
-.add-news-modal .el-form-item.el-form-item--medium {
-  margin-right: 0;
-  margin-bottom: 20px;
-  margin-left: 30px;
-}
+  .upload-head {
+    width: 87px;
+    height: 40px;
+    padding: 0;
+    margin-right: 16px;
+    margin-left: 20px;
+    font-size: 14px;
+    line-height: 40px;
+    color: rgba(69, 90, 100, 1);
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid rgba(69, 90, 100, 1);
+    border-radius: 4px;
+  }
 
-.add-news-modal .el-dialog__header {
-  height: 56px;
-  border-bottom: 1px solid #ebeef5;
-}
+  .el-checkbox {
+    height: 20px;
+    margin-right: 20px;
+  }
 
-.add-news-modal .el-dialog__title {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 16px;
-  color: rgba(32, 36, 49, 1);
-}
+  .el-checkbox-group {
+    float: right;
+    width: 80%;
+  }
 
-.add-news-modal .el-dialog__footer {
-  width: 100%;
-  height: 80px;
-  line-height: 80px;
-  text-align: center;
-  border-top: 1px solid #ebeef5;
-}
-
-.add-news-modal .el-form-item--medium .el-form-item__label {
-  width: 61px;
-  font-size: 14px;
-  color: #757575;
-}
-
-.add-news-modal .upload-head {
-  width: 87px;
-  height: 40px;
-  padding: 0;
-  margin-right: 16px;
-  margin-left: 20px;
-  font-size: 14px;
-  line-height: 40px;
-  color: rgba(69, 90, 100, 1);
-  text-align: center;
-  background-color: #fff;
-  border: 1px solid rgba(69, 90, 100, 1);
-  border-radius: 4px;
-}
-
-.add-news-modal .el-checkbox {
-  height: 20px;
-  margin-right: 20px;
-}
-
-.add-news-modal .el-checkbox-group {
-  float: right;
-  width: 80%;
-}
-
-.add-news-modal .el-form-item__content {
-  line-height: 15px;
+  .el-form-item__content {
+    line-height: 15px;
+  }
 }
 
 #new-list .el-table__body tr td:first-child,

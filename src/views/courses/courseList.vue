@@ -21,27 +21,27 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-       <search-form-btn></search-form-btn>
-        <add-method-btn name="课程" @click="AddCourse"></add-method-btn>
+        <search-form-btn/>
+        <add-method-btn name="课程" @click="AddCourse"/>
       </el-form-item>
     </el-form>
     <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :dialog-type="changeRoleVisible" @changeRole="changeUserRole" />
     <el-dialog title="新增课程" :visible.sync="dialogVisible" width="508px" class="add-course-modal">
-       <el-form :model="form">
+      <el-form :model="form">
         <el-form-item label="课程名称">
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
         <el-form-item label="课程内容" class="active-origin">
-           <el-input v-model="form.name" autocomplete="off" />
- 
+          <el-input v-model="form.name" autocomplete="off" />
+
         </el-form-item>
         <el-form-item label="价格" xx>
-                   <el-select v-model="ruleForm.region" placeholder="请选择活动区域" class="course-price">
+          <el-select v-model="ruleForm.region" placeholder="请选择活动区域" class="course-price">
             <el-option label="普通角色1" value="shanghai" />
             <el-option label="普通角色2" value="beijing" />
           </el-select>
         </el-form-item>
-         <el-form-item label="淘宝链接">
+        <el-form-item label="淘宝链接">
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
       </el-form>
@@ -63,10 +63,10 @@ export default {
   },
   data() {
     return {
-      tableOperation: [{ name: '发布', clickEvent: 'changeRole' },{ name: '下架', clickEvent: 'changeRole' }],
-      dialogVisible: false,  
-      publiceSubjects:['101思想政治理论', '201英语一', '202俄语', '203日语',' 204英语二', '301数学一', '302数学二', '303数学三'],
-      professionSubjects:['数据结构', '操作系统', '计算机组成原理', '计算机网络',' 程序设计',' 软件工程', '数据库'],
+      tableOperation: [{ name: '发布', clickEvent: 'changeRole' }, { name: '下架', clickEvent: 'changeRole' }],
+      dialogVisible: false,
+      publiceSubjects: ['101思想政治理论', '201英语一', '202俄语', '203日语', ' 204英语二', '301数学一', '302数学二', '303数学三'],
+      professionSubjects: ['数据结构', '操作系统', '计算机组成原理', '计算机网络', ' 程序设计', ' 软件工程', '数据库'],
       ruleForm: {
         name: '',
         region: '',
@@ -91,7 +91,7 @@ export default {
         { name: '课程名称', indexs: 'title' },
         { name: '课程类型', indexs: 'pone' },
         { name: '状态', indexs: 'email' },
-        { name: '创建时间', indexs: 'publish' },
+        { name: '创建时间', indexs: 'publish' }
       ],
       tableData: [
         {
@@ -99,21 +99,21 @@ export default {
           title: '新闻标题1',
           pone: '18825055554',
           email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
+          publish: '2019-10-21 10:00'
         },
         {
           id: '0001',
           title: '新闻标题1',
           pone: '18825055554',
           email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
+          publish: '2019-10-21 10:00'
         },
         {
           id: '0001',
           title: '新闻标题1',
           pone: '18825055554',
           email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
+          publish: '2019-10-21 10:00'
         }
       ]
     }
@@ -136,8 +136,8 @@ export default {
       console.log('123')
       this.dialogVisible = true
     },
-    changeRoleVisible(){
-      
+    changeRoleVisible() {
+
     }
   }
 }
@@ -226,6 +226,5 @@ export default {
 .course-list .el-table__body tr td:first-child {
   color: #0266d6;
 }
-
 
 </style>
