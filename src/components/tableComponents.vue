@@ -12,9 +12,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <div :class="{'hidden':hidden}" class="pagination-container"> -->
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" />
-    <!-- </div> -->
   </div>
 </template>
 <script>
@@ -39,6 +37,12 @@ export default {
       type: Array,
       default: () => {
         return []
+      }
+    },
+    operationType: {
+      type: String,
+      default: () => {
+
       }
     }
   },

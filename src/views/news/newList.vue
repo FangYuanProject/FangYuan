@@ -211,12 +211,6 @@ export default {
     margin-left: 30px;
   }
 
-  .el-form-item--medium .el-form-item__label {
-    width: 61px;
-    font-size: 14px;
-    color: #757575;
-  }
-
   .upload-head {
     width: 87px;
     height: 40px;

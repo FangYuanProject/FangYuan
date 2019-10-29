@@ -28,21 +28,14 @@ export const constantRoutes = [
         path: '/user/analysis',
         component: () => import('@/views/user/analysis'),
         name: 'user-analysis',
+        hidden: true,
         meta: { title: '用户分析', noCache: true }
-      }
-    ]
-  },
-  {
-    path: '/user',
-    component: Layout,
-    redirect: '/user/home',
-    hidden: true,
-    children: [
+      },
       {
         path: '/user/home',
         component: () => import('@/views/user/home'),
         name: 'user-home',
-        meta: { title: '用户主页', icon: 'user', noCache: true }
+        meta: { title: '用户主页', noCache: true }
       }
     ]
   },
@@ -58,9 +51,9 @@ export const constantRoutes = [
         meta: { title: '新闻管理', affix: true }
       },
       {
-        path: '/new-detail',
+        path: '/news-detail',
         component: () => import('@/views/news/newsDetail'),
-        name: 'new-detail',
+        name: 'newsDetail',
         hidden: true,
         meta: { title: '新建新闻', affix: true }
       }

@@ -34,7 +34,7 @@
     />
     <el-dialog title="新增用户" :visible.sync="dialogVisible" width="508px" class="add-user-modal">
       <el-form :model="form">
-        <el-form-item label="头像">
+        <el-form-item label="头像" class="user-info">
           <span class="user-head">
             <img src="@/assets/user.png" alt>
           </span>
@@ -95,7 +95,7 @@ export default {
   },
   data() {
     return {
-      tableOperation: [{ name: '更换角色', clickEvent: 'changeRole' }],
+      tableOperation: [{ name: '更换角色' }],
       dialogVisible: false,
       changeRoleVisible: false,
       ruleForm: {
@@ -215,19 +215,19 @@ export default {
 }
 
 .add-user-modal {
-  .user-head {
-    display: inline-block;
-    width: 70px;
-    height: 70px;
-    line-height: 85px;
-    text-align: center;
-    vertical-align: middle;
-    background: rgba(251, 251, 251, 1);
-    border-radius: 10px;
+  .user-info {
+    height: 40px;
 
-    img {
-      width: 27px;
-      height: 31px;
+    .user-head {
+      position: relative;
+      top: -34px;
+      display: inline-block;
+      vertical-align: text-top;
+
+      img {
+        width: 64px;
+        height: 64px;
+      }
     }
   }
 
@@ -252,29 +252,25 @@ export default {
 }
 
 .add-user-modal {
-  // .el-form-item__content:not(:first-child) {
-  //   height: 40px;
-  // }
-
   .el-form-item.el-form-item--medium {
     margin-right: 0;
     margin-left: 30px;
   }
-}
 
-.add-user-modal .upload-head {
-  width: 87px;
-  height: 40px;
-  padding: 0;
-  margin-right: 16px;
-  margin-left: 20px;
-  font-size: 14px;
-  line-height: 40px;
-  color: rgba(69, 90, 100, 1);
-  text-align: center;
-  background-color: #fff;
-  border: 1px solid rgba(69, 90, 100, 1);
-  border-radius: 4px;
+  .upload-head {
+    width: 87px;
+    height: 40px;
+    padding: 0;
+    margin-right: 16px;
+    margin-left: 20px;
+    font-size: 14px;
+    line-height: 40px;
+    color: rgba(69, 90, 100, 1);
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid rgba(69, 90, 100, 1);
+    border-radius: 4px;
+  }
 }
 
 .el-table__body tr td:nth-of-type(2),

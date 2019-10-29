@@ -42,6 +42,7 @@
     "chalk": "2.4.2",
     "commitizen": "^4.0.3",
     "connect": "3.6.6",
+    "cz-conventional-changelog": "^3.0.2",
     "eslint": "5.15.3",
     "eslint-plugin-vue": "5.2.2",
     "html-webpack-plugin": "3.2.0",
@@ -68,5 +69,23 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FangYuanProject/FangYuan.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/FangYuanProject/FangYuan/issues"
+  },
+  "homepage": "https://github.com/FangYuanProject/FangYuan#readme"
 }
