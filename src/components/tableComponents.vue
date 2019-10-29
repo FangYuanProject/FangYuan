@@ -12,20 +12,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page.sync="currentPage2"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
-      layout="sizes, prev, pager, next"
-      :total="1000">
-    </el-pagination> -->
+    <!-- <div :class="{'hidden':hidden}" class="pagination-container"> -->
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" />
+    <!-- </div> -->
   </div>
 </template>
 <script>
+import Pagination from '@/components/Pagination'
 export default {
   name: 'TableComponents',
+  components: { Pagination },
   props: {
     tableData: {
       type: Array,
@@ -48,13 +44,22 @@ export default {
   },
   data() {
     return {
-      currentPage2: 1
+      currentPage2: 1,
+      currentPage1: 5,
+      currentPage3: 5,
+      currentPage4: 4,
+      total: 1000,
+      listQuery: {
+        page: 1,
+        limit: 100
+      }
     }
   },
 
   mounted() {
     console.log(this.tableOperation)
   },
+
   methods: {
     handleCurrentChange() {
 

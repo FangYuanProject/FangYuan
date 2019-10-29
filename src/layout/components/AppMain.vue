@@ -8,13 +8,13 @@
 
 <script>
 export default {
-  name: "AppMain",
+  name: 'AppMain',
   computed: {
     key() {
-      return this.$route.path;
+      return this.$route.path
     }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">
@@ -29,7 +29,8 @@ export default {
   & > div {
     background-color: #fff;
     width: 97%;
-    margin: 0 auto;
+    margin: 30px auto;
+    padding-bottom: 30px;
 
     .title {
       height: 56px;

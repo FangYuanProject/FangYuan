@@ -56,17 +56,17 @@ export const constantRoutes = [
         component: () => import('@/views/news/newList'),
         name: 'new-list',
         meta: { title: '新闻管理', affix: true }
+      },
+      {
+        path: '/new-detail',
+        component: () => import('@/views/news/newsDetail'),
+        name: 'new-detail',
+        hidden: false,
+        meta: { title: '新建新闻', affix: true }
       }
-
     ]
   },
-  {
-    path: 'new-detail',
-    component: () => import('@/views/news/newsDetail'),
-    name: 'new-list',
-    hidden: true,
-    meta: { title: '新建新闻', affix: true }
-  },
+
   {
     path: '/school',
     component: Layout,

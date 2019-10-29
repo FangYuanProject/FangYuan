@@ -10,16 +10,16 @@
     <div class="news-content">
       <el-form label-width="100px">
         <el-form-item label="新闻标题">
-          <el-input autocomplete="off" placeholder="请输入"/>
+          <el-input autocomplete="off" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="新闻类型" prop="region" class="news-type">
-          <el-select  placeholder="请选择活">
+        <el-form-item label="新闻类型" class="news-type">
+          <el-select placeholder="请选择活">
             <el-option label="普通角色1" value="shanghai" />
             <el-option label="普通角色2" value="beijing" />
           </el-select>
         </el-form-item>
-        <el-form-item label="相关学校" prop="region" class="relate-school">
-          <el-select  placeholder="请选择">
+        <el-form-item label="相关学校" class="relate-school">
+          <el-select placeholder="请选择">
             <el-option label="普通角色1" value="shanghai" />
             <el-option label="普通角色2" value="beijing" />
           </el-select>
@@ -33,13 +33,24 @@
             maxlength="200"
           />
         </el-form-item>
-         <el-form-item label="新闻摘要">
-        <!-- <tinymce :height="300" id='tinymce'></tinymce> -->
-         </el-form-item>
+        <el-form-item label="新闻摘要">
+          <tinymce id="tinymce" />
+        </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
+<script>
+import Tinymce from '@/components/Tinymce/Editor'
+export default {
+  components: { Tinymce },
+  data() {
+    return {
+      name: 'tinymce'
+    }
+  }
+}
+</script>
 <style lang="scss" scoped>
 .title {
   height: 84px;
@@ -84,13 +95,17 @@
   width: 95%;
 }
 .relate-school{
-    margin-left:150px;
+    margin-left:50px;
 }
 .relate-school,.news-type{
     display: inline-block;
+    width:45%;
+}
+.relate-school .el-select,.news-type .el-select{
+  width:100%;
 }
 .relate-school .el-input,
 .news-type .el-input{
-    width:400px;
+    width:100%;
 }
 </style>
