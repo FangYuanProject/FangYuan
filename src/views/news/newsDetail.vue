@@ -53,18 +53,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .title {
-  margin-top: 20px;
   height: 64px;
   padding: 15px 0 0 30px;
+  margin-top: 20px;
   line-height: 0;
   border-bottom: 1px solid #ebeef5;
 
   span {
+    display: inline-block;
+    height: 80px;
     font-size: 20px;
     font-weight: bold;
-    height: 80px;
     line-height: 32px;
-    display: inline-block;
     color: #202431;
   }
 
