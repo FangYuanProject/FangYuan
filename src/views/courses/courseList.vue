@@ -177,13 +177,14 @@ export default {
 }
 
 .add-course-modal .el-form-item__label {
+  width: 85px;
   font-size: 14px;
   color: #757575;
   text-align: right;
-  width:85px;
 }
-.add-course-modal  .el-input{
-  width:80%;
+
+.add-course-modal .el-input {
+  width: 80%;
 }
 
 .add-course-modal .el-form-item.el-form-item--medium {
@@ -192,8 +193,8 @@ export default {
   margin-left: 30px;
 }
 
-.add-course-modal .course-price .el-input{
-  width:377px;
+.add-course-modal .course-price .el-input {
+  width: 377px;
 }
 
 .add-course-modal .el-dialog__header {
@@ -201,19 +202,19 @@ export default {
   border-bottom: 1px solid #ebeef5;
 }
 
-.add-course-modal  .el-dialog__title {
+.add-course-modal .el-dialog__title {
   font-size: 20px;
   font-weight: 600;
   line-height: 16px;
   color: rgba(32, 36, 49, 1);
 }
 
-.add-course-modal  .el-dialog__footer {
-   width:100%;
-  height:80px;
-  text-align: center;
+.add-course-modal .el-dialog__footer {
+  width: 100%;
+  height: 80px;
   line-height: 80px;
-  border-top:1px solid #ebeef5;
+  text-align: center;
+  border-top: 1px solid #ebeef5;
 }
 
 .add-course-modal .el-form-item--medium .el-form-item__label {
@@ -221,7 +222,8 @@ export default {
   font-size: 14px;
   color: #757575;
 }
-.course-list  .el-table__body tr td:first-child{
+
+.course-list .el-table__body tr td:first-child {
   color: #0266d6;
 }
 

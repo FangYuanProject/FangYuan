@@ -2,8 +2,8 @@
     <el-button type="primary" class="search-btn" @click="addUser">查询</el-button>
 </template>
 <style lang="scss" scoped>
-.search-btn{
-    width: 87px;
+.search-btn {
+  width: 87px;
   height: 40px;
   margin-left: 30px;
   font-size: 14px;

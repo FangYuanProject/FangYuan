@@ -76,7 +76,7 @@ export default {
 <style lang="scss">
 
 #table-render {
-  margin-top:40px;
+  margin-top: 40px;
 
   .el-table__header-wrapper,
   .el-table__footer-wrapper {
@@ -120,10 +120,10 @@ export default {
   }
 
   .el-button--primary {
+    padding: 0;
     color: #0266d6;
     background-color: transparent;
     border-color: transparent;
-    padding: 0;
   }
 }
 

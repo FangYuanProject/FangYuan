@@ -186,8 +186,9 @@ export default {
 <style lang='scss'>
 /* 修改elemnt-ui样式 */
 .new-list-ruleForm {
-  margin-left:30px;
+  margin-left: 30px;
 }
+
 .new-list-ruleForm .el-input--medium .el-input__inner {
   width: 170px;
   height: 40px;
@@ -204,13 +205,14 @@ export default {
 }
 
 .add-news-modal .el-form-item__label {
+  width: 85px;
   font-size: 14px;
   color: #757575;
   text-align: right;
-  width:85px;
 }
-.add-news-modal  .el-input{
-  width:80%;
+
+.add-news-modal .el-input {
+  width: 80%;
 }
 
 .add-news-modal .el-form-item.el-form-item--medium {
@@ -224,19 +226,19 @@ export default {
   border-bottom: 1px solid #ebeef5;
 }
 
-.add-news-modal  .el-dialog__title {
+.add-news-modal .el-dialog__title {
   font-size: 20px;
   font-weight: 600;
   line-height: 16px;
   color: rgba(32, 36, 49, 1);
 }
 
-.add-news-modal  .el-dialog__footer {
-   width:100%;
-  height:80px;
-  text-align: center;
+.add-news-modal .el-dialog__footer {
+  width: 100%;
+  height: 80px;
   line-height: 80px;
-  border-top:1px solid #ebeef5;
+  text-align: center;
+  border-top: 1px solid #ebeef5;
 }
 
 .add-news-modal .el-form-item--medium .el-form-item__label {
@@ -259,31 +261,36 @@ export default {
   border: 1px solid rgba(69, 90, 100, 1);
   border-radius: 4px;
 }
-.add-news-modal  .el-checkbox{
-  margin-right:20px;
-  height:20px;
+
+.add-news-modal .el-checkbox {
+  height: 20px;
+  margin-right: 20px;
 }
-.add-news-modal  .el-checkbox-group{
-  width:80%;
+
+.add-news-modal .el-checkbox-group {
   float: right;
+  width: 80%;
 }
-.add-news-modal  .el-form-item__content{
+
+.add-news-modal .el-form-item__content {
   line-height: 15px;
 }
 
- #new-list .el-table__body tr td:first-child,
+#new-list .el-table__body tr td:first-child,
 #new-list .el-table__body tr td:last-child {
   color: #0266d6;
 }
-.score-input{
+
+.score-input {
   .el-input {
     display: inline-block;
-    width:147px;
+    width: 147px;
   }
 }
-.active-origin{
-  .el-input{
-    width:375px;
+
+.active-origin {
+  .el-input {
+    width: 375px;
   }
 }
 </style>

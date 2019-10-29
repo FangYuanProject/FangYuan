@@ -1,7 +1,7 @@
 <template>
   <div class="course-list">
     <h2 class="title">角色列表</h2>
-    <add-method-btn name="角色" @click="AddRole" style="float:right;margin-right:30px"></add-method-btn>
+    <add-method-btn name="角色" @click="AddRole" style="float: right; margin-right: 30px;"></add-method-btn>
 
     <tableComponents
       :table-data="tableData"
@@ -174,14 +174,15 @@ export default {
 .add-course-modal .el-dialog__footer {
   width: 100%;
   height: 80px;
-  text-align: center;
   line-height: 80px;
+  text-align: center;
   border-top: 1px solid #ebeef5;
 }
-.current-role{
-  color:#202431;
-  font-size:14px;
+
+.current-role {
   display: inline-block;
-  margin-bottom:30px;
+  margin-bottom: 30px;
+  font-size: 14px;
+  color: #202431;
 }
 </style>

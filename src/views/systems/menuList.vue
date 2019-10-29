@@ -1,7 +1,7 @@
 <template>
   <div class="menu-list">
     <h2 class="title">菜单列表</h2>
-    <add-method-btn name="菜单" @click="AddRole" style="float:right;margin-right:30px"></add-method-btn>
+    <add-method-btn name="菜单" @click="AddRole" style="float: right; margin-right: 30px;"></add-method-btn>
 
     <tableComponents
       :table-data="tableData"
@@ -141,42 +141,48 @@ export default {
 <style lang='scss'>
 .edit-menu-modal {
   .el-form-item__label {
+    width: 85px;
     font-size: 14px;
     color: #757575;
     text-align: right;
-    width: 85px;
   }
+
   .el-input {
     width: 80%;
   }
+
   .menu-sort .el-input {
     width: 377px;
   }
+
   .el-form-item.el-form-item--medium {
     margin-right: 0;
     margin-bottom: 20px;
     margin-left: 30px;
   }
+
   .el-dialog__header {
     height: 56px;
     border-bottom: 1px solid #ebeef5;
   }
+
   .el-dialog__title {
     font-size: 20px;
     font-weight: 600;
     line-height: 16px;
     color: rgba(32, 36, 49, 1);
   }
+
   .el-dialog__footer {
     width: 100%;
     height: 80px;
-    text-align: center;
     line-height: 80px;
+    text-align: center;
     border-top: 1px solid #ebeef5;
   }
 }
 
-.menu-list .el-table__body td:nth-child(3){
+.menu-list .el-table__body td:nth-child(3) {
   color: #0266d6;
 }
 </style>

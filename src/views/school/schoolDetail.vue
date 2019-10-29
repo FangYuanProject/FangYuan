@@ -36,70 +36,74 @@ export default {
 
 <style lang="scss" scoped>
 .title {
-  font-size: 20px;
-  padding-left: 30px;
-  color: #202431;
   height: 84px;
+  padding-left: 30px;
+  font-size: 20px;
   line-height: 84px;
+  color: #202431;
   border-bottom: 1px solid #ebeef5;
 }
+
 .school {
+  display: inline-block;
+  width: 132px;
   height: 272px;
   padding: 42px 0 0 49px;
-  width: 132px;
   text-align: center;
-  display: inline-block;
 
 
   .change-badge {
     display: block;
-    padding: 0;
-    margin-top: 32px;
     width: 87px;
     height: 28px;
-    background: rgba(69, 90, 100, 1);
-    border-radius: 4px;
-    border: 1px solid rgba(69, 90, 100, 1);
+    padding: 0;
+    margin-top: 32px;
     line-height: 28px;
     text-align: center;
+    background: rgba(69, 90, 100, 1);
+    border: 1px solid rgba(69, 90, 100, 1);
+    border-radius: 4px;
   }
 }
-.edit-scholl-info{
+
+.edit-scholl-info {
   display: inline-block;
-  margin-left:42px;
+  margin-left: 42px;
   vertical-align: bottom;
-  .school-name{
-    font-size:24px;
-    font-weight:600;
-    color:rgba(32,36,49,1);
+
+  .school-name {
+    font-size: 24px;
+    font-weight: 600;
+    color: rgba(32, 36, 49, 1);
   }
-  .edit-btn{
-    font-size:14px;
-    font-weight:400;
-    color:rgba(2,102,214,1);
+
+  .edit-btn {
     display: inline-block;
-    margin-left:20px;
     margin-bottom: 42px;
-  }
-  .label-name{
-    width:182px;
-    height:16px;
-    font-size:14px;
-    font-weight:400;
-    color:rgba(32,36,49,1);
-    line-height:16px;
+    margin-left: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(2, 102, 214, 1);
   }
 
-  .value-name{
-    display:inline-block;
-    margin-left:5px;
-    height:16px;
-    font-size:14px;
-    font-weight:400;
-    color:#999;
-    line-height:16px;
+  .label-name {
+    width: 182px;
+    height: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    color: rgba(32, 36, 49, 1);
   }
 
+  .value-name {
+    display: inline-block;
+    height: 16px;
+    margin-left: 5px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #999;
+  }
 }
 </style>
 

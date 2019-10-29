@@ -31,7 +31,7 @@
           <span class="school-head">
             <img src="@/assets/schoolBadge@1x.png" alt />
           </span>
-          <div style="vertical-align:top;display:inline-block;margin-top:10px">
+          <div style="display: inline-block; margin-top: 10px; vertical-align: top;">
             <el-button type="primary" class="upload-head" @click="dialogVisible = false">上传校徽</el-button>
             <span class="tips">大小不得大于5M</span>
           </div>
@@ -241,46 +241,55 @@ export default {
   width: 170px;
   height: 40px;
 }
+
 .add-school-modal {
   .el-input {
     width: 80%;
   }
+
   .el-form-item__content:not(:first-child) {
     height: 40px;
   }
+
   .el-form-item__label {
+    width: 85px;
     font-size: 14px;
     color: #757575;
     text-align: right;
-    width: 85px;
   }
+
   .el-form-item.el-form-item--medium {
     margin-right: 0;
     margin-bottom: 20px;
     margin-left: 30px;
   }
+
   .el-dialog__header {
     height: 56px;
     border-bottom: 1px solid #ebeef5;
   }
+
   .el-dialog__title {
     font-size: 20px;
     font-weight: 600;
     line-height: 16px;
     color: rgba(32, 36, 49, 1);
   }
+
   .el-dialog__footer {
     width: 100%;
     height: 80px;
-    text-align: center;
     line-height: 80px;
+    text-align: center;
     border-top: 1px solid #ebeef5;
   }
+
   .el-form-item--medium .el-form-item__label {
     width: 61px;
     font-size: 14px;
     color: #757575;
   }
+
   .upload-head {
     width: 87px;
     height: 40px;
@@ -295,27 +304,33 @@ export default {
     border: 1px solid rgba(69, 90, 100, 1);
     border-radius: 4px;
   }
+
   .el-checkbox {
-    margin-right: 20px;
     height: 20px;
+    margin-right: 20px;
   }
+
   .el-checkbox-group {
-    width: 80%;
     float: right;
+    width: 80%;
   }
+
   .el-form-item__content {
     line-height: 15px;
   }
 }
+
 .school-list .el-table__body tr td:nth-of-type(1) {
   color: #0266d6;
 }
+
 .score-input {
   .el-input {
     display: inline-block;
     width: 147px;
   }
 }
+
 .active-origin {
   .el-input {
     width: 375px;

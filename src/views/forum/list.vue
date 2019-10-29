@@ -181,6 +181,7 @@ export default {
   width: 170px;
   height: 40px;
 }
+
 .add-forum-modal {
   .el-form-item.el-form-item--medium {
     margin-right: 0;
@@ -194,6 +195,7 @@ export default {
     color: #757575;
   }
 }
+
 .forum-list .el-table__body tr td:first-child,
 .forum-list .el-table__body tr td:nth-child(3) {
   color: #0266d6;

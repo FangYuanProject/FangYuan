@@ -19,18 +19,19 @@ export default {
 
 <style scoped lang="scss">
 .app-main {
-  /*50 = navbar  */
-  min-height: calc(100vh - 50px);
-  width: 100%;
   position: relative;
+  width: 100%;
+
+  /* 50 = navbar  */
+  min-height: calc(100vh - 50px);
   overflow: hidden;
   background: #f0f0f0;
 
   & > div {
-    background-color: #fff;
     width: 97%;
-    margin: 30px auto;
     padding-bottom: 30px;
+    margin: 30px auto;
+    background-color: #fff;
 
     .title {
       height: 56px;
@@ -42,6 +43,7 @@ export default {
     }
   }
 }
+
 .fixed-header + .app-main {
   padding-top: 50px;
 }
@@ -61,56 +63,64 @@ export default {
     padding-right: 15px;
   }
 }
+
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
   background-color: #455a64;
   border-color: #455a64;
 }
+
 .el-checkbox__input.is-checked + .el-checkbox__label {
   color: #757575;
 }
 
 .el-dialog__body {
   .el-form-item__label {
+    width: 85px;
     font-size: 14px;
     color: #757575;
     text-align: right;
-    width: 85px;
   }
+
   .el-input,
   .el-input-group,
   .el-textarea {
     width: 80%;
   }
+
   .el-select .el-input {
     width: 377px;
   }
 }
+
 .el-dialog__header {
   height: 56px;
   border-bottom: 1px solid #ebeef5;
 }
+
 .el-dialog__title {
   font-size: 20px;
   font-weight: 600;
   line-height: 16px;
   color: rgba(32, 36, 49, 1);
 }
+
 .el-dialog__footer {
   width: 100%;
   height: 80px;
-  text-align: center;
   line-height: 80px;
+  text-align: center;
   border-top: 1px solid #ebeef5;
+
   .submit-data-btn {
     width: 86px;
     height: 40px;
+    padding: 0;
     font-size: 14px;
     color: #fff;
     background: rgba(69, 90, 100, 1);
     border-color: rgba(69, 90, 100, 1);
     border-radius: 4px;
-    padding: 0;
   }
 }
 </style>

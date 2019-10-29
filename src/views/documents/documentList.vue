@@ -252,19 +252,21 @@ export default {
   width: 170px;
   height: 40px;
 }
+
 .add-document-modal {
   .el-form-item.el-form-item--medium {
     margin-right: 0;
     margin-bottom: 20px;
     margin-left: 30px;
   }
-  
+
   .el-form-item--medium .el-form-item__label {
     width: 61px;
     font-size: 14px;
     color: #757575;
   }
 }
+
 .document-list .el-table__body tr td:first-child {
   color: #0266d6;
 }

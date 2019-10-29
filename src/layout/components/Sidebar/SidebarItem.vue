@@ -94,9 +94,9 @@ export default {
 }
 </script>
 <style >
-.system-name span:first-child{
-  font-size:20px;
-  font-weight:600;
-  color:#fff;
+.system-name span:first-child {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
 }
 </style>

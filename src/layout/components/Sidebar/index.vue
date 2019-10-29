@@ -64,16 +64,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .system-name {
-  height:50px;
-  line-height:50px;
+  height: 50px;
+  line-height: 50px;
   text-align: center;
+
   & > span:first-child {
     font-size: 20px;
     color: #fff;
   }
+
   & > span:last-child {
     font-size: 20px;
-    color:#757575;
+    color: #757575;
   }
 }
 </style>

@@ -254,17 +254,20 @@ export default {
   width: 170px;
   height: 40px;
 }
+
 .change-user-role {
   .el-input {
     width: 80%;
   }
+
   .el-form-item__label {
+    width: 60px;
     font-size: 14px;
     color: #757575;
     text-align: right;
-    width: 60px;
   }
-  .user-role .el-input{
+
+  .user-role .el-input {
     width: 377px;
   }
 }
@@ -273,18 +276,21 @@ export default {
   .el-form-item__content:not(:first-child) {
     height: 40px;
   }
+
   .el-form-item.el-form-item--medium {
     margin-right: 0;
     margin-left: 30px;
   }
+
   .el-input {
     width: 80%;
   }
+
   .el-form-item__label {
+    width: 60px;
     font-size: 14px;
     color: #757575;
     text-align: right;
-    width: 60px;
   }
 }
 
@@ -304,11 +310,11 @@ export default {
 
 .change-user-role .el-dialog__footer,
 .add-user-modal .el-dialog__footer {
-  width:100%;
-  height:80px;
-  text-align: center;
+  width: 100%;
+  height: 80px;
   line-height: 80px;
-  border-top:1px solid #ebeef5;
+  text-align: center;
+  border-top: 1px solid #ebeef5;
 }
 
 .add-user-modal .el-form-item--medium .el-form-item__label {

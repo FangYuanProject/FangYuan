@@ -61,7 +61,7 @@ export const constantRoutes = [
         path: '/new-detail',
         component: () => import('@/views/news/newsDetail'),
         name: 'new-detail',
-        hidden: false,
+        hidden: true,
         meta: { title: '新建新闻', affix: true }
       }
     ]

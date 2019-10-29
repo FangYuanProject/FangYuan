@@ -117,7 +117,7 @@ export default {
 </script>
 
 <style>
-.tox-tinymce{
-  width:95%;
+.tox-tinymce {
+  width: 95%;
 }
 </style>

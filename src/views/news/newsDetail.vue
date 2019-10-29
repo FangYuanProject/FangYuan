@@ -57,15 +57,18 @@ export default {
   padding: 26px 0 0 30px;
   line-height: 0;
   border-bottom: 1px solid #ebeef5;
+
   span {
-    color: #202431;
     font-size: 20px;
+    color: #202431;
   }
+
   div {
     float: right;
     margin-right: 30px;
   }
 }
+
 .news-content {
   margin-top: 36px;
 }
@@ -74,18 +77,20 @@ export default {
 .save-news {
   width: 87px;
   height: 40px;
-  background: rgba(241, 241, 241, 1);
-  border-radius: 4px;
-  border: 1px solid rgba(69, 90, 100, 1);
   color: #455a64;
+  background: rgba(241, 241, 241, 1);
+  border: 1px solid rgba(69, 90, 100, 1);
+  border-radius: 4px;
 }
+
 .publish-news {
   width: 109px;
   height: 40px;
   background: rgba(69, 90, 100, 1);
-  border-radius: 4px;
   border-color: rgba(69, 90, 100, 1);
+  border-radius: 4px;
 }
+
 .news-content .el-form-item__label {
   text-align: center;
 }
@@ -94,18 +99,24 @@ export default {
 .news-content .el-textarea {
   width: 95%;
 }
-.relate-school{
-    margin-left:50px;
+
+.relate-school {
+  margin-left: 50px;
 }
-.relate-school,.news-type{
-    display: inline-block;
-    width:45%;
+
+.relate-school,
+.news-type {
+  display: inline-block;
+  width: 45%;
 }
-.relate-school .el-select,.news-type .el-select{
-  width:100%;
+
+.relate-school .el-select,
+.news-type .el-select {
+  width: 100%;
 }
+
 .relate-school .el-input,
-.news-type .el-input{
-    width:100%;
+.news-type .el-input {
+  width: 100%;
 }
 </style>
