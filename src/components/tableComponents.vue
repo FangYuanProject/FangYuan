@@ -1,14 +1,14 @@
 <template>
   <div id="table-render">
     <el-table :data="tableData" highlight-current-row style="width: 100%;" :header-cell-style="{backgroundColor:'#FBFBFB',color:'rgba(51,51,51,1)',fontSize:'16px',height:'53px'}">
-      <el-table-column v-for="(item,index) in thData" :key="index" :label="item.name" :prop="item.indexs" align="center">
-        <template slot-scope="scope">
+      <el-table-column v-for="(item,index) in thData" :key="index" :label="item.name" :prop="item.indexs" align="center" @click="cellClickEvent(item.name)">
+        <template slot-scope="scope" >
           <span>{{ scope.row[item.indexs] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template>
-          <el-button v-for="(item,index) in tableOperation" :key="index+1" type="primary" class="submit-data-btn" @click="clickEvent">{{ item.name }}</el-button>
+          <el-button v-for="(item,index) in tableOperation" :key="index+1" type="primary" class="submit-data-btn" @click="clickEvent(item)">{{ item.name }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -71,8 +71,11 @@ export default {
     handleSizeChange() {
 
     },
-    clickEvent() {
-      this.$emit('click')
+    clickEvent(type) {
+      this.$emit('click',type)
+    },
+    cellClickEvent(type){
+      this.$emit('click',type)
     }
   }
 }
