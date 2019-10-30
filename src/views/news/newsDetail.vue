@@ -5,8 +5,8 @@
       <div>
         <button type="primary" class="del-news">删除</button>
         <button type="primary" class="save-news">保存</button>
-        <button type="primary" class="publish-news"><span class="iconfont iconfabu"></span>&nbsp;发布</button>
-        <button type="primary" class="off-sale"><span class="iconfont iconxiajia"></span>&nbsp;下架</button>
+        <button type="primary" class="publish-news"><span class="iconfont iconfabu" />&nbsp;发布</button>
+        <button type="primary" class="off-sale"><span class="iconfont iconxiajia" />&nbsp;下架</button>
       </div>
     </div>
     <div class="news-content">
@@ -85,6 +85,7 @@ button {
       font-weight: 600;
       line-height: 40px;
       color: rgba(170, 170, 170, 1);
+      background-color: #fff;
       border: 1px solid rgba(170, 170, 170, 1);
       border-radius: 4px;
     }
@@ -101,8 +102,8 @@ button {
   height: 40px;
   color: #455a64;
   vertical-align: bottom;
-  background: rgba(241, 241, 241, 1);
-  border: 1px solid rgba(69, 90, 100, 1);
+  background: #f1f1f1;
+  border: 1px solid #455a64;
   border-radius: 4px;
 }
 
@@ -114,8 +115,8 @@ button {
   line-height: 40px;
   color: #fff;
   vertical-align: top;
-  background: rgba(69, 90, 100, 1);
-  border-color: rgba(69, 90, 100, 1);
+  background: #455a64;
+  border: 1px solid #455a64;
   border-radius: 4px;
 
   .iconfabu,

@@ -1,5 +1,5 @@
 <template>
-    <el-button type="primary" class="search-btn" @click="addUser">查询</el-button>
+  <el-button type="primary" class="search-btn" @click="searchList">查询</el-button>
 </template>
 <style lang="scss" scoped>
 .search-btn {
@@ -14,3 +14,17 @@
 }
 
 </style>
+<script>
+export default {
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+    searchList() {
+      this.$emit('click')
+    }
+  }
+}
+</script>

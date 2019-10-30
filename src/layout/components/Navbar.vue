@@ -5,12 +5,13 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
-        </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
+      <!-- <el-dropdown class="avatar-container" trigger="click"> -->
+      <div class="avatar-wrapper">
+        <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+        <span class="user-name">张一凡</span> &nbsp;| &nbsp;<span class="log-out">退出系统</span>
+        <!-- <i class="el-icon-caret-bottom" /> -->
+      </div>
+      <!-- <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
               Home
@@ -25,8 +26,8 @@
           <el-dropdown-item divided>
             <span style="display: block;" @click="logout">Log Out</span>
           </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+        </el-dropdown-menu> -->
+      <!-- </el-dropdown> -->
     </div>
   </div>
 </template>
@@ -87,7 +88,20 @@ export default {
   .right-menu {
     float: right;
     height: 100%;
+    padding-right: 30px;
     line-height: 50px;
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(74, 74, 74, 1);
+    }
+
+    .log-out {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(2, 102, 214, 1);
+    }
 
     &:focus {
       outline: none;

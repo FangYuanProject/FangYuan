@@ -63,7 +63,6 @@ export const constantRoutes = [
   {
     path: '/school',
     component: Layout,
-    redirect: '/school',
     meta: { title: '学校管理', icon: 'xuexiao', noCache: true },
     children: [
       {

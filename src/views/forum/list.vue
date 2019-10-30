@@ -12,27 +12,27 @@
         <el-input v-model="ruleForm.name" />
       </el-form-item>
       <el-form-item>
-        <search-form-btn/>
-        <add-method-btn name="帖子" @click="addForum"/>
+        <search-form-btn />
+        <add-method-btn name="帖子" @click="addForum" />
       </el-form-item>
     </el-form>
     <tableComponents
       :table-data="tableData"
       :th-data="thData"
       :table-operation="tableOperation"
-      :dialog-type="changeRoleVisible"
-      @click="setTop"
+      @click="handleClick"
+      @cell-click="editForum"
     />
-    <el-dialog title="发布帖子" width="508px" class="add-document-modal">
+    <el-dialog :title="publishDialogTitle" width="508px" :visible.sync="publishDialogVisible" class="add-document-modal">
       <el-form :model="form">
         <el-form-item label="帖子标题">
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
         <el-form-item label="帖子内容">
-          <el-input v-model="form.name" type="textarea" autocomplete="off" rows="5" />
+          <el-input type="textarea" autocomplete="off" rows="5" />
         </el-form-item>
         <el-form-item label="上传附件">
-          <el-input v-model="input1" placeholder="支持扩展名pdf,jpg">
+          <el-input placeholder="支持扩展名pdf,jpg">
             <template slot="append">
               <el-button type="primary" class="submit-data-btn">选择</el-button>
             </template>
@@ -52,7 +52,7 @@
           <el-input v-model="form.name" type="textarea" autocomplete="off" rows="5" />
         </el-form-item>
         <el-form-item label="下架原因">
-          <el-input type="textarea" rows="5"/>
+          <el-input type="textarea" rows="5" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -62,9 +62,10 @@
   </div>
 </template>
 <script>
-import tableComponents from '@/components/tableComponents';
-import AddMethodBtn from '@/components/AddMethodBtn';
-import SearchFormBtn from '@/components/SearchFormBtn';
+import tableComponents from '@/components/tableComponents'
+import AddMethodBtn from '@/components/AddMethodBtn'
+import SearchFormBtn from '@/components/SearchFormBtn'
+import { messageBox } from '@/utils/index.js'
 export default {
   components: {
     tableComponents,
@@ -75,7 +76,8 @@ export default {
     return {
       tableOperation: [{ name: '置顶' }, { name: '删除' }, { name: '下架' }],
       dialogVisible: false,
-
+      publishDialogVisible: false,
+      publishDialogTitle: '发布帖子',
       ruleForm: {
         name: '',
         region: '',
@@ -142,10 +144,23 @@ export default {
       this.$refs[formName].resetFields()
     },
     addForum() {
-      this.dialogVisible = true
+      this.publishDialogVisible = true
+      this.publishDialogTitle = '发布帖子'
     },
-    setTop() {
-      this.dialogVisible = true
+    handleClick(type) {
+      // this.dialogVisible = true
+      console.log(type)
+      if (type.name === '置顶') {
+        messageBox('success', '置顶成功')
+      }
+    },
+    editForum(row, colum) {
+      if (colum.label === '帖子ID') {
+        this.publishDialogVisible = true
+        this.publishDialogTitle = '编辑帖子'
+      } else if (colum.label === '帖子链接') {
+        window.location.href = 'http://www.baidu.com'
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div id="table-render">
-    <el-table :data="tableData" highlight-current-row style="width: 100%;" :header-cell-style="{backgroundColor:'#FBFBFB',color:'rgba(51,51,51,1)',fontSize:'16px',height:'53px'}">
-      <el-table-column v-for="(item,index) in thData" :key="index" :label="item.name" :prop="item.indexs" align="center" @click="cellClickEvent(item.name)">
+    <el-table :data="tableData" highlight-current-row style="width: 100%;" :header-cell-style="{backgroundColor:'#FBFBFB',color:'rgba(51,51,51,1)',fontSize:'16px',height:'53px'}" @cell-click="handleCellClick">
+      <el-table-column v-for="(item,index) in thData" :key="index" :label="item.name" :prop="item.indexs" align="center" :formatter="formatter">
         <template slot-scope="scope">
           <span>{{ scope.row[item.indexs] }}</span>
         </template>
@@ -11,15 +11,26 @@
           <el-button v-for="(item,index) in tableOperation" :key="index+1" type="primary" class="submit-data-btn" @click="clickEvent(item)">{{ item.name }}</el-button>
         </template>
       </el-table-column>
+
     </el-table>
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" />
+    <el-pagination
+      :background="background"
+      :current-page.sync="currentPage"
+      :page-size.sync="pageSize"
+      :layout="layout"
+      :page-sizes="pageSizes"
+      :total="total"
+      v-bind="$attrs"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 <script>
-import Pagination from '@/components/Pagination'
+// import Pagination from '@/components/Pagination'
 export default {
   name: 'TableComponents',
-  components: { Pagination },
+  // components: { Pagination },
   props: {
     tableData: {
       type: Array,
@@ -44,38 +55,92 @@ export default {
       default: () => {
 
       }
+    },
+    // total: {
+    //   required: true,
+    //   type: Number
+    // },
+    page: {
+      type: Number,
+      default: 1
+    },
+    limit: {
+      type: Number,
+      default: 20
+    },
+    pageSizes: {
+      type: Array,
+      default() {
+        return [10, 20, 30, 50]
+      }
+    },
+    layout: {
+      type: String,
+      default: 'sizes, prev, pager, next'
+    },
+    background: {
+      type: Boolean,
+      default: true
+    },
+    autoScroll: {
+      type: Boolean,
+      default: true
+    },
+    hidden: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      currentPage2: 1,
-      currentPage1: 5,
-      currentPage3: 5,
-      currentPage4: 4,
-      total: 1000,
-      listQuery: {
-        page: 1,
-        limit: 100
+      total: 1000
+    }
+  },
+  computed: {
+    currentPage: {
+      get() {
+        return this.page
+      },
+      set(val) {
+        this.$emit('update:page', val)
+      }
+    },
+    pageSize: {
+      get() {
+        return this.limit
+      },
+      set(val) {
+        this.$emit('update:limit', val)
       }
     }
   },
 
   mounted() {
-    console.log(this.tableOperation)
+    // console.log(this.tableOperation)
   },
 
   methods: {
-    handleCurrentChange() {
-
+    handleSizeChange(val) {
+      this.$emit('pagination', { page: this.currentPage, limit: val })
+      // if (this.autoScroll) {
+      //   scrollTo(0, 800)
+      // }
     },
-    handleSizeChange() {
-
+    handleCurrentChange(val) {
+      this.$emit('pagination', { page: val, limit: this.pageSize })
+      // if (this.autoScroll) {
+      //   scrollTo(0, 800)
+      // }
     },
-    clickEvent() {
-      this.$emit('click')
+    clickEvent(type) {
+      this.$emit('click', type)
     },
     handleCellClick(row, column, cell, event) {
       this.$emit('cell-click', row, column, cell, event)
+    },
+    formatter(row, column) {
+      console.log(row)
+      console.log('row')
     }
   }
 }
@@ -84,6 +149,7 @@ export default {
 
 #table-render {
   margin-top: 40px;
+  text-align: center;
 
   .el-table__header-wrapper,
   .el-table__footer-wrapper {
@@ -96,30 +162,9 @@ export default {
     line-height: 58px;
   }
 
-  .el-pagination {
-    position: absolute;
-    left: 50%;
-    width: 100%;
-    margin-left: -50%;
-    line-height: 39px;
-    text-align: center;
-  }
-
   .el-input--mini .el-input__inner {
     width: 100px;
     height: 39px;
-  }
-
-  .el-pager,
-  .btn-next,
-  .btn-prev {
-    vertical-align: sub !important;
-  }
-
-  .el-pager li {
-    margin-right: 43px;
-    font-size: 14px;
-    color: #606266;
   }
 
   .el-table .cell {
@@ -131,6 +176,39 @@ export default {
     color: #0266d6;
     background-color: transparent;
     border-color: transparent;
+  }
+
+  .el-pagination {
+    margin-top: 30px;
+  }
+
+  .el-pagination.is-background .el-pager li:not(.disabled).active {
+    font-size: 14px;
+    color: #0266d6;
+    background-color: transparent !important;
+  }
+
+  .el-pagination.is-background .btn-next,
+  .el-pagination.is-background .btn-prev,
+  .el-pagination.is-background .el-pager li {
+    font-size: 14px;
+    font-weight: normal;
+    color: #606266;
+    background-color: transparent;
+  }
+
+  .el-pagination .el-select .el-input {
+    width: 83px;
+    height: 39px;
+  }
+
+  .el-pagination button,
+  .el-pagination span:not([class*=suffix]) {
+    vertical-align: baseline;
+  }
+
+  .el-pager {
+    vertical-align: bottom;
   }
 }
 

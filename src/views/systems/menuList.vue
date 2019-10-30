@@ -1,7 +1,7 @@
 <template>
   <div class="menu-list">
     <h2 class="title">菜单列表</h2>
-    <add-method-btn name="菜单" @click="AddRole" style="float: right; margin-right: 30px;"></add-method-btn>
+    <add-method-btn name="菜单" style="float: right; margin-right: 30px;" @click="AddRole" />
 
     <tableComponents
       :table-data="tableData"
@@ -39,8 +39,8 @@
   </div>
 </template>
 <script>
-import tableComponents from "@/components/tableComponents";
-import AddMethodBtn from "@/components/AddMethodBtn";
+import tableComponents from '@/components/tableComponents'
+import AddMethodBtn from '@/components/AddMethodBtn'
 export default {
   components: {
     tableComponents,
@@ -48,46 +48,46 @@ export default {
   },
   data() {
     return {
-      tableOperation: [{ name: "修改" }],
+      tableOperation: [{ name: '修改' }],
       checked: true,
       dialogVisible: false,
       form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
         delivery: false,
         type: [],
-        resource: "",
-        desc: ""
+        resource: '',
+        desc: ''
       },
       thData: [
-        { name: "菜单名称", indexs: "id" },
-        { name: "上级菜单", indexs: "title" },
-        { name: "链接", indexs: "pone" },
-        { name: "状态", indexs: "email" }
+        { name: '菜单名称', indexs: 'id' },
+        { name: '上级菜单', indexs: 'title' },
+        { name: '链接', indexs: 'pone' },
+        { name: '状态', indexs: 'email' }
       ],
       tableData: [
         {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-          email: "1758265002@qq.com"
+          id: '0001',
+          title: '新闻标题1',
+          pone: '18825055554',
+          email: '1758265002@qq.com'
         },
         {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-          email: "1758265002@qq.com"
+          id: '0001',
+          title: '新闻标题1',
+          pone: '18825055554',
+          email: '1758265002@qq.com'
         },
         {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-          email: "1758265002@qq.com"
+          id: '0001',
+          title: '新闻标题1',
+          pone: '18825055554',
+          email: '1758265002@qq.com'
         }
       ]
-    };
+    }
   },
   methods: {
     submitForm(formName) {
@@ -101,20 +101,20 @@ export default {
       // })
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
     },
     AddRole() {
-      console.log("123");
-      this.dialogVisible = true;
+      console.log('123')
+      this.dialogVisible = true
     },
     editRole() {
-      this.dialogVisible = true;
+      this.dialogVisible = true
     },
-    changeRoleVisible(){
-      
+    changeRoleVisible() {
+
     }
   }
-};
+}
 </script>
 
 <style lang='scss' scoped>
@@ -127,30 +127,10 @@ export default {
   border-bottom: 1px solid #ebeef5;
 }
 
-.submit-data-btn {
-  width: 86px;
-  height: 40px;
-  font-size: 14px;
-  color: #fff;
-  background: rgba(69, 90, 100, 1);
-  border-color: rgba(69, 90, 100, 1);
-  border-radius: 4px;
-}
 </style>
 
 <style lang='scss'>
 .edit-menu-modal {
-  .el-form-item__label {
-    width: 85px;
-    font-size: 14px;
-    color: #757575;
-    text-align: right;
-  }
-
-  .el-input {
-    width: 80%;
-  }
-
   .menu-sort .el-input {
     width: 377px;
   }
@@ -159,26 +139,6 @@ export default {
     margin-right: 0;
     margin-bottom: 20px;
     margin-left: 30px;
-  }
-
-  .el-dialog__header {
-    height: 56px;
-    border-bottom: 1px solid #ebeef5;
-  }
-
-  .el-dialog__title {
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 16px;
-    color: rgba(32, 36, 49, 1);
-  }
-
-  .el-dialog__footer {
-    width: 100%;
-    height: 80px;
-    line-height: 80px;
-    text-align: center;
-    border-top: 1px solid #ebeef5;
   }
 }
 

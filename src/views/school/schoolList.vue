@@ -1,5 +1,5 @@
 <template>
-  <div class="schoool-list">
+  <div class="school-list">
     <h2 class="title">学校列表</h2>
     <el-form ref="ruleForm" :model="ruleForm" label-width="70px" inline class="list-ruleForm">
       <el-form-item label="学校ID" prop="newId">
@@ -9,7 +9,7 @@
         <el-input v-model="ruleForm.name" />
       </el-form-item>
       <el-form-item label="地区" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+        <el-select v-model="ruleForm.region" placeholder="请选择">
           <el-option label="普通角色1" value="shanghai" />
           <el-option label="普通角色2" value="beijing" />
         </el-select>
@@ -23,7 +23,6 @@
       :table-data="tableData"
       :th-data="thData"
       :table-operation="tableOperation"
-      :dialog-type="changeRoleVisible"
     />
     <el-dialog title="新增学校" :visible.sync="dialogVisible" width="508px" class="add-news-modal">
       <el-form :model="form">
@@ -124,20 +123,13 @@ export default {
         desc: ''
       },
       form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        name: ''
       },
       thData: [
         { name: '学校ID', indexs: 'id' },
+        { name: '学校代码', indexs: 'title' },
         { name: '学校名称', indexs: 'title' },
         { name: '地区', indexs: 'pone' },
-        { name: '特性', indexs: 'email' },
         { name: '创建时间', indexs: 'publish' },
         { name: '热度', indexs: 'undercarriage' },
         { name: '学校代码', indexs: 'undercarriage' }
@@ -199,17 +191,6 @@ export default {
   line-height: 0;
   color: #202431;
   border-bottom: 1px solid #ebeef5;
-}
-
-.add-new {
-  width: 109px;
-  height: 40px;
-  margin-left: 123px;
-  font-size: 14px;
-  color: #fff;
-  background: rgba(69, 90, 100, 1);
-  border-color: rgba(69, 90, 100, 1);
-  border-radius: 4px;
 }
 
 .add-school-modal {
@@ -282,7 +263,7 @@ export default {
   }
 }
 
-.school-list .el-table__body tr td:nth-of-type(1) {
+.school-list .el-table__body tr td:first-child {
   color: #0266d6;
 }
 

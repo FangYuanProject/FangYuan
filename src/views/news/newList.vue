@@ -49,7 +49,7 @@
         <add-method-btn name="新闻" @click="addNews" />
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :dialog-type="changeRoleVisible" @changeRole="changeUserRole" />
+    <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" @cell-click="editNews" />
   </div>
 </template>
 <script>
@@ -64,7 +64,7 @@ export default {
   },
   data() {
     return {
-      tableOperation: [{ name: '发布', clickEvent: 'publish' }, { name: '下架', clickEvent: 'publish' }],
+      tableOperation: [{ name: '发布' }, { name: '下架' }],
       ruleForm: {
         name: '',
         region: '',
@@ -144,8 +144,10 @@ export default {
     addNews() {
       this.$router.push({ path: '/news-detail' })
     },
-    changeRoleVisible() {
-
+    editNews(row, column, cell, event) {
+      if (column.label === '新闻ID') {
+        this.$router.push({ path: '/news-detail' })
+      }
     }
   }
 }
@@ -189,21 +191,6 @@ export default {
   margin-left: 30px;
 }
 
-.new-list-ruleForm .el-input--medium .el-input__inner {
-  width: 170px;
-  height: 40px;
-}
-
-.add-news-modal .el-input--medium,
-.add-news-modal .el-input--medium .el-input__inner {
-  width: 335px;
-  height: 40px;
-}
-
-// .add-news-modal .el-form-item__content:not(:first-child) {
-//   height: 40px;
-// }
-
 .add-news-modal {
   .el-form-item.el-form-item--medium {
     margin-right: 0;
@@ -241,8 +228,7 @@ export default {
   }
 }
 
-#new-list .el-table__body tr td:first-child,
-#new-list .el-table__body tr td:last-child {
+#new-list .el-table__body tr td:first-child {
   color: #0266d6;
 }
 

@@ -40,25 +40,27 @@
           </p>
         </div>
       </div>
-      <div class="bottom float-right">
-        <div class="recommand-code">
-          <p>我的推荐码</p>
-          <p>NUGBASJF &nbsp;<span class="iconfont iconfuzhi" /></p>
-        </div>
-        <div class="my-score">
-          <p>我的积分</p>
-          <p>100</p>
+      <div style="border-top: 1px solid #ebeef5;">
+        <div class="bottom float-right">
+          <div class="recommand-code">
+            <p>我的推荐码</p>
+            <p>NUGBASJF &nbsp;<span class="iconfont iconfuzhi" /></p>
+          </div>
+          <div class="my-score">
+            <p>我的积分</p>
+            <p>100</p>
+          </div>
         </div>
       </div>
     </div>
     <div class="float-right user-collect">
       <div class="tab">
         <ul>
-          <li class="active"><span class="iconfont iconxinwen"></span>&nbsp;新闻&nbsp;2</li>
-           <li><span class="iconfont iconxuexiao"></span>&nbsp;学校&nbsp;2</li>
-           <li><span class="iconfont iconzhenti"></span>&nbsp;真题&nbsp;2</li>
-           <li><span class="iconfont iconluntan"></span>&nbsp;帖子&nbsp;2</li>
-           <li><span class="iconfont iconkecheng"></span>&nbsp;课程&nbsp;2</li>
+          <li class="active"><span class="iconfont iconxinwen" />&nbsp;新闻&nbsp;<em>2</em></li>
+          <li><span class="iconfont iconxuexiao" />&nbsp;学校&nbsp;<em>2</em></li>
+          <li><span class="iconfont iconzhenti" />&nbsp;真题&nbsp;<em>2</em></li>
+          <li><span class="iconfont iconluntan" />&nbsp;帖子&nbsp;<em>2</em></li>
+          <li><span class="iconfont iconkecheng" />&nbsp;课程&nbsp;<em>2</em></li>
         </ul>
       </div>
       <div class="tab-content">
@@ -66,7 +68,7 @@
           <li>
             <p class="list-title">
               新闻标题，今年北大又扩招50人
-              <span class="float-right iconfont iconyishoucang"></span>
+              <span class="float-right iconfont iconyishoucang" />
             </p>
             <p class="list-content">高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。</p>
             <p class="list-info">
@@ -113,6 +115,7 @@ export default {
 }
 
 .top {
+  height: 315px;
   border-bottom: 1px solid #ebeef5;
 }
 
@@ -126,7 +129,7 @@ export default {
 
   .change-user-head {
     position: absolute;
-    top: 40px;
+    top: 15px;
     display: inline-block;
     width: 200px;
     text-align: -webkit-center;
@@ -137,7 +140,7 @@ export default {
       height: 132px;
       line-height: 132px;
       text-align: center;
-      background: #fff;
+      background: #fbfbfb;
       border-radius: 10px;
       opacity: .5;
     }
@@ -154,6 +157,7 @@ export default {
 
     .edit-user-btn {
       display: inline-block;
+      margin-bottom: 42px;
       margin-left: 10px;
       font-size: 14px;
       font-weight: 400;
@@ -218,12 +222,19 @@ export default {
     li {
       float: left;
       width: 20%;
+      height: 75px;
       font-size: 16px;
       font-weight: 600;
       line-height: 75px;
       color: #455a64;
       text-align: center;
       list-style: none;
+
+      em {
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(117, 117, 117, 1);
+      }
 
       &.active {
         color: #0266d6;

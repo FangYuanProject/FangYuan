@@ -31,6 +31,7 @@ export default {
     width: 97%;
     padding-bottom: 30px;
     margin: 30px auto;
+    overflow: hidden;
     background-color: #fff;
 
     .title {

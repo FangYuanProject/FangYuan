@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="user-list">
     <h2 class="title">用户列表</h2>
     <el-form ref="ruleForm" :model="ruleForm" label-width="60px" inline class="user-list-ruleForm">
       <el-form-item label="用户ID" prop="newId">
@@ -281,8 +281,7 @@ export default {
   }
 }
 
-.el-table__body tr td:nth-of-type(2),
-.el-table__body tr td:last-child {
+.user-list .el-table__body tr td:nth-of-type(2) {
   color: #0266d6;
 }
 </style>
