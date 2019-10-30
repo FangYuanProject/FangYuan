@@ -31,6 +31,7 @@
       :table-operation="tableOperation"
       :dialog-type="changeRoleVisible"
       @click="changeUserRole"
+      @cell-click="toUserDetail"
     />
     <el-dialog title="新增用户" :visible.sync="dialogVisible" width="508px" class="add-user-modal">
       <el-form :model="form">
@@ -178,6 +179,12 @@ export default {
     },
     submitChangeRoleInfo() {
       this.changeRoleVisible = false
+    },
+    toUserDetail(row, column, cell, event) {
+      console.log(column.label)
+      if (column.label === '用户名') {
+        this.$router.push({ path: '/user/home' })
+      }
     }
   }
 }
