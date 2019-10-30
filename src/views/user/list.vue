@@ -174,6 +174,7 @@ export default {
     },
     changeUserRole(data) {
       console.log('123')
+      console.log(data)
       this.changeRoleVisible = true
       this.dialogVisible = false
     },
