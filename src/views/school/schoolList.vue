@@ -20,6 +20,24 @@
           <el-option label="普通角色2" value="beijing" />
         </el-select>
       </el-form-item>
+      <el-form-item label="新建时间" prop="region">
+        <el-date-picker
+          v-model="region"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        />
+      </el-form-item>
+      <el-form-item label="热度" prop="title">
+        <el-input v-model="ruleForm.name" />
+      </el-form-item>
+      <el-form-item label="状态" prop="region">
+        <el-select v-model="ruleForm.region" placeholder="请选择">
+          <el-option label="普通角色1" value="shanghai" />
+          <el-option label="普通角色2" value="beijing" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <search-form-btn />
         <add-method-btn name="学校" @click="addSchool" />
@@ -55,9 +73,16 @@
             <el-option label="普通角色2" value="beijing" />
           </el-select>
         </el-form-item>
+        <el-form-item label="特性" class="score-input" prop="region">
+          <el-select v-model="modalForm.region" placeholder="请选择">
+            <el-option label="普通角色1" value="shanghai" />
+            <el-option label="普通角色2" value="beijing" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm')">确 定</el-button>
+        <el-button v-if="title==='编辑学校'" type="primary" class="edit-data-btn" @click="submitForm('modalForm')">保存</el-button>
+        <el-button v-else type="primary" class="submit-data-btn" @click="submitForm('modalForm')"><span class="iconfont iconfabu" />&nbsp;发布</el-button>
       </span>
     </el-dialog>
   </div>
@@ -113,9 +138,10 @@ export default {
         { name: '学校代码', indexs: 'title' },
         { name: '学校名称', indexs: 'title' },
         { name: '地区', indexs: 'pone' },
-        { name: '创建时间', indexs: 'publish' },
+        { name: '特性', indexs: 'pone' },
+        { name: '新建时间', indexs: 'publish' },
         { name: '热度', indexs: 'undercarriage' },
-        { name: '学校代码', indexs: 'undercarriage' }
+        { name: '状态', indexs: 'undercarriage' }
       ],
       tableData: [
         {
@@ -190,7 +216,8 @@ export default {
       })
     },
     editSchool(row, column) {
-      if (column.lable === '学校ID') {
+      console.log(column)
+      if (column.label === '学校ID') {
         this.dialogVisible = true
         this.title = '编辑学校'
       }
