@@ -337,7 +337,7 @@ export default {
   width: 100px;
 }
 
-.el-input__inner {
+.user-home .el-input__inner {
   width: auto;
   border: none;
 }

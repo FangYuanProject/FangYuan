@@ -92,6 +92,10 @@ export default {
   .el-select .el-input {
     width: 377px;
   }
+
+  .el-form-item__error {
+    left: 50%;
+  }
 }
 
 .el-dialog__header {

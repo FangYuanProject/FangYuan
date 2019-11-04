@@ -14,6 +14,12 @@
           <el-option label="普通角色2" value="beijing" />
         </el-select>
       </el-form-item>
+      <el-form-item label="特性" prop="region">
+        <el-select v-model="ruleForm.region" placeholder="请选择">
+          <el-option label="普通角色1" value="shanghai" />
+          <el-option label="普通角色2" value="beijing" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <search-form-btn />
         <add-method-btn name="学校" @click="addSchool" />
@@ -23,56 +29,35 @@
       :table-data="tableData"
       :th-data="thData"
       :table-operation="tableOperation"
+      @click="publishOrOutSell"
+      @cell-click="editSchool"
     />
-    <el-dialog title="新增学校" :visible.sync="dialogVisible" width="508px" class="add-news-modal">
-      <el-form :model="form">
+    <el-dialog :title="title" :visible.sync="dialogVisible" width="508px" class="add-school-modal">
+      <el-form ref="modalForm" :model="modalForm" :rules="rules">
         <el-form-item label="校徽">
           <span class="school-head">
-            <img src="@/assets/schoolBadge@1x.png" alt>
+            <img src="@/assets/schoolBadge@1x.png">
           </span>
           <div style="display: inline-block; margin-top: 10px; vertical-align: top;">
-            <el-button type="primary" class="upload-head" @click="dialogVisible = false">上传校徽</el-button>
-            <span class="tips">大小不得大于5M</span>
+            <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @click="uploadSchoolBadge" />
           </div>
+
         </el-form-item>
-        <el-form-item label="学校名称">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="学校代码" prop="code">
+          <el-input v-model="modalForm.code" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="所在校区" class="active-origin">
-          <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+        <el-form-item label="学校名称" class="active-origin" prop="name">
+          <el-input v-model="modalForm.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="所在地区" class="score-input" prop="region">
+          <el-select v-model="modalForm.region" placeholder="请选择">
             <el-option label="普通角色1" value="shanghai" />
             <el-option label="普通角色2" value="beijing" />
           </el-select>
-        </el-form-item>
-        <el-form-item label="公共科目">
-          <el-checkbox-group>
-            <el-checkbox
-              v-for="(pubSub,index) in publiceSubjects"
-              :key="pubSub+index"
-              :label="pubSub"
-            >{{ pubSub }}</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="专业科目">
-          <el-checkbox-group>
-            <el-checkbox
-              v-for="(proSub,index) in professionSubjects"
-              :key="proSub+index"
-              :label="proSub"
-            >{{ proSub }}</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="初试分数线" class="score-input">
-          <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
-          </el-select>
-          <el-input v-model="form.name" autocomplete="off" />
-          <span>+</span>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="submit-data-btn" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -81,11 +66,13 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
+import UploadPicBtn from '@/components/UploadPictureBtn'
 export default {
   components: {
     tableComponents,
     AddMethodBtn,
-    SearchFormBtn
+    SearchFormBtn,
+    UploadPicBtn
   },
   data() {
     return {
@@ -93,26 +80,20 @@ export default {
         { name: '发布', clickEvent: 'changeRole' },
         { name: '下架', clickEvent: 'changeRole' }
       ],
+      title: '新增学校',
+      rules: {
+        name: [
+          { required: true, message: '请输入学校名称', trigger: 'blur' }
+        ],
+        region: [
+          { required: true, message: '请选择所在区域', trigger: 'change' }
+        ],
+        code: [
+          { required: true, message: '请输入学校代码', trigger: 'blur' }
+        ]
+
+      },
       dialogVisible: false,
-      publiceSubjects: [
-        '101思想政治理论',
-        '201英语一',
-        '202俄语',
-        '203日语',
-        ' 204英语二',
-        '301数学一',
-        '302数学二',
-        '303数学三'
-      ],
-      professionSubjects: [
-        '数据结构',
-        '操作系统',
-        '计算机组成原理',
-        '计算机网络',
-        ' 程序设计',
-        ' 软件工程',
-        '数据库'
-      ],
       ruleForm: {
         name: '',
         region: '',
@@ -122,8 +103,10 @@ export default {
         resource: '',
         desc: ''
       },
-      form: {
-        name: ''
+      modalForm: {
+        name: '',
+        code: '',
+        region: ''
       },
       thData: [
         { name: '学校ID', indexs: 'id' },
@@ -164,20 +147,53 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     alert('submit!')
-      //     } else {
-      //     console.log('error submit!!')
-      //       return false
-      //     }
-      // })
+      console.log(this.$refs[formName])
+      this.$refs[formName].validate((valid) => {
+        console.log(valid)
+        // if (valid) {
+        //   alert('submit!')
+        // } else {
+        //   console.log('error submit!!')
+        //   return false
+        // }
+      })
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields()
+      // this.$refs[formName].resetFields()
     },
     addSchool() {
       this.dialogVisible = true
+      this.title = '新增学校'
+    },
+    uploadSchoolBadge(file) {
+      console.log(file)
+    },
+    publishOrOutSell(data) {
+      this.dialogVisible = false
+      const title = data.name === '发布' ? '是否发布该学校' : '是否确认将该学校下架'
+      const successTip = data.name === '发布' ? '发布' : '下架'
+      this.$confirm(title, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '成功' + successTip
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消' + successTip
+        })
+      })
+    },
+    editSchool(row, column) {
+      if (column.lable === '学校ID') {
+        this.dialogVisible = true
+        this.title = '编辑学校'
+      }
     }
   }
 }
@@ -223,43 +239,10 @@ export default {
 }
 
 .add-school-modal {
-  // .el-form-item__content:not(:first-child) {
-  //   height: 40px;
-  // }
-
   .el-form-item.el-form-item--medium {
     margin-right: 0;
     margin-bottom: 20px;
     margin-left: 30px;
-  }
-
-  .upload-head {
-    width: 87px;
-    height: 40px;
-    padding: 0;
-    margin-right: 16px;
-    margin-left: 20px;
-    font-size: 14px;
-    line-height: 40px;
-    color: rgba(69, 90, 100, 1);
-    text-align: center;
-    background-color: #fff;
-    border: 1px solid rgba(69, 90, 100, 1);
-    border-radius: 4px;
-  }
-
-  .el-checkbox {
-    height: 20px;
-    margin-right: 20px;
-  }
-
-  .el-checkbox-group {
-    float: right;
-    width: 80%;
-  }
-
-  .el-form-item__content {
-    line-height: 15px;
   }
 }
 
@@ -267,16 +250,4 @@ export default {
   color: #0266d6;
 }
 
-.score-input {
-  .el-input {
-    display: inline-block;
-    width: 147px;
-  }
-}
-
-.active-origin {
-  .el-input {
-    width: 375px;
-  }
-}
 </style>
