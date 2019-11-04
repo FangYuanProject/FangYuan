@@ -87,7 +87,7 @@ export const constantRoutes = [
         path: '/document',
         component: () => import('@/views/documents/documentList'),
         name: 'document-list',
-        meta: { title: '真题管理', icon: 'zhenti', affix: true }
+        meta: { title: '试题管理', icon: 'zhenti', affix: true }
       }
     ]
   },

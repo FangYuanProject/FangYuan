@@ -22,7 +22,7 @@
       </el-form-item>
       <el-form-item label="新建时间" prop="region">
         <el-date-picker
-          v-model="region"
+          v-model="ruleForm.region"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
@@ -50,7 +50,7 @@
       @click="publishOrOutSell"
       @cell-click="editSchool"
     />
-    <el-dialog :title="title" :visible.sync="dialogVisible" width="508px" class="add-school-modal">
+    <el-dialog :title="modalTitle" :visible.sync="dialogVisible" width="508px" class="add-school-modal">
       <el-form ref="modalForm" :model="modalForm" :rules="rules">
         <el-form-item label="校徽">
           <span class="school-head">
@@ -81,8 +81,10 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button v-if="title==='编辑学校'" type="primary" class="edit-data-btn" @click="submitForm('modalForm')">保存</el-button>
-        <el-button v-else type="primary" class="submit-data-btn" @click="submitForm('modalForm')"><span class="iconfont iconfabu" />&nbsp;发布</el-button>
+        <el-button type="primary" :class="[status==='edit' ? 'edit-data-btn' : 'submit-data-btn']" @click="submitForm('modalForm')">
+          <span v-if="status!=='edit'" class="iconfont iconfabu">&nbsp;发布</span>
+          <span v-else>保存</span>
+        </el-button>
       </span>
     </el-dialog>
   </div>
@@ -105,7 +107,8 @@ export default {
         { name: '发布', clickEvent: 'changeRole' },
         { name: '下架', clickEvent: 'changeRole' }
       ],
-      title: '新增学校',
+      modalTitle: '新增学校',
+      status: 'add',
       rules: {
         name: [
           { required: true, message: '请输入学校名称', trigger: 'blur' }
@@ -189,7 +192,8 @@ export default {
     },
     addSchool() {
       this.dialogVisible = true
-      this.title = '新增学校'
+      this.status = 'add'
+      this.modalTitle = '新增学校'
     },
     uploadSchoolBadge(file) {
       console.log(file)
@@ -219,7 +223,8 @@ export default {
       console.log(column)
       if (column.label === '学校ID') {
         this.dialogVisible = true
-        this.title = '编辑学校'
+        this.modalTitle = '编辑学校'
+        this.status = 'edit'
       }
     }
   }
