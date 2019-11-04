@@ -139,6 +139,7 @@ export default {
 .title {
   height: 56px;
   padding: 26px 0 0 30px;
+  margin-bottom: 0;
   font-size: 20px;
   line-height: 0;
   color: #202431;
@@ -160,7 +161,7 @@ export default {
 
 .user-info {
   position: relative;
-  width: 35%;
+  width: 24%;
   height: 100%;
   padding: 0 20px;
   background-color: #fff;
@@ -248,7 +249,7 @@ export default {
 }
 
 .user-collect {
-  width: 65%;
+  width: 76%;
   height: 100%;
   background-color: #fff;
 
@@ -257,9 +258,13 @@ export default {
     height: 75px;
     border-bottom: 1px solid #ebeef5;
 
+    ul {
+      margin: 0;
+    }
+
     li {
       float: left;
-      width: 20%;
+      width: 160px;
       height: 75px;
       font-size: 16px;
       font-weight: 600;

@@ -61,7 +61,6 @@ button {
 .title {
   height: 64px;
   padding: 15px 0 0 30px;
-  margin-top: 20px;
   line-height: 0;
   border-bottom: 1px solid #ebeef5;
 
