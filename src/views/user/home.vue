@@ -189,6 +189,7 @@ export default {
     display: inline-block;
 
     .user-name {
+      margin-bottom: 0;
       font-size: 24px;
       font-weight: 600;
       color: rgba(32, 36, 49, 1);
@@ -196,7 +197,7 @@ export default {
 
     .edit-user-btn {
       display: inline-block;
-      margin-bottom: 42px;
+      margin-bottom: 30px;
       margin-left: 10px;
       font-size: 14px;
       font-weight: 400;
@@ -211,6 +212,11 @@ export default {
     .label-value {
       font-size: 14px;
       color: #757575;
+    }
+
+    p:not(:first-child) {
+      margin-top: 0;
+      margin-bottom: 0;
     }
   }
 
