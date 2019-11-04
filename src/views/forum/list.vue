@@ -1,15 +1,36 @@
 <template>
   <div class="forum-list">
     <h2 class="title">论坛列表</h2>
-    <el-form ref="ruleForm" :model="ruleForm" label-width="70px" inline class="list-ruleForm">
+    <el-form ref="ruleForm" :model="searchForm" label-width="70px" inline class="list-ruleForm">
       <el-form-item label="帖子ID" prop="newId">
-        <el-input v-model="ruleForm.name" />
+        <el-input v-model="searchForm.name" />
+      </el-form-item>
+      <el-form-item label="帖子类型" prop="region">
+        <el-select v-model="searchForm.region" placeholder="请选择">
+          <el-option label="普通角色1" value="shanghai" />
+          <el-option label="普通角色2" value="beijing" />
+        </el-select>
       </el-form-item>
       <el-form-item label="帖子标题" prop="title">
-        <el-input v-model="ruleForm.name" />
+        <el-input v-model="searchForm.name" />
       </el-form-item>
       <el-form-item label="创建人" prop="region">
-        <el-input v-model="ruleForm.name" />
+        <el-input v-model="searchForm.name" />
+      </el-form-item>
+      <el-form-item label="上传时间" prop="region">
+        <el-date-picker
+          v-model="searchForm.region"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        />
+      </el-form-item>
+      <el-form-item label="状态" prop="region">
+        <el-select v-model="searchForm.region" placeholder="请选择">
+          <el-option label="普通角色1" value="shanghai" />
+          <el-option label="普通角色2" value="beijing" />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <search-form-btn />
@@ -40,10 +61,29 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="submit-data-btn" @click="dialogVisible = false">确 定</el-button>
+        <div v-if="status==='add'">
+          <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm')">
+            保存
+          </el-button>
+          <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm')">
+            <span class="iconfont iconfabu">&nbsp;发布</span>
+          </el-button>
+        </div>
+        <div v-else>
+          <el-button class="del-document" @click="delDocument('modalForm')">
+            删除
+          </el-button>
+          <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm')">
+            更新
+          </el-button>
+          <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm')">
+            <span class="iconfont iconxiajia">&nbsp;下架</span>
+          </el-button>
+
+        </div>
       </span>
     </el-dialog>
-    <el-dialog title="下架帖子" :visible.sync="dialogVisible" width="508px" class="add-document-modal">
+    <el-dialog title="下架帖子" :visible.sync="outSellDialogVisible" width="508px" class="add-document-modal">
       <el-form :model="form">
         <el-form-item label="帖子类型">
           <el-input v-model="form.name" autocomplete="off" />
@@ -65,7 +105,6 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import { messageBox } from '@/utils/index.js'
 export default {
   components: {
     tableComponents,
@@ -74,11 +113,11 @@ export default {
   },
   data() {
     return {
-      tableOperation: [{ name: '置顶' }, { name: '删除' }, { name: '下架' }],
-      dialogVisible: false,
+      tableOperation: [{ name: '置顶' }, { name: '取消置顶' }, { name: '下架' }],
+      outSellDialogVisible: false,
       publishDialogVisible: false,
       publishDialogTitle: '发布帖子',
-      ruleForm: {
+      searchForm: {
         name: '',
         region: '',
         date2: '',
@@ -99,10 +138,12 @@ export default {
       },
       thData: [
         { name: '帖子ID', indexs: 'id' },
+        { name: '帖子类型', indexs: 'title' },
         { name: '帖子标题', indexs: 'title' },
         { name: '帖子链接', indexs: 'pone' },
         { name: '创建人', indexs: 'email' },
-        { name: '创建时间', indexs: 'publish' }
+        { name: '创建时间', indexs: 'publish' },
+        { name: '状态', indexs: 'publish' }
       ],
       tableData: [
         {
@@ -151,7 +192,18 @@ export default {
       // this.dialogVisible = true
       console.log(type)
       if (type.name === '置顶') {
-        messageBox('success', '置顶成功')
+        this.$message({
+          message: '置顶成功',
+          type: 'success'
+        })
+      } else if (type.name === '取消置顶') {
+        this.$message({
+          message: '取消置顶成功',
+          type: 'success'
+        })
+      } else {
+        this.outSellDialogVisible = true
+        this.publishDialogVisible = false
       }
     },
     editForum(row, colum) {
