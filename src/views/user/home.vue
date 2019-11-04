@@ -14,29 +14,9 @@
             <span class="user-name">张一凡</span>
             <span class="edit-user-btn">编辑资料</span>
           </p>
-          <p>
-            <span class="label-name">邮箱：</span>
-            <span class="label-value">zhangyifan@yy.com</span>
-          </p>
-          <p>
-            <span class="label-name">手机：</span>
-            <span class="label-value">18825055554</span>
-          </p>
-          <p>
-            <span class="label-name">本科院校：</span>
-            <span class="label-value">天津大学</span>
-          </p>
-          <p>
-            <span class="label-name">考研院校：</span>
-            <span class="label-value">北京大学</span>
-          </p>
-          <p>
-            <span class="label-name">是否跨考：</span>
-            <span class="label-value">否</span>
-          </p>
-          <p>
-            <span class="label-name">本科入学年份</span>
-            <span class="label-value">2012</span>
+          <p v-for="(item,index) in userInfo" :key="index">
+            <span class="label-name">{{ item.name }}</span>
+            <el-input v-model="item.text" class="label-value" />
           </p>
         </div>
       </div>
@@ -56,25 +36,21 @@
     <div class="float-right user-collect">
       <div class="tab">
         <ul>
-          <li class="active"><span class="iconfont iconxinwen" />&nbsp;新闻&nbsp;<em>2</em></li>
-          <li><span class="iconfont iconxuexiao" />&nbsp;学校&nbsp;<em>2</em></li>
-          <li><span class="iconfont iconzhenti" />&nbsp;真题&nbsp;<em>2</em></li>
-          <li><span class="iconfont iconluntan" />&nbsp;帖子&nbsp;<em>2</em></li>
-          <li><span class="iconfont iconkecheng" />&nbsp;课程&nbsp;<em>2</em></li>
+          <li v-for="(tab,key) in tabList" :key="key" :class="[tabIndex===key ? 'active' :'']" @click="changeTab(key,tab.index)"><span :class="['iconfont',tab.icon]" />&nbsp;{{ tab.name }}&nbsp;<em>{{ tab.collectNum }}</em></li>
         </ul>
       </div>
       <div class="tab-content">
         <ul>
-          <li>
+          <li v-for="(item,index) in tabContentList[tabContentShow]" :key="index+10">
             <p class="list-title">
-              新闻标题，今年北大又扩招50人
+              {{ item.title }}
               <span class="float-right iconfont iconyishoucang" />
             </p>
-            <p class="list-content">高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。</p>
+            <p class="list-content">{{ item.content }}</p>
             <p class="list-info">
-              <span class="date float-left">2016-12-12 12:12</span>
+              <span class="date float-left">{{ item.date }}</span>
               <span class="float-right">
-                收藏<em>2</em> <em>|&nbsp;&nbsp;</em>浏览<em>2</em>
+                收藏<em>{{ item.collect }}</em> <em>|&nbsp;&nbsp;</em>浏览<em>{{ item.view }}</em>
               </span>
             </p>
           </li>
@@ -88,9 +64,72 @@ export default {
   components: {},
   data() {
     return {
-      userInfo: {
-        name: 'Mr.Zhange'
+      userInfo: [{
+        name: '邮箱', text: 'zhangyifan@yy.com'
+      }, {
+        name: '手机', text: '18825055554'
+      }, {
+        name: '本科院校', text: '天津大学'
+      }, {
+        name: '考研院校', text: '背景大学'
+      }, {
+        name: '是否跨考', text: '否'
+      }, {
+        name: '本科入学年份', text: '2019-10-30'
+      }],
+      tabList: [
+        { index: 'news', name: '新闻', icon: 'iconxinwen', collectNum: '2' },
+        { index: 'school', name: '学校', icon: 'iconxuexiao', collectNum: '2' },
+        { index: 'document', name: '真题', icon: 'iconzhenti', collectNum: '2' },
+        { index: 'forum', name: '帖子', icon: 'iconluntan', collectNum: '2' },
+        { index: 'course', name: '课程', icon: 'iconkecheng', collectNum: '2' }
+      ],
+      tabIndex: 0,
+      tabContentShow: 'news',
+      tabContentList: {
+        news: [
+          { title: '新闻-新闻标题，今年北大又扩招50人',
+            content: '高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。',
+            date: '2019-10-31 12:12',
+            collect: '2',
+            view: '2' }
+        ],
+        school: [
+          { title: '学校-新闻标题，今年北大又扩招50人',
+            content: '高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。',
+            date: '2019-10-31 12:12',
+            collect: '2',
+            view: '2' }
+        ],
+        document: [
+          { title: '真题-新闻标题，今年北大又扩招50人',
+            content: '高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。',
+            date: '2019-10-31 12:12',
+            collect: '2',
+            view: '2' }
+        ],
+        forum: [
+          { title: '帖子-新闻标题，今年北大又扩招50人',
+            content: '高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。',
+            date: '2019-10-31 12:12',
+            collect: '2',
+            view: '2' }
+        ],
+        course: [
+          { title: '课程-新闻标题，今年北大又扩招50人',
+            content: '高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。',
+            date: '2019-10-31 12:12',
+            collect: '2',
+            view: '2' }
+        ]
+
       }
+    }
+  },
+  methods: {
+    changeTab(index, tabName) {
+      this.tabIndex = index
+      this.tabContentShow = tabName
     }
   }
 }
@@ -121,7 +160,7 @@ export default {
 
 .user-info {
   position: relative;
-  width: 33%;
+  width: 35%;
   height: 100%;
   padding: 0 20px;
   background-color: #fff;
@@ -131,7 +170,6 @@ export default {
     position: absolute;
     top: 15px;
     display: inline-block;
-    width: 200px;
     text-align: -webkit-center;
 
     .user-head {
@@ -210,7 +248,7 @@ export default {
 }
 
 .user-collect {
-  width: 67%;
+  width: 65%;
   height: 100%;
   background-color: #fff;
 
@@ -250,8 +288,9 @@ export default {
       padding: 0;
 
       li {
-        padding-bottom: 10px;
+        padding-bottom: 30px;
         list-style: none;
+        border-bottom: 1px solid #ebeef5;
 
         .list-title {
           font-size: 18px;
@@ -292,6 +331,15 @@ export default {
   background: rgba(69, 90, 100, 1);
   border: 1px solid rgba(69, 90, 100, 1);
   border-radius: 4px;
+}
+
+.user-info .edit-user-info .el-input {
+  width: 100px;
+}
+
+.el-input__inner {
+  width: auto;
+  border: none;
 }
 </style>
 

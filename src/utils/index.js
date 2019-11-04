@@ -1,7 +1,4 @@
-/**
- * Created by PanJiaChen on 16/11/18.
- */
-import { Message } from 'element-ui'
+
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time
@@ -106,13 +103,3 @@ export function param2Obj(url) {
   )
 }
 
-/*
-*@param {string} type
-*@param {string} content
-*/
-export function messageBox(type, content) {
-  Message({
-    message: content,
-    type: type
-  })
-}
