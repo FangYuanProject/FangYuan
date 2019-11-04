@@ -8,7 +8,7 @@
       action="https://jsonplaceholder.typicode.com/posts/"
     >
       <el-button size="small" type="primary" class="upload-pic">{{ btnName }}</el-button>
-      <span slot="tip" class="el-upload__tip">{{ uploadTips }}</span>
+      <span slot="tip" class="el-upload__tip" :style="{'display':uploadTips===''?'none' :'inline'}">{{ uploadTips }}</span>
     </el-upload>
   </div>
 </template>
@@ -23,9 +23,9 @@ export default {
       }
     },
     uploadTips: {
-      type: String,
+      type: Object,
       default: () => {
-        console.log(this.uploadTips)
+
       }
     }
   },

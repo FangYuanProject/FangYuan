@@ -176,15 +176,13 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      console.log(this.$refs[formName])
       this.$refs[formName].validate((valid) => {
-        console.log(valid)
-        // if (valid) {
-        //   alert('submit!')
-        // } else {
-        //   console.log('error submit!!')
-        //   return false
-        // }
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
     },
     resetForm(formName) {
