@@ -61,12 +61,12 @@ export const constantRoutes = [
   },
 
   {
-    path: '/school',
+    path: '/school-list',
     component: Layout,
     meta: { title: '学校管理', icon: 'xuexiao', noCache: true },
     children: [
       {
-        path: '/school',
+        path: '/school-list',
         component: () => import('@/views/school/schoolList'),
         name: 'school-list',
         meta: { title: '学校列表', noCache: true }
@@ -87,7 +87,7 @@ export const constantRoutes = [
         path: '/document',
         component: () => import('@/views/documents/documentList'),
         name: 'document-list',
-        meta: { title: '真题管理', icon: 'zhenti', affix: true }
+        meta: { title: '试题管理', icon: 'zhenti', affix: true }
       }
     ]
   },

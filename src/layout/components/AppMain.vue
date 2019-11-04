@@ -92,6 +92,10 @@ export default {
   .el-select .el-input {
     width: 377px;
   }
+
+  .el-form-item__error {
+    left: 50%;
+  }
 }
 
 .el-dialog__header {
@@ -121,6 +125,24 @@ export default {
     color: #fff;
     background: rgba(69, 90, 100, 1);
     border-color: rgba(69, 90, 100, 1);
+    border-radius: 4px;
+
+    span.iconfabu {
+      font-size: 14px;
+    }
+  }
+
+  .edit-data-btn {
+    width: 88px;
+    height: 40px;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 40px;
+    color: rgba(69, 90, 100, 1);
+    text-align: center;
+    background: rgba(241, 241, 241, 1);
+    border: 1px solid rgba(69, 90, 100, 1);
     border-radius: 4px;
   }
 }
