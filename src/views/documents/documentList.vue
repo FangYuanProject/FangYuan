@@ -131,7 +131,6 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-
         <div v-if="status==='add'">
           <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm')">
             保存
@@ -292,16 +291,17 @@ export default {
     uploadDocumentAnswer() {
 
     },
-    operationCell(data, id) {
-      if (data.name === '下载') {
+    operationCell(type, data) {
+      if (type.name === '下载') {
         console.log('xaiza')
-      } else if (data.name === '答案') {
+      } else if (type.name === '答案') {
         console.log('答案')
-      } else if (data.name === '下架') {
+      } else if (type.name === '下架') {
         console.log('下加')
       } else {
         console.log('fabu')
       }
+      console.log(data)
     },
     editDocument(row, colum) {
       if (colum.label === '试题ID') {

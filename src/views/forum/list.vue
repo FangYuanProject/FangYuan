@@ -45,58 +45,55 @@
       @cell-click="editForum"
     />
     <el-dialog :title="publishDialogTitle" width="508px" :visible.sync="publishDialogVisible" class="add-document-modal">
-      <el-form :model="form">
-        <el-form-item label="帖子标题">
-          <el-input v-model="form.name" autocomplete="off" />
+      <el-form ref="publishForm" :model="publishForm" :rules="publishFormRules">
+        <el-form-item label="帖子类型" prop="type">
+          <el-select v-model="publishForm.type" placeholder="请选择">
+            <el-option label="普通角色1" value="shanghai" />
+            <el-option label="普通角色2" value="beijing" />
+          </el-select>
         </el-form-item>
-        <el-form-item label="帖子内容">
-          <el-input type="textarea" autocomplete="off" rows="5" />
+        <el-form-item label="帖子标题" prop="title">
+          <el-input v-model="publishForm.title" autocomplete="off" rows="5" />
         </el-form-item>
-        <el-form-item label="上传附件">
-          <el-input placeholder="支持扩展名pdf,jpg">
-            <template slot="append">
-              <el-button type="primary" class="submit-data-btn">选择</el-button>
-            </template>
-          </el-input>
+        <el-form-item label="帖子内容" prop="content">
+          <el-input v-model="publishForm.content" type="textarea" autocomplete="off" rows="5" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <div v-if="status==='add'">
-          <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm')">
-            保存
-          </el-button>
-          <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm')">
-            <span class="iconfont iconfabu">&nbsp;发布</span>
-          </el-button>
-        </div>
-        <div v-else>
-          <el-button class="del-document" @click="delDocument('modalForm')">
-            删除
-          </el-button>
-          <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm')">
-            更新
-          </el-button>
-          <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm')">
-            <span class="iconfont iconxiajia">&nbsp;下架</span>
-          </el-button>
-
-        </div>
+        <el-button type="primary" class="edit-data-btn" @click="submitForm('publishForm')">
+          保存
+        </el-button>
+        <el-button type="primary" class="submit-data-btn" @click="submitForm('publishForm')">
+          <span class="iconfont iconfabu">&nbsp;发布</span>
+        </el-button>
       </span>
     </el-dialog>
-    <el-dialog title="下架帖子" :visible.sync="outSellDialogVisible" width="508px" class="add-document-modal">
-      <el-form :model="form">
-        <el-form-item label="帖子类型">
-          <el-input v-model="form.name" autocomplete="off" />
+    <el-dialog title="下架帖子" :visible.sync="outSellDialogVisible" width="508px" class="out-sell-modal">
+      <el-form ref="outSellForm" :model="outSellForm" :rules="outSellFormRules">
+        <el-form-item label="帖子ID" prop="id">
+          <el-input v-model="outSellForm.id" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="帖子标题">
-          <el-input v-model="form.name" type="textarea" autocomplete="off" rows="5" />
+        <el-form-item label="帖子类型" prop="type">
+          <el-select v-model="outSellForm.type" placeholder="请选择">
+            <el-option label="普通角色1" value="shanghai" />
+            <el-option label="普通角色2" value="beijing" />
+          </el-select>
         </el-form-item>
-        <el-form-item label="下架原因">
-          <el-input type="textarea" rows="5" />
+        <el-form-item label="帖子标题" prop="title">
+          <el-input v-model="outSellForm.title" autocomplete="off" rows="5" />
+        </el-form-item>
+        <el-form-item label="下架原因" prop="reason">
+          <el-input v-model="outSellForm.reason" type="textarea" rows="5" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="submit-data-btn" @click="dialogVisible = false">确定下架</el-button>
+        <div v-if="status==='checkReason'">
+          <el-button @click="delForum('outSellForm')">删除</el-button>
+          <el-button type="primary" class="submit-data-btn" @click="comfirmOutSell('outSellForm')">重新上架</el-button>
+        </div>
+        <div v-else>
+          <el-button type="primary" class="submit-data-btn" @click="comfirmOutSell('outSellForm')">确认下架</el-button>
+        </div>
       </span>
     </el-dialog>
   </div>
@@ -105,6 +102,7 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
+import { comfirmBox, AlertBox } from '@/utils/util'
 export default {
   components: {
     tableComponents,
@@ -113,10 +111,15 @@ export default {
   },
   data() {
     return {
-      tableOperation: [{ name: '置顶' }, { name: '取消置顶' }, { name: '下架' }],
+      tableOperation: [{ name: '置顶' }, { name: '取消置顶' }, { name: '下架' }, { name: '查看' }],
       outSellDialogVisible: false,
       publishDialogVisible: false,
       publishDialogTitle: '发布帖子',
+      publishFormRules: {
+        type: [{ required: true, message: '请输入帖子类型', trigger: 'change' }],
+        title: [{ required: true, message: '请输入帖子标题', trigger: 'blur' }]
+      },
+      status: 'checkReason',
       searchForm: {
         name: '',
         region: '',
@@ -126,15 +129,19 @@ export default {
         resource: '',
         desc: ''
       },
-      form: {
+      publishForm: {
         name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        type: '',
+        content: ''
+      },
+      outSellForm: {
+        id: '',
+        type: '',
+        title: '',
+        reason: ''
+      },
+      outSellFormRules: {
+        reason: [{ required: true, message: '请输入下架原因', trigger: 'blur' }]
       },
       thData: [
         { name: '帖子ID', indexs: 'id' },
@@ -172,14 +179,24 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     alert('submit!')
-      //     } else {
-      //     console.log('error submit!!')
-      //       return false
-      //     }
-      // })
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    comfirmOutSell(form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
@@ -187,9 +204,9 @@ export default {
     addForum() {
       this.publishDialogVisible = true
       this.publishDialogTitle = '发布帖子'
+      this.status = 'add'
     },
     handleClick(type) {
-      // this.dialogVisible = true
       console.log(type)
       if (type.name === '置顶') {
         this.$message({
@@ -204,15 +221,26 @@ export default {
       } else {
         this.outSellDialogVisible = true
         this.publishDialogVisible = false
+        this.status = type.name === '下架' ? 'outSell' : 'checkReason'
       }
     },
     editForum(row, colum) {
       if (colum.label === '帖子ID') {
         this.publishDialogVisible = true
         this.publishDialogTitle = '编辑帖子'
+        this.status = 'edit'
       } else if (colum.label === '帖子链接') {
-        window.location.href = 'http://www.baidu.com'
+        window.open('http://www.baidu.com')
       }
+    },
+    delForum() {
+      const _this = this
+      comfirmBox('warning', '是否确认删除该条数据', () => {
+        AlertBox('success', '删除成功')
+        _this.outSellDialogVisible = false
+      }, () => {
+        console.log('456')
+      })
     }
   }
 }
