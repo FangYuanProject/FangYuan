@@ -18,17 +18,95 @@
           <p> <span class="label-name">初试分数线:</span><span class="value-name">425（2018），425（2018），425（2018），</span></p>
         </div>
       </div>
-
+    </div>
+    <div class="school-content">
+      <ul>
+        <li v-for="folder in tableData">
+          <ulFolder :folder="folder" />
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 <script>
 // import tableComponents from '@/components/tableComponents'
+import ulFolder from '@/components/treeFolder/ulFolders'
 export default {
-  components: {},
+  components: {
+    ulFolder
+  },
   data() {
     return {
-      schoolName: '华农'
+      tableData: [
+        {
+          name: '计算机学院',
+          id: 124,
+          children: [
+            {
+              name: 2019,
+              id: 20191,
+              children: [
+                {
+                  name: '(01020)计算机系统机构专业',
+                  id: 201934
+                },
+                {
+                  name: '(01050)计算机管理专业',
+                  id: 201935
+                }
+              ]
+            },
+            {
+              name: 2018,
+              id: 20181,
+              children: [
+                {
+                  name: '(01020)计算机系统',
+                  id: 201834
+                },
+                {
+                  name: '(01050)计算机管理',
+                  id: 201835
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: '软件学院',
+          id: 123,
+          children: [
+            {
+              name: 2019,
+              id: 2019,
+              children: [
+                {
+                  name: '(02120)软件专业',
+                  id: 201944
+                },
+                {
+                  name: '(02150)软件管理专业',
+                  id: 201945
+                }
+              ]
+            },
+            {
+              name: 2018,
+              id: 2018,
+              children: [
+                {
+                  name: '(02120)软件系统',
+                  id: 201844
+                },
+                {
+                  name: '(02150)软件管理',
+                  id: 201845
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   }
 }

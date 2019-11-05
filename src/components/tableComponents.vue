@@ -7,7 +7,7 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
-        <template>
+        <template slot-scope="scope">
           <el-button v-for="(item,index) in tableOperation" :key="index+1" type="primary" class="submit-data-btn" @click="clickEvent(item, scope.row['id'])">{{ item.name }}</el-button>
         </template>
       </el-table-column>
@@ -132,8 +132,8 @@ export default {
       //   scrollTo(0, 800)
       // }
     },
-    clickEvent(type) {
-      this.$emit('click', type)
+    clickEvent(type, id) {
+      this.$emit('click', type, id)
     },
     handleCellClick(row, column, cell, event) {
       this.$emit('cell-click', row, column, cell, event)

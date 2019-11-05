@@ -5,6 +5,9 @@
       <el-form-item label="学校ID" prop="newId">
         <el-input v-model="ruleForm.name" />
       </el-form-item>
+      <el-form-item label="学校代码" prop="schoolCode">
+        <el-input v-model="ruleForm.name" />
+      </el-form-item>
       <el-form-item label="学校名称" prop="title">
         <el-input v-model="ruleForm.name" />
       </el-form-item>
@@ -81,9 +84,11 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" :class="[status==='edit' ? 'edit-data-btn' : 'submit-data-btn']" @click="submitForm('modalForm')">
-          <span v-if="status!=='edit'" class="iconfont iconfabu">&nbsp;发布</span>
-          <span v-else>保存</span>
+        <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm')">
+          <span>保存</span>
+        </el-button>
+        <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm')">
+          <span class="iconfont iconfabu">发布</span>
         </el-button>
       </span>
     </el-dialog>
@@ -138,7 +143,7 @@ export default {
       },
       thData: [
         { name: '学校ID', indexs: 'id' },
-        { name: '学校代码', indexs: 'title' },
+        { name: '学校代码', indexs: 'schoolCode' },
         { name: '学校名称', indexs: 'title' },
         { name: '地区', indexs: 'pone' },
         { name: '特性', indexs: 'pone' },
@@ -149,6 +154,7 @@ export default {
       tableData: [
         {
           id: '0001',
+          schoolCode: '56789',
           title: '新闻标题1',
           pone: '18825055554',
           email: '1758265002@qq.com',
@@ -157,6 +163,7 @@ export default {
         },
         {
           id: '0001',
+          schoolCode: '56789',
           title: '新闻标题1',
           pone: '18825055554',
           email: '1758265002@qq.com',
@@ -165,6 +172,7 @@ export default {
         },
         {
           id: '0001',
+          schoolCode: '56789',
           title: '新闻标题1',
           pone: '18825055554',
           email: '1758265002@qq.com',
