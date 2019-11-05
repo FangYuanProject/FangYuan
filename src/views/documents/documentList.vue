@@ -131,7 +131,6 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-
         <div v-if="status==='add'">
           <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm')">
             保存
