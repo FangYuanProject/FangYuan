@@ -229,7 +229,8 @@ export default {
         { name: '专业', indexs: 'pone' },
         { name: '科目', indexs: 'email' },
         { name: '年份', indexs: 'publish' },
-        { name: '上传时间', indexs: 'undercarriage' }
+        { name: '上传时间', indexs: 'undercarriage' },
+        { name: '操作', indexs: 'publishOrUndercarriage'}
       ],
       tableData: [
         {
@@ -238,7 +239,8 @@ export default {
           pone: '18825055554',
           email: '1758265002@qq.com',
           publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员'
+          undercarriage: '普通管理员',
+          publishOrUndercarriage: '1'
         },
         {
           id: '0001',
@@ -246,7 +248,8 @@ export default {
           pone: '18825055554',
           email: '1758265002@qq.com',
           publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员'
+          undercarriage: '普通管理员',
+          publishOrUndercarriage: '0'
         },
         {
           id: '0001',
@@ -254,7 +257,8 @@ export default {
           pone: '18825055554',
           email: '1758265002@qq.com',
           publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员'
+          undercarriage: '普通管理员',
+          publishOrUndercarriage: '0'
         }
       ]
     }
