@@ -102,7 +102,7 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import { comfirmBox, AlertBox } from '@/utils/index'
+import { comfirmBox, AlertBox } from '@/utils/util'
 export default {
   components: {
     tableComponents,
