@@ -8,7 +8,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template>
-          <el-button v-for="(item,index) in tableOperation" :key="index+1" type="primary" class="submit-data-btn" @click="clickEvent(item)">{{ item.name }}</el-button>
+          <el-button v-for="(item,index) in tableOperation" :key="index+1" type="primary" class="submit-data-btn" @click="clickEvent(item, scope.row['id'])">{{ item.name }}</el-button>
         </template>
       </el-table-column>
 
