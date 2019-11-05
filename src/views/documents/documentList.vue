@@ -230,7 +230,7 @@ export default {
         { name: '科目', indexs: 'email' },
         { name: '年份', indexs: 'publish' },
         { name: '上传时间', indexs: 'undercarriage' },
-        { name: '操作', indexs: 'publishOrUndercarriage'}
+        { name: '操作', indexs: 'publishOrUndercarriage' }
       ],
       tableData: [
         {
@@ -291,16 +291,17 @@ export default {
     uploadDocumentAnswer() {
 
     },
-    operationCell(data) {
-      if (data.name === '下载') {
+    operationCell(type, data) {
+      if (type.name === '下载') {
         console.log('xaiza')
-      } else if (data.name === '答案') {
+      } else if (type.name === '答案') {
         console.log('答案')
-      } else if (data.name === '下架') {
+      } else if (type.name === '下架') {
         console.log('下加')
       } else {
         console.log('fabu')
       }
+      console.log(data)
     },
     editDocument(row, colum) {
       if (colum.label === '试题ID') {
