@@ -74,3 +74,13 @@ div:focus {
 .title {
   margin-top: 5px;
 }
+
+// 列表页的操作按钮
+.list-btn {
+  font-size: 14px;
+  color: #0266D6;
+}
+.list-btn:hover,
+.list-btn:focus {
+  color: #0986ff;
+}

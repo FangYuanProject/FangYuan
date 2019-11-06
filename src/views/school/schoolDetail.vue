@@ -102,7 +102,7 @@ export default {
                 {
                   name: '(02120)软件专业',
                   id: 201944,
-                  level: 3,
+                  level: 3
                 },
                 {
                   name: '(02150)软件管理专业',
