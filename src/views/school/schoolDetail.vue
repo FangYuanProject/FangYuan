@@ -3,7 +3,7 @@
     <h2 class="title">学校主页</h2>
     <div class="school-content">
       <div class="school">
-        <img src="@/assets/schoolBadge@2x.png" alt >
+        <img src="@/assets/schoolBadge@2x.png" />
         <el-button type="primary" class="change-badge">更换校徽</el-button>
       </div>
       <div class="edit-scholl-info">
@@ -20,9 +20,12 @@
       </div>
     </div>
     <div class="school-content">
-      <ul>
-        <li v-for="folder in tableData">
-          <ulFolder :folder="folder" />
+      <div class="mb20 w oh">
+        <el-button type="primary" class="add-academic fr">+&nbsp;新建学院</el-button>
+      </div>
+      <ul class="school-tree">
+        <li v-for="folder in tableData" :key="folder.id">
+          <ul-folder :folder="folder" />
         </li>
       </ul>
     </div>
@@ -30,10 +33,10 @@
 </template>
 <script>
 // import tableComponents from '@/components/tableComponents'
-import ulFolder from '@/components/treeFolder/ulFolders'
+import UlFolder from '@/components/treeFolder/UlFolders'
 export default {
   components: {
-    ulFolder
+    UlFolder
   },
   data() {
     return {
@@ -41,32 +44,46 @@ export default {
         {
           name: '计算机学院',
           id: 124,
+          level: 1,
           children: [
             {
               name: 2019,
               id: 20191,
+              level: 2,
               children: [
                 {
                   name: '(01020)计算机系统机构专业',
-                  id: 201934
+                  id: 201934,
+                  level: 3,
+                  children: [
+                    {
+                      name: '计算机方向',
+                      id: 1212312,
+                      level: 4
+                    }
+                  ]
                 },
                 {
                   name: '(01050)计算机管理专业',
-                  id: 201935
+                  id: 201935,
+                  level: 3
                 }
               ]
             },
             {
               name: 2018,
               id: 20181,
+              level: 2,
               children: [
                 {
                   name: '(01020)计算机系统',
-                  id: 201834
+                  id: 201834,
+                  level: 3
                 },
                 {
                   name: '(01050)计算机管理',
-                  id: 201835
+                  id: 201835,
+                  level: 3
                 }
               ]
             }
@@ -75,32 +92,46 @@ export default {
         {
           name: '软件学院',
           id: 123,
+          level: 1,
           children: [
             {
               name: 2019,
               id: 2019,
+              level: 2,
               children: [
                 {
                   name: '(02120)软件专业',
-                  id: 201944
+                  id: 201944,
+                  level: 3,
                 },
                 {
                   name: '(02150)软件管理专业',
-                  id: 201945
+                  id: 201945,
+                  level: 3,
+                  children: [
+                    {
+                      name: '软件管理方向',
+                      id: 1212312,
+                      level: 4
+                    }
+                  ]
                 }
               ]
             },
             {
               name: 2018,
               id: 2018,
+              level: 2,
               children: [
                 {
                   name: '(02120)软件系统',
-                  id: 201844
+                  id: 201844,
+                  level: 3
                 },
                 {
                   name: '(02150)软件管理',
-                  id: 201845
+                  id: 201845,
+                  level: 3
                 }
               ]
             }
@@ -116,10 +147,25 @@ export default {
 .title {
   height: 84px;
   padding-left: 30px;
+  margin-bottom: 0;
   font-size: 20px;
   line-height: 84px;
   color: #202431;
-  border-bottom: 1px solid #ebeef5;
+}
+
+.school-content {
+  padding: 20px;
+  border-top: 1px solid #ebeef5;
+}
+
+.add-academic {
+  width: 109px;
+  height: 40px;
+  margin-left: 123px;
+  font-size: 14px;
+  background: rgba(69, 90, 100, 1);
+  border-color: rgba(69, 90, 100, 1);
+  border-radius: 4px;
 }
 
 .school {
@@ -180,6 +226,19 @@ export default {
     font-weight: 400;
     line-height: 16px;
     color: #999;
+  }
+}
+
+.school-tree {
+  li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  p {
+    padding: 0;
+    margin: 0;
   }
 }
 </style>
