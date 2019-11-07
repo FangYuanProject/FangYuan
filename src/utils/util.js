@@ -28,3 +28,16 @@ export function AlertBox(type, message) {
     type: type
   })
 }
+
+/** 清除参数中的空值
+   * @param {object} param
+   * @returns {Object}
+   */
+export function clearNullValue(param) {
+  for (const i in param) {
+    if (param[i] === '') {
+      delete param[i]
+    }
+  }
+  return param
+}

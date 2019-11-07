@@ -10,35 +10,29 @@
       <el-form-item prop="username">
         <div class="sub-title-container">
           <p class="sub_title">登录</p>
-          <span class="text_tip">使用手机号或邮箱登录</span>
+          <span class="text_tip">使用邮箱登录</span>
         </div>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="请输入手机号或邮箱"
-          name="username"
+          ref="email"
+          v-model="loginForm.email"
+          placeholder="请输入邮箱"
+          name="email"
           type="text"
           tabindex="1"
           autocomplete="on"
         />
       </el-form-item>
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-        <el-form-item prop="password">
-          <el-input
-            ref="password"
-            v-model="loginForm.password"
-            type="password"
-            placeholder="请输入密码"
-            name="password"
-            tabindex="2"
-            autocomplete="on"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
-          />
-        </el-form-item>
-      </el-tooltip>
-      <el-checkbox :checked="isAutoLogin" label="自动登录" fill="#455A64" />
+      <el-form-item prop="password">
+        <el-input
+          ref="password"
+          v-model="loginForm.password"
+          type="password"
+          placeholder="请输入密码"
+          name="password"
+          autocomplete="on"
+        />
+      </el-form-item>
+      <!-- <el-checkbox :checked="isAutoLogin" label="自动登录" fill="#455A64" /> -->
 
       <el-button :loading="loading" type="primary" class="login-btn" @click.native.prevent="handleLogin">登录</el-button>
     </el-form>
@@ -46,7 +40,8 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validEmail } from '@/utils/validate'
+import { login } from '@/api/index'
 //  validPhone, validEmail,
 // import SocialSign from './components/SocialSignin'
 
@@ -55,121 +50,42 @@ export default {
   // components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
-      // if (!validEmail(value) && !validPhone(value)) {
-      //   callback(new Error('请输入手机号码或邮箱'))
-      // } else {
-      //   callback()
-      // }
-      if (validUsername(value)) {
+      if (validEmail(value)) {
         callback()
+      } else {
+        callback(new Error('请输入正确格式的邮箱'))
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('请输入至少6位密码'))
+      if (value.length < 8) {
+        callback(new Error('请输入至少8位密码'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: '',
+        email: '',
         password: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        email: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
-      capsTooltip: false,
       loading: false,
       showDialog: false,
-      redirect: undefined,
-      otherQuery: {},
       isAutoLogin: true
     }
   },
-  watch: {
-    $route: {
-      handler: function(route) {
-        const query = route.query
-        if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
-        }
-      },
-      immediate: true
-    }
-  },
-  created() {
-    // window.addEventListener('storage', this.afterQRScan)
-  },
-  mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
-    }
-  },
   destroyed() {
-    // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    checkCapslock({ shiftKey, key } = {}) {
-      if (key && key.length === 1) {
-        if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
-          this.capsTooltip = true
-        } else {
-          this.capsTooltip = false
-        }
-      }
-      if (key === 'CapsLock' && this.capsTooltip === true) {
-        this.capsTooltip = false
-      }
-    },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
+      const data = this.loginForm
+      login(data).then(res => {
+        this.$router.push({ path: '/' })
       })
-    },
-    getOtherQuery(query) {
-      return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
-        }
-        return acc
-      }, {})
     }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
   }
 }
 </script>

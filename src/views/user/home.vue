@@ -11,12 +11,12 @@
         </div>
         <div class="edit-user-info float-right">
           <p>
-            <span class="user-name">张一凡</span>
+            <span class="user-name">{{ userName }}</span>
             <span class="edit-user-btn">编辑资料</span>
           </p>
-          <p v-for="(item,index) in userInfo" :key="index">
-            <span class="label-name">{{ item.name }}</span>
-            <el-input v-model="item.text" class="label-value" />
+          <p v-for="(item,index) in textTab" :key="index">
+            <span class="label-name">{{ userInfo[item][0].name }}</span>
+            <el-input v-model="userInfo[item][0].text" class="label-value" />
           </p>
         </div>
       </div>
@@ -24,11 +24,11 @@
         <div class="bottom float-right">
           <div class="recommand-code">
             <p>我的推荐码</p>
-            <p>NUGBASJF &nbsp;<span class="iconfont iconfuzhi" /></p>
+            <p>{{ referralCode }} &nbsp;<span class="iconfont iconfuzhi" /></p>
           </div>
           <div class="my-score">
             <p>我的积分</p>
-            <p>100</p>
+            <p>{{ point }}</p>
           </div>
         </div>
       </div>
@@ -60,29 +60,28 @@
   </div>
 </template>
 <script>
+import { userDetail } from '@/api/index'
 export default {
   components: {},
   data() {
     return {
-      userInfo: [{
-        name: '邮箱', text: 'zhangyifan@yy.com'
-      }, {
-        name: '手机', text: '18825055554'
-      }, {
-        name: '本科院校', text: '天津大学'
-      }, {
-        name: '考研院校', text: '背景大学'
-      }, {
-        name: '是否跨考', text: '否'
-      }, {
-        name: '本科入学年份', text: '2019-10-30'
-      }],
+      userInfo: {
+        email: [{ name: '邮箱', text: '' }],
+        phoneNumber: [{ name: '手机', text: '' }],
+        prepareUniversity: [{ name: '本科院校', text: '' }],
+        undergraduateUniversity: [{ name: '考研院校', text: '' }],
+        crossProfession: [{ name: '是否跨考', text: '' }],
+        entranceYear: [{ name: '本科入学年份', text: '' }]
+      },
+      textTab: ['email', 'phoneNumber', 'prepareUniversity', 'undergraduateUniversity', 'crossProfession', 'entranceYear'],
+      userName: '',
+      point: 0,
+      referralCode: '',
       tabList: [
         { index: 'news', name: '新闻', icon: 'iconxinwen', collectNum: '2' },
         { index: 'school', name: '学校', icon: 'iconxuexiao', collectNum: '2' },
         { index: 'document', name: '真题', icon: 'iconzhenti', collectNum: '2' },
-        { index: 'forum', name: '帖子', icon: 'iconluntan', collectNum: '2' },
-        { index: 'course', name: '课程', icon: 'iconkecheng', collectNum: '2' }
+        { index: 'forum', name: '帖子', icon: 'iconluntan', collectNum: '2' }
       ],
       tabIndex: 0,
       tabContentShow: 'news',
@@ -126,10 +125,26 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getUserInfo()
+  },
   methods: {
     changeTab(index, tabName) {
       this.tabIndex = index
       this.tabContentShow = tabName
+    },
+    getUserInfo() {
+      userDetail({ id: this.$route.query.id }).then(res => {
+        this.userName = res.data.username
+        this.point = res.data.point
+        this.referralCode = res.data.referralCode
+        for (const i in res.data) {
+          if (this.userInfo[i]) {
+            this.userInfo[i][0].text = res.data[i]
+          }
+        }
+        console.log(this.userInfo)
+      })
     }
   }
 }
@@ -161,7 +176,7 @@ export default {
 
 .user-info {
   position: relative;
-  width: 24%;
+  width: 34%;
   height: 100%;
   padding: 0 20px;
   background-color: #fff;
@@ -221,10 +236,14 @@ export default {
   }
 
   .bottom {
-    padding-right: 70px;
+    padding-right: 100px;
+    margin-top: 10px;
     clear: both;
 
     .recommand-code {
+      padding: 10px 0;
+      margin-bottom: 10px;
+
       & > p:first-child {
         font-size: 18px;
         font-weight: 600;
@@ -255,7 +274,7 @@ export default {
 }
 
 .user-collect {
-  width: 76%;
+  width: 66%;
   height: 100%;
   background-color: #fff;
 
@@ -350,6 +369,7 @@ export default {
 
 .user-home .el-input__inner {
   width: auto;
+  background-color: transparent;
   border: none;
 }
 </style>

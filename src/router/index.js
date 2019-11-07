@@ -25,16 +25,9 @@ export const constantRoutes = [
         meta: { title: '用户列表', noCache: true }
       },
       {
-        path: '/user/analysis',
-        component: () => import('@/views/user/analysis'),
-        name: 'user-analysis',
-        hidden: true,
-        meta: { title: '用户分析', noCache: true }
-      },
-      {
-        path: '/user/home',
+        path: '/user/home/',
         component: () => import('@/views/user/home'),
-        name: 'user-home',
+        name: 'userHome',
         meta: { title: '用户主页', noCache: true }
       }
     ]
