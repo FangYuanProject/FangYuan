@@ -1,8 +1,8 @@
 <template>
   <p class="ul-folder">
     <span class="w dib">
-      <a href="javascript:;" @click="showOrHide()" :class="{'ml20': folder.level === 1, 'ml40': folder.level === 2, 'ml60': folder.level === 3, 'ml80': folder.level === 4}" class="pr">
-      <i :class="{'arrow-down': ulShow, 'arrow-up': !ulShow}"></i>{{ folder.name }}
+      <a href="javascript:;" :class="{'ml20': folder.level === 1, 'ml40': folder.level === 2, 'ml60': folder.level === 3, 'ml80': folder.level === 4}" class="pr" @click="showOrHide()">
+        <i :class="{'arrow-down': ulShow, 'arrow-up': !ulShow}" />{{ folder.name }}
       </a>
       <span class="dib fr pr100">
         <a v-if="folder.level === 1" href="javascript:;" class="list-btn ml20">新增年份</a>
@@ -12,16 +12,11 @@
         <a href="javascript:;" class="list-btn ml20">删除</a>
       </span>
     </span>
-    <tree-folder :children="folder.children" :class="{'mh0': !ulShow, 'mh2000': ulShow}" :ref="folder.id"></tree-folder>
+    <tree-folder :ref="folder.id" :children="folder.children" :class="{'mh0': !ulShow, 'mh2000': ulShow}" />
   </p>
 </template>
 <script>
 export default {
-  data() {
-    return {
-      ulShow: false
-    }
-  },
   props: {
     folder: {
       type: Array,
@@ -30,19 +25,18 @@ export default {
       }
     }
   },
-  methods: {
-    showOrHide() {
-      this.ulShow = !this.ulShow
-      // if (this.ulShow) {
-      //   const height = this.$refs[this.folder.id].$el.scrollHeight
-      //   this.$refs[this.folder.id].$el.style.height = height + 'px'
-      // } else {
-      //   this.$refs[this.folder.id].$el.style.height = '0px'
-      // }
+  data() {
+    return {
+      ulShow: false
     }
   },
   beforeCreate() {
     this.$options.components.TreeFolder = () => import('./TreeFolder.vue')
+  },
+  methods: {
+    showOrHide() {
+      this.ulShow = !this.ulShow
+    }
   }
 }
 </script>
