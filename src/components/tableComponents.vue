@@ -56,10 +56,10 @@ export default {
 
       }
     },
-    // total: {
-    //   required: true,
-    //   type: Number
-    // },
+    total: {
+      required: true,
+      type: Number
+    },
     page: {
       type: Number,
       default: 1
@@ -93,7 +93,6 @@ export default {
   },
   data() {
     return {
-      total: 1000
     }
   },
   computed: {

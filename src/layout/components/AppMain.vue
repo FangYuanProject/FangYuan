@@ -94,7 +94,7 @@ export default {
   }
 
   .el-form-item__error {
-    left: 50%;
+    left: 42%;
   }
 }
 

@@ -22,18 +22,16 @@
           autocomplete="on"
         />
       </el-form-item>
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-        <el-form-item prop="password">
-          <el-input
-            ref="password"
-            v-model="loginForm.password"
-            type="password"
-            placeholder="请输入密码"
-            name="password"
-            autocomplete="on"
-          />
-        </el-form-item>
-      </el-tooltip>
+      <el-form-item prop="password">
+        <el-input
+          ref="password"
+          v-model="loginForm.password"
+          type="password"
+          placeholder="请输入密码"
+          name="password"
+          autocomplete="on"
+        />
+      </el-form-item>
       <!-- <el-checkbox :checked="isAutoLogin" label="自动登录" fill="#455A64" /> -->
 
       <el-button :loading="loading" type="primary" class="login-btn" @click.native.prevent="handleLogin">登录</el-button>
@@ -83,7 +81,7 @@ export default {
   },
   methods: {
     handleLogin() {
-      const data = this.$refs['loginForm'].model
+      const data = this.loginForm
       login(data).then(res => {
         this.$router.push({ path: '/' })
       })

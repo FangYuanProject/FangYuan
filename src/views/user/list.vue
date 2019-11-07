@@ -2,26 +2,26 @@
   <div class="user-list">
     <h2 class="title">用户列表</h2>
     <el-form ref="ruleForm" :model="ruleForm" label-width="60px" inline class="user-list-ruleForm">
-      <el-form-item label="用户ID" prop="newId">
-        <el-input v-model="ruleForm.name" />
+      <el-form-item label="用户ID" prop="id">
+        <el-input v-model="ruleForm.id" />
       </el-form-item>
-      <el-form-item label="用户名" prop="title">
-        <el-input v-model="ruleForm.name" />
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="ruleForm.username" />
       </el-form-item>
-      <el-form-item label="手机号" prop="title">
-        <el-input v-model="ruleForm.name" />
+      <el-form-item label="手机号" prop="phoneNumber">
+        <el-input v-model="ruleForm.phoneNumber" />
       </el-form-item>
-      <el-form-item label="邮箱" prop="title">
-        <el-input v-model="ruleForm.name" />
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="ruleForm.email" />
       </el-form-item>
-      <el-form-item label="角色" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+      <el-form-item label="角色" prop="roleCode">
+        <el-select v-model="ruleForm.roleCode" placeholder="请选择">
           <el-option label="普通角色1" value="shanghai" />
           <el-option label="普通角色2" value="beijing" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" class="search-btn" @click="submitForm('ruleForm')">查询</el-button>
+        <el-button type="primary" class="search-btn" @click="searchUserList('ruleForm')">查询</el-button>
         <el-button type="primary" class="add-user" @click="addUser">+&nbsp;新建用户</el-button>
       </el-form-item>
     </el-form>
@@ -29,12 +29,13 @@
       :table-data="tableData"
       :th-data="thData"
       :table-operation="tableOperation"
-      :dialog-type="changeRoleVisible"
+      :total="totalNumber"
       @click="changeUserRole"
       @cell-click="toUserDetail"
+      @pagination="changePage"
     />
     <el-dialog title="新增用户" :visible.sync="dialogVisible" width="508px" class="add-user-modal">
-      <el-form :model="form">
+      <el-form ref="addUserModal" :model="form" :rules="userForm">
         <el-form-item label="头像" class="user-info">
           <span class="user-head">
             <img src="@/assets/user.png" alt>
@@ -42,24 +43,24 @@
           <el-button type="primary" class="upload-head" @click="dialogVisible = false">上传头像</el-button>
           <span class="tips">大小不得大于5M</span>
         </el-form-item>
-        <el-form-item label="用户名">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="form.username" autocomplete="off" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="form.password" autocomplete="off" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="form.email" autocomplete="off" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="手机号" prop="phoneNumber">
+          <el-input v-model="form.phoneNumber" autocomplete="off" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="角色">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="角色" prop="roleCode">
+          <el-input v-model="form.roleCode" autocomplete="off" placeholder="请输入" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="submit-data-btn" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" class="submit-data-btn" @click="submitAddForm('addUserModal')">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -70,7 +71,7 @@
     >
       <el-form :model="form">
         <el-form-item label="用户ID">
-          <el-input v-model="form.name" autocomplete="off" />
+          <el-input v-model="form.id" autocomplete="off" />
         </el-form-item>
         <el-form-item label="用户名">
           <el-input v-model="form.name" autocomplete="off" />
@@ -90,6 +91,8 @@
 </template>
 <script>
 import tableComponents from '@/components/tableComponents'
+import { userList, addUser } from '@/api/index'
+import { AlertBox } from '@/utils/util.js'
 export default {
   components: {
     tableComponents
@@ -99,82 +102,63 @@ export default {
       tableOperation: [{ name: '更换角色' }],
       dialogVisible: false,
       changeRoleVisible: false,
+      page: 1,
+      pageSize: 20,
+      totalNumber: 0,
       ruleForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        id: '',
+        email: '',
+        phoneNumber: '',
+        roleCode: '',
+        username: ''
       },
       form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        email: '',
+        password: '',
+        phoneNumber: '',
+        roleCode: '',
+        username: ''
+      },
+      userForm: {
+        password: [{ required: true, min: 8, message: '请输入至少8位数的密码', trigger: 'blur' }],
+        email: [{ type: 'email', required: true, message: '请输入正确格式的密码', trigger: 'blur' }],
+        roleCode: [{ required: true, message: '请输入用户角色', trigger: 'blur' }]
       },
       thData: [
         { name: '用户ID', indexs: 'id' },
-        { name: '用户名', indexs: 'title' },
-        { name: '手机号', indexs: 'pone' },
+        { name: '用户名', indexs: 'username' },
+        { name: '手机号', indexs: 'phoneNumber' },
         { name: '邮箱', indexs: 'email' },
-        { name: '注册时间', indexs: 'publish' },
-        { name: '角色', indexs: 'undercarriage' }
+        { name: '注册时间', indexs: 'createTime' },
+        { name: '角色', indexs: 'roleCode' }
       ],
-      tableData: [
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员'
-        }
-      ]
+      tableData: []
     }
   },
+  mounted() {
+    this.getUserList()
+  },
   methods: {
-    submitForm(formName) {
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     alert('submit!')
-      //     } else {
-      //     console.log('error submit!!')
-      //       return false
-      //     }
-      // })
+    submitAddForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          addUser(this.form).then(res => {
+            AlertBox('success', res.message)
+            this.dialogVisible = false
+            this.getUserList()
+          })
+        } else {
+          return false
+        }
+      })
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
+    searchUserList() {
+      this.getUserList()
     },
     addUser() {
       this.dialogVisible = true
     },
     changeUserRole(data) {
-      console.log('123')
-      console.log(data)
       this.changeRoleVisible = true
       this.dialogVisible = false
     },
@@ -182,10 +166,24 @@ export default {
       this.changeRoleVisible = false
     },
     toUserDetail(row, column, cell, event) {
-      console.log(column.label)
+      console.log(row)
       if (column.label === '用户名') {
-        this.$router.push({ path: '/user/home' })
+        this.$router.push({ path: '/user/home', query: { id: row.id }})
       }
+    },
+    getUserList() {
+      this.ruleForm.page = this.page
+      this.ruleForm.pageSize = this.pageSize
+      userList(this.ruleForm).then(res => {
+        this.tableData = res.data
+        this.totalNumber = res.total
+      })
+    },
+    changePage(pageData) {
+      console.log(pageData)
+      this.page = pageData.page
+      this.pageSize = pageData.limit
+      this.getUserList(this.ruleForm)
     }
   }
 }
