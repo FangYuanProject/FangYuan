@@ -22,14 +22,102 @@
     </div>
     <div class="school-content">
       <div class="mb20 w oh">
-        <el-button type="primary" class="add-academic fr">+&nbsp;新建学院</el-button>
+        <el-button type="primary" class="add-academic fr" @click="showAcademic">+&nbsp;新增学院</el-button>
       </div>
       <ul class="school-tree">
         <li v-for="folder in tableData" :key="folder.id">
-          <ul-folder :folder="folder" />
+          <ul-folder :folder="folder" @newYear="showYear" @newDirection="showDirection" @newMajor="showMajor"/>
         </li>
       </ul>
     </div>
+    <el-dialog title="新增方向" :visible.sync="changeDirectionVisible" width="508px" class="change-user-role">
+      <el-form ref="formDirection" :model="formDirection" :rules="ruleDirection">
+        <el-form-item label="方向名称">
+          <el-input v-model="formDirection.name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" class="submit-data-btn" @click="submitDirection">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="新增年份" :visible.sync="changeYearVisible" width="508px" class="change-user-role">
+      <el-form ref="formYear" :model="formYear" :rules="ruleYear">
+        <el-form-item label="年份">
+          <el-select v-model="formYear.year" placeholder="请选择年份" class="user-role">
+            <el-option v-for="y in formYear.years" :key="y" :label="y" :value="y" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" class="submit-data-btn" @click="submitYear">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="新增学院" :visible.sync="changeAcademicVisible" width="508px" class="change-user-role">
+      <el-form ref="formAcademic" :model="formAcademic" :rules="ruleAcademic">
+        <el-form-item label="学院代码" prop="code">
+          <el-input v-model="formAcademic.code" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="学院名称" prop="name">
+          <el-input v-model="formAcademic.name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" class="submit-data-btn" @click="submitAcademic">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="新增专业" :visible.sync="changeMajorVisible" width="508px" class="change-user-role">
+      <el-form ref="formMajor" :model="formMajor" :rules="ruleMajor">
+        <el-form-item label="专业代码" prop="code">
+          <el-input v-model="formMajor.code" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="专业名称" prop="name">
+          <el-input v-model="formMajor.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="拟招生人数">
+          <el-input v-model="formMajor.studentRecruitment" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="推免生人数">
+          <el-input v-model="formMajor.studentFree" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="学习方式" prop="learnWay">
+          <el-input v-model="formMajor.learnWay" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="学习年限" prop="learnYear">
+          <el-input v-model="formMajor.learnYear" autocomplete="off" />
+        </el-form-item>
+        <div v-for="(p, index) in formMajor.publicCourse" :key="index" class="w oh">
+          <el-form-item class="ww50 fl" label="公共课" prop="publicCourse">
+            <el-input v-model="p.courseName" autocomplete="off" />
+          </el-form-item>
+          <el-form-item class="ww50 fl" label="录取分数线" prop="publicCourseScore">
+            <el-input v-model="p.courseScore" autocomplete="off" />
+          </el-form-item>
+        </div>
+        <div v-for="(p, index) in formMajor.professionalCourse" :key="index" class="w oh">
+          <el-form-item class="ww50 fl" label="业务课" prop="professionalCourse">
+            <el-input v-model="p.proCourseName" autocomplete="off" />
+          </el-form-item>
+          <el-form-item class="ww50 fl" label="录取分数线" prop="professionalCourseScore">
+            <el-input v-model="p.proCourseScore" autocomplete="off" />
+          </el-form-item>
+        </div>
+        <el-form-item label="录取线" prop="scoreLine">
+          <el-input v-model="formMajor.scoreLine" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="初试专业课" prop="firstProCourse">
+          <el-input v-model="formMajor.firstProCourse" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="专业课备注">
+          <el-input v-model="formMajor.proCourseMark" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="参考书目">
+          <el-input v-model="formMajor.consultBooks" type="textarea" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" class="submit-data-btn" @click="submitMajor">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -41,6 +129,67 @@ export default {
   },
   data() {
     return {
+      changeDirectionVisible: false, // 弹窗显示--新增方向
+      changeMajorVisible: false, // 弹窗显示--新增专业
+      changeYearVisible: false, // 弹窗显示--新增年份
+      changeAcademicVisible: false, // 弹窗显示--新增学院
+      formDirection: {
+        name: ''
+      },
+      formMajor: {
+        code: '', // 专业代码
+        name: '', // 专业名称
+        studentRecruitment: '', // 拟招生人数
+        studentFree: '', // 推免生人数
+        learnWay: '', // 学习方式
+        learnYear: '', // 学习年限
+        publicCourse: [
+          {
+            courseName: '',
+            courseScore: ''
+          }
+        ], // 公共课程
+        professionalCourse: [
+          {
+            proCourseName: '',
+            proCourseScore: ''
+          }
+        ], // 业务课
+        scoreLine: '', // 录取线
+        firstProCourse: '', // 初试专业课
+        proCourseMark: '', // 专业课备注
+        consultBooks: '' // 参考书目
+      },
+      formYear: {
+        year: '', // 所选年份
+        years: [] // 年份选项
+      },
+      formAcademic: {
+        code: '', // 学院代码
+        name: '' // 学院名称
+      },
+      ruleAcademic: {
+        code: [{ required: true, trigger: 'blur', message: '请输入学院代码' }],
+        name: [{ required: true, trigger: 'blur', message: '请输入学院名称' }]
+      },
+      ruleYear: {
+        year: [{ required: true, trigger: 'change', message: '请选择年份' }]
+      },
+      ruleDirection: {
+        name: [{ required: true, trigger: 'blur', message: '请输入方向名称' }]
+      },
+      ruleMajor: {
+        code: [{ required: true, trigger: 'blur', message: '请输入专业代码' }],
+        name: [{ required: true, trigger: 'blur', message: '请输入专业名称' }],
+        learnWay: [{ required: true, trigger: 'change', message: '请选择学习方式' }],
+        learnYear: [{ required: true, trigger: 'change', message: '请输入学习年限' }],
+        publicCourse: [{ required: true, trigger: 'blur', message: '请输入公共课' }],
+        publicCourseScore: [{ required: true, trigger: 'blur', message: '请输入录取分数线' }],
+        professionalCourse: [{ required: true, trigger: 'blur', message: '请输入业务课' }],
+        professionalCourseScore: [{ required: true, trigger: 'blur', message: '请输入录取分数线' }],
+        scoreLine: [{ required: true, trigger: 'blur', message: '请输入录取线' }],
+        firstProCourse: [{ required: true, trigger: 'blur', message: '请输入初试专业课' }]
+      },
       tableData: [
         {
           name: '计算机学院',
@@ -140,6 +289,66 @@ export default {
         }
       ]
     }
+  },
+  created() {
+    this.init()
+  },
+  methods: {
+    init() {
+
+    },
+    showDirection() {
+      this.changeDirectionVisible = true
+    },
+    showYear() {
+      this.changeYearVisible = true
+    },
+    showMajor() {
+      this.changeMajorVisible = true
+    },
+    showAcademic() {
+      this.changeAcademicVisible = true
+    },
+    submitDirection() {
+      this.$refs.formDirection.validate((valid) => {
+        if (valid) {
+          this.changeDirectionVisible = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    submitMajor() {
+      this.$refs.formMajor.validate((valid) => {
+        if (valid) {
+          this.changeMajorVisible = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    submitYear() {
+      this.$refs.formYear.validate((valid) => {
+        if (valid) {
+          this.changeYearVisible = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    submitAcademic() {
+      this.$refs.formAcademic.validate((valid) => {
+        if (valid) {
+          this.changeAcademicVisible = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    }
   }
 }
 </script>
@@ -171,8 +380,7 @@ export default {
 
 .school {
   display: inline-block;
-  width: 132px;
-  height: 272px;
+  width: 162px;
   padding: 20px 0 0 30px;
   text-align: center;
 
