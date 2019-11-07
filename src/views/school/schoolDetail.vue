@@ -3,7 +3,9 @@
     <h2 class="title">学校主页</h2>
     <div class="school-content">
       <div class="school">
-        <img src="@/assets/schoolBadge@2x.png" />
+        <div class="school-logo">
+          <img src="@/assets/schoolBadge@2x.png" />
+        </div>
         <el-button type="primary" class="change-badge">更换校徽</el-button>
       </div>
       <div class="edit-scholl-info">
@@ -12,10 +14,9 @@
           <span class="edit-btn">编辑资料</span>
         </div>
         <div>
-          <p> <span class="label-name">所在地区:</span><span class="value-name">北京</span></p>
-          <p> <span class="label-name">公共科目:</span><span class="value-name"> 政治，数学，英语</span></p>
-          <p> <span class="label-name">专业科目:</span><span class="value-name">政治，数学，英语</span></p>
-          <p> <span class="label-name">初试分数线:</span><span class="value-name">425（2018），425（2018），425（2018），</span></p>
+          <p class="lh30"><span class="label-name">学校代码:</span><span class="value-name">12312</span></p>
+          <p class="lh30"><span class="label-name">所在地区:</span><span class="value-name">北京</span></p>
+          <p class="lh30"><span class="label-name">特性:</span><span class="value-name">211</span></p>
         </div>
       </div>
     </div>
@@ -172,8 +173,21 @@ export default {
   display: inline-block;
   width: 132px;
   height: 272px;
-  padding: 42px 0 0 49px;
+  padding: 20px 0 0 30px;
   text-align: center;
+
+  .school-logo {
+    width: 132px;
+    height: 132px;
+    line-height: 132px;
+    background-color: rgba(251, 251, 251, 1);
+
+    img {
+      max-width: calc(100% - 10px);
+      max-height: calc(100% - 10px);
+      vertical-align: middle;
+    }
+  }
 
   .change-badge {
     display: block;
@@ -181,6 +195,7 @@ export default {
     height: 28px;
     padding: 0;
     margin-top: 32px;
+    margin-left: 22px;
     line-height: 28px;
     text-align: center;
     background: rgba(69, 90, 100, 1);
@@ -191,8 +206,9 @@ export default {
 
 .edit-scholl-info {
   display: inline-block;
+  margin-top: 20px;
   margin-left: 42px;
-  vertical-align: bottom;
+  vertical-align: top;
 
   .school-name {
     font-size: 24px;

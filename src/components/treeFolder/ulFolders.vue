@@ -51,6 +51,7 @@ export default {
 .ul-folder .w {
   a,
   span {
+    display: inline-block;
     height: 35px;
     font-size: 14px;
     line-height: 35px;
@@ -63,7 +64,7 @@ export default {
 
 .arrow-down {
   position: absolute;
-  top: 5px;
+  top: 15px;
   left: -15px;
   border-top: 6px solid #3d546f;
   border-right: 5px solid transparent;
@@ -73,7 +74,7 @@ export default {
 
 .arrow-up {
   position: absolute;
-  top: 3px;
+  top: 12px;
   left: -15px;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;

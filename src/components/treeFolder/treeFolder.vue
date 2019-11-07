@@ -37,12 +37,13 @@ export default {
 <style lang="scss" scoped>
 .tree-folder {
   overflow: hidden;
-  transition: max-height ease-in-out .2s;
+  transition: max-height ease-in-out s;
 }
 
 .tree-folder .w {
   a,
   span {
+    display: inline-block;
     height: 35px;
     font-size: 14px;
     line-height: 35px;
