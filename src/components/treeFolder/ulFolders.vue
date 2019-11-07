@@ -17,6 +17,11 @@
 </template>
 <script>
 export default {
+  data() {
+    return {
+      ulShow: false
+    }
+  },
   props: {
     folder: {
       type: Array,
@@ -25,7 +30,6 @@ export default {
       }
     }
   },
-<<<<<<< HEAD
   methods: {
     showOrHide() {
       this.ulShow = !this.ulShow
@@ -46,20 +50,10 @@ export default {
     },
     delList(level, id) { // 删除
       console.log('dellevelid', level, id)
-=======
-  data() {
-    return {
-      ulShow: false
->>>>>>> ec2dac291d70eb607e84801b96462c79ee08507c
     }
   },
   beforeCreate() {
     this.$options.components.TreeFolder = () => import('./TreeFolder.vue')
-  },
-  methods: {
-    showOrHide() {
-      this.ulShow = !this.ulShow
-    }
   }
 }
 </script>
