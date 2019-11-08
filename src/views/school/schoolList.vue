@@ -82,10 +82,10 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm')">
+        <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm', 0)">
           <span>保存</span>
         </el-button>
-        <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm')">
+        <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm', 1)">
           <span class="iconfont iconfabu">发布</span>
         </el-button>
       </span>
@@ -210,10 +210,34 @@ export default {
           console.log('error', error)
         })
     },
-    submitForm(formName) {
+    submitForm(formName, saveOrPublish) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          let data = {
+            location: this.modalForm.location,
+            property: this.modalForm.property,
+            universityCode: this.modalForm.universityCode,
+            universityName: this.modalForm.universityName
+          }
+          schoolAdd(data)
+              .then(response => {
+                let detail = response.data
+                if (detail && detail.code) {
+                  console.log('新增成功')
+                  if (saveOrPublish === 1) { // 新增并发布
+                    schoolRelease({id: detail.id})
+                      .then(response1 => {
+                        console.log(response1)
+                      })
+                      .catch(error1 => {
+                        console.log('error', error1)
+                      })
+                  }
+                }
+              })
+              .catch(error => {
+                console.log('error', error)
+              })
         } else {
           console.log('error submit!!')
           return false
