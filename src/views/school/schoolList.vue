@@ -3,24 +3,24 @@
     <h2 class="title">学校列表</h2>
     <el-form ref="ruleForm" :model="ruleForm" label-width="70px" inline class="list-ruleForm">
       <el-form-item label="学校ID" prop="newId">
-        <el-input v-model="ruleForm.name" />
+        <el-input v-model="ruleForm.id" />
       </el-form-item>
       <el-form-item label="学校代码" prop="schoolCode">
-        <el-input v-model="ruleForm.name" />
+        <el-input v-model="ruleForm.universityCode" />
       </el-form-item>
       <el-form-item label="学校名称" prop="title">
-        <el-input v-model="ruleForm.name" />
+        <el-input v-model="ruleForm.universityName" />
       </el-form-item>
       <el-form-item label="地区" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
+        <el-select v-model="ruleForm.location" placeholder="请选择">
+          <el-option label="上海" value="shanghai" />
+          <el-option label="北京" value="beijing" />
         </el-select>
       </el-form-item>
       <el-form-item label="特性" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
+        <el-select v-model="ruleForm.property" placeholder="请选择">
+          <el-option label="985" value="985" />
+          <el-option label="211" value="211" />
         </el-select>
       </el-form-item>
       <el-form-item label="新建时间" prop="region">
@@ -37,8 +37,9 @@
       </el-form-item>
       <el-form-item label="状态" prop="region">
         <el-select v-model="ruleForm.region" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
+          <el-option label="未发布" value="0" />
+          <el-option label="已发布" value="1" />
+          <el-option label="已下架" value="2" />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -62,24 +63,21 @@
           <div style="display: inline-block; margin-top: 10px; vertical-align: top;">
             <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @click="uploadSchoolBadge" />
           </div>
-
         </el-form-item>
-        <el-form-item label="学校代码" prop="code">
-          <el-input v-model="modalForm.code" autocomplete="off" />
+        <el-form-item label="学校代码" prop="universityCode">
+          <el-input v-model="modalForm.universityCode" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="学校名称" class="active-origin" prop="name">
-          <el-input v-model="modalForm.name" autocomplete="off" />
+        <el-form-item label="学校名称" class="active-origin" prop="universityName">
+          <el-input v-model="modalForm.universityName" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="所在地区" class="score-input" prop="region">
-          <el-select v-model="modalForm.region" placeholder="请选择">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
+        <el-form-item label="所在地区" class="score-input" prop="location">
+          <el-select v-model="modalForm.location" placeholder="请选择">
+            <el-option v-for="(loc, index) in modalForm.locations" :key="index" :label="loc" :value="loc" />
           </el-select>
         </el-form-item>
-        <el-form-item label="特性" class="score-input" prop="region">
-          <el-select v-model="modalForm.region" placeholder="请选择">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
+        <el-form-item label="特性" class="score-input" prop="property">
+          <el-select v-model="modalForm.property" placeholder="请选择">
+            <el-option v-for="(pro, index) in modalForm.properties" :key="index" :label="pro" :value="pro" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -99,6 +97,7 @@ import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 import UploadPicBtn from '@/components/UploadPictureBtn'
+import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve } from '@/api/secIndex'
 export default {
   components: {
     tableComponents,
@@ -115,16 +114,18 @@ export default {
       modalTitle: '新增学校',
       status: 'add',
       rules: {
-        name: [
+        universityName: [
           { required: true, message: '请输入学校名称', trigger: 'blur' }
         ],
-        region: [
+        location: [
           { required: true, message: '请选择所在区域', trigger: 'change' }
         ],
-        code: [
+        universityCode: [
           { required: true, message: '请输入学校代码', trigger: 'blur' }
+        ],
+        property: [
+          { required: true, message: '请选择学校特性', trigger: 'change' }
         ]
-
       },
       dialogVisible: false,
       ruleForm: {
@@ -137,9 +138,12 @@ export default {
         desc: ''
       },
       modalForm: {
-        name: '',
-        code: '',
-        region: ''
+        universityName: '',
+        universityCode: '',
+        location: '',
+        locations: ['北京', '上海'],
+        property: '',
+        properties: ['985', '211']
       },
       thData: [
         { name: '学校ID', indexs: 'id' },
@@ -182,7 +186,30 @@ export default {
       ]
     }
   },
+  created() {
+    this.init()
+  },
   methods: {
+    init() {
+      this.getList()
+    },
+    getList() {
+      let data = {
+        id: '',
+        location: '',
+        page: '' || 1,
+        pageSize: '',
+        property: '',
+        universityName: ''
+      }
+      schoolList(data)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log('error', error)
+        })
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

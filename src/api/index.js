@@ -1,5 +1,6 @@
 import axios from '@/utils/request.js'
 import { clearNullValue } from '@/utils/util.js'
+
 // 登录
 export const login = data => axios.post('/login', data)
 // 退出登录

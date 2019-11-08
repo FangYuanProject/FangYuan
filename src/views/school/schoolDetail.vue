@@ -26,7 +26,7 @@
       </div>
       <ul class="school-tree">
         <li v-for="folder in tableData" :key="folder.id">
-          <ul-folder :folder="folder" @newYear="showYear" @newDirection="showDirection" @newMajor="showMajor"/>
+          <ul-folder :folder="folder" />
         </li>
       </ul>
     </div>
@@ -123,6 +123,7 @@
 <script>
 // import tableComponents from '@/components/tableComponents'
 import UlFolder from '@/components/treeFolder/UlFolders'
+import Bus from '@/assets/js/eventBus'
 export default {
   components: {
     UlFolder
@@ -292,6 +293,25 @@ export default {
   },
   created() {
     this.init()
+  },
+  mounted() {
+    Bus.$on('newYear', (data) => {
+      console.log('新增年份', data)
+      this.showYear()
+    })
+    Bus.$on('newDirection', (data) => {
+      console.log('新增方向', data)
+      this.showDirection()
+    })
+    Bus.$on('newMajor', (data) => {
+      console.log('新增专业', data)
+      this.showMajor()
+    })
+  },
+  destroyed() {
+    Bus.$off('newDirection')
+    Bus.$off('newMajor')
+    Bus.$off('newYear')
   },
   methods: {
     init() {

@@ -19,6 +19,7 @@
 </template>
 <script>
 import UlFolders from './UlFolders.vue'
+import Bus from '@/assets/js/eventBus'
 export default {
   components: {
     UlFolders
@@ -47,7 +48,7 @@ export default {
       } else { // 新增专业
         methods = 'newMajor'
       }
-      this.$emit(methods, id)
+      Bus.$emit(methods, id)
     },
     editor(level, id) { // 编辑
       console.log('editorlevelid', level, id)
