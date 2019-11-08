@@ -12,11 +12,11 @@
         <div class="edit-user-info float-right">
           <p>
             <span class="user-name">{{ userName }}</span>
-            <span class="edit-user-btn">编辑资料</span>
+            <span class="edit-user-btn" @click="editUserInfo">编辑资料</span>
           </p>
           <p v-for="(item,index) in textTab" :key="index">
             <span class="label-name">{{ userInfo[item][0].name }}</span>
-            <el-input v-model="userInfo[item][0].text" class="label-value" />
+            <span class="label-value">{{ userInfo[item][0].text }}</span>
           </p>
         </div>
       </div>
@@ -24,7 +24,7 @@
         <div class="bottom float-right">
           <div class="recommand-code">
             <p>我的推荐码</p>
-            <p>{{ referralCode }} &nbsp;<span class="iconfont iconfuzhi" /></p>
+            <p>{{ referralCode }} &nbsp;<span class="iconfont iconfuzhi copy-code" :data-clipboard-text="referralCode" @click="copyCode" /></p>
           </div>
           <div class="my-score">
             <p>我的积分</p>
@@ -61,6 +61,8 @@
 </template>
 <script>
 import { userDetail } from '@/api/index'
+import { AlertBox } from '@/utils/util'
+import Clipboard from 'clipboard'
 export default {
   components: {},
   data() {
@@ -74,6 +76,7 @@ export default {
         entranceYear: [{ name: '本科入学年份', text: '' }]
       },
       textTab: ['email', 'phoneNumber', 'prepareUniversity', 'undergraduateUniversity', 'crossProfession', 'entranceYear'],
+      isReadOnly: true,
       userName: '',
       point: 0,
       referralCode: '',
@@ -145,6 +148,23 @@ export default {
         }
         console.log(this.userInfo)
       })
+    },
+    copyCode() {
+      const clip = new Clipboard('.copy-code')
+      clip.on('success', e => {
+        AlertBox('success', '复制成功')
+        // 释放内存
+        clip.destroy()
+      })
+      clip.on('error', e => {
+        // 不支持复制
+        AlertBox('error', '该浏览器不支持复制')
+        // 释放内存
+        clip.destroy()
+      })
+    },
+    editUserInfo() {
+      this.isReadOnly = false
     }
   }
 }
@@ -176,7 +196,7 @@ export default {
 
 .user-info {
   position: relative;
-  width: 34%;
+  width: 37%;
   height: 100%;
   padding: 0 20px;
   background-color: #fff;
@@ -230,8 +250,7 @@ export default {
     }
 
     p:not(:first-child) {
-      margin-top: 0;
-      margin-bottom: 0;
+      margin: 10px 0;
     }
   }
 
@@ -251,6 +270,7 @@ export default {
       }
 
       & > p:last-child {
+        margin-top: 10px;
         font-size: 14px;
         font-weight: 400;
         color: rgba(117, 117, 117, 1);
@@ -265,6 +285,7 @@ export default {
       }
 
       & > p:last-child {
+        margin-top: 10px;
         font-size: 14px;
         font-weight: 400;
         color: rgba(2, 102, 214, 1);
@@ -274,7 +295,7 @@ export default {
 }
 
 .user-collect {
-  width: 66%;
+  width: 63%;
   height: 100%;
   background-color: #fff;
 
@@ -289,7 +310,7 @@ export default {
 
     li {
       float: left;
-      width: 160px;
+      width: 25%;
       height: 75px;
       font-size: 16px;
       font-weight: 600;
@@ -318,6 +339,7 @@ export default {
       padding: 0;
 
       li {
+        padding-top: 10px;
         padding-bottom: 30px;
         list-style: none;
         border-bottom: 1px solid #ebeef5;
