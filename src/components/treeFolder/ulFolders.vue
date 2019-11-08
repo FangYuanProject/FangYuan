@@ -17,11 +17,6 @@
 </template>
 <script>
 export default {
-  data() {
-    return {
-      ulShow: false
-    }
-  },
   props: {
     folder: {
       type: Array,
@@ -29,6 +24,14 @@ export default {
         return []
       }
     }
+  },
+  data() {
+    return {
+      ulShow: false
+    }
+  },
+  beforeCreate() {
+    this.$options.components.TreeFolder = () => import('./TreeFolder.vue')
   },
   methods: {
     showOrHide() {
@@ -51,9 +54,6 @@ export default {
     delList(level, id) { // 删除
       console.log('dellevelid', level, id)
     }
-  },
-  beforeCreate() {
-    this.$options.components.TreeFolder = () => import('./TreeFolder.vue')
   }
 }
 </script>

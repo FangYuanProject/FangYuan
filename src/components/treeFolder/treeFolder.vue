@@ -1,7 +1,7 @@
 <template>
   <ul class="tree-folder">
     <li v-for="child in children" :key="child.id">
-      <ul-folders v-if="child.children" :folder="child" @newDirection="newDirection" @newMajor="newMajor"></ul-folders>
+      <ul-folders v-if="child.children" :folder="child" />
       <span v-else class="w dib">
         <a href="javascript:;" :class="{'ml40': child.level === 2, 'ml60': child.level === 3, 'ml80': child.level === 4}">
           {{ child.name }}
