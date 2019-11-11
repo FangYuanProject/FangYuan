@@ -7,16 +7,16 @@
       :table-data="tableData"
       :th-data="thData"
       :table-operation="tableOperation"
-      :dialog-type="changeRoleVisible"
+      :total="tableData.length"
       @click="editRole"
     />
     <el-dialog title="权限" :visible.sync="dialogVisible" width="508px" class="add-course-modal">
 
       <span class="current-role">角色名称：管理员</span>
       <el-tree
+        ref="tree"
         :data="data"
         show-checkbox
-        ref="tree"
         default-expand-all
         node-key="id"
         highlight-current
@@ -31,6 +31,7 @@
 <script>
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
+import { addRole, delRole, editRole, roleList } from '@/api/index'
 export default {
   components: {
     tableComponents,
@@ -43,16 +44,6 @@ export default {
         { name: '删除', clickEvent: 'changeRole' }
       ],
       dialogVisible: false,
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
       data: [{
         id: 1,
         label: '一级 1',
@@ -92,19 +83,12 @@ export default {
         children: 'children',
         label: 'label'
       },
-      thData: [{ name: '角色', indexs: 'title' }],
-      tableData: [
-        {
-          title: '新闻标题1'
-        },
-        {
-          title: '新闻标题1'
-        },
-        {
-          title: '新闻标题1'
-        }
-      ]
+      thData: [{ name: 'ID', indexs: 'roleCode' }, { name: '角色', indexs: 'roleName' }],
+      tableData: []
     }
+  },
+  mounted() {
+    this.getRoleList()
   },
   methods: {
     submitForm(formName) {
@@ -129,6 +113,11 @@ export default {
     },
     changeRoleVisible() {
 
+    },
+    getRoleList() {
+      roleList().then(res => {
+        console.log(res)
+      })
     }
   }
 }

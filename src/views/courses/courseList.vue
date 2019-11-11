@@ -2,51 +2,73 @@
   <div class="course-list">
     <h2 class="title">课程列表</h2>
     <el-form ref="ruleForm" :model="ruleForm" label-width="70px" inline class="new-list-ruleForm">
-      <el-form-item label="课程ID" prop="newId">
-        <el-input v-model="ruleForm.name" />
+      <el-form-item label="课程ID" prop="goodsId">
+        <el-input v-model="ruleForm.goodsId" />
       </el-form-item>
-      <el-form-item label="课程名称" prop="title">
-        <el-input v-model="ruleForm.name" />
+      <el-form-item label="课程名称" prop="goodsName">
+        <el-input v-model="ruleForm.goodsName" />
       </el-form-item>
-      <el-form-item label="课程类型" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+      <el-form-item label="课程类型" prop="type">
+        <el-select v-model="ruleForm.type" placeholder="请选择">
           <el-option label="普通角色1" value="shanghai" />
           <el-option label="普通角色2" value="beijing" />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="ruleForm.status" placeholder="请选择">
           <el-option label="普通角色1" value="shanghai" />
           <el-option label="普通角色2" value="beijing" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <search-form-btn/>
-        <add-method-btn name="课程" @click="AddCourse"/>
+        <search-form-btn @click="searchGoodsList" />
+        <add-method-btn name="课程" @click="AddCourse" />
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :dialog-type="changeRoleVisible" @changeRole="changeUserRole" />
-    <el-dialog title="新增课程" :visible.sync="dialogVisible" width="508px" class="add-course-modal">
-      <el-form :model="form">
-        <el-form-item label="课程名称">
-          <el-input v-model="form.name" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="课程内容" class="active-origin">
-          <el-input v-model="form.name" autocomplete="off" />
-
-        </el-form-item>
-        <el-form-item label="价格" xx>
-          <el-select v-model="ruleForm.region" placeholder="请选择活动区域" class="course-price">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
+    <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :total="total" @click="goodsOperation" @cell-click="editGoods" @pagination="changePage" />
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="508px" class="add-course-modal">
+      <el-form ref="courseModal" :model="editForm" :rules="validForm">
+        <el-form-item label="课程类型" prop="type">
+          <el-select v-model="editForm.type" placeholder="请选择">
+            <el-option label="普通角色" value="普通1色" />
+            <el-option label="普通角色" value="普通角色" />
           </el-select>
         </el-form-item>
-        <el-form-item label="淘宝链接">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="课程名称" prop="goodsName">
+          <el-input v-model="editForm.goodsName" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="课程内容" class="active-origin" prop="content">
+          <el-input v-model="editForm.content" autocomplete="off" />
+
+        </el-form-item>
+        <el-form-item label="价格" prop="price">
+          <el-input v-model="editForm.price" autocomplete="off" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="淘宝链接" prop="taobaoUrl">
+          <el-input v-model="editForm.taobaoUrl" autocomplete="off" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="submit-data-btn" @click="dialogVisible = false">确 定</el-button>
+        <div v-if="dialogTitle==='新增商品'">
+          <el-button type="primary" class="edit-data-btn" @click="submitCourseData('courseModal')">
+            保存
+          </el-button>
+          <el-button type="primary" class="submit-data-btn" @click="submitCourseData('courseModal')">
+            <span class="iconfont iconfabu">&nbsp;发布</span>
+          </el-button>
+        </div>
+        <div v-else>
+          <el-button class="del-document" @click="delDocument('courseModal')">
+            删除
+          </el-button>
+          <el-button type="primary" class="edit-data-btn" @click="submitCourseData('courseModal')">
+            更新
+          </el-button>
+          <el-button type="primary" class="submit-data-btn" @click="submitForm('courseModal')">
+            <span class="iconfont iconxiajia">&nbsp;下架</span>
+          </el-button>
+
+        </div>
       </span>
     </el-dialog>
   </div>
@@ -55,6 +77,9 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
+import { AlertBox } from '@/utils/util'
+import { addGoods, delGoods, editGoods, goodseList, publishGoods, unshelveGoods, goodsDetail } from '@/api/index'
+import { validURL } from '@/utils/validate'
 export default {
   components: {
     tableComponents,
@@ -62,82 +87,120 @@ export default {
     SearchFormBtn
   },
   data() {
+    const vaildUrl = (rule, value, callback) => {
+      if (validURL(value)) {
+        callback()
+      } else {
+        callback(new Error('请输入正确格式的邮箱'))
+      }
+    }
     return {
-      tableOperation: [{ name: '发布', clickEvent: 'changeRole' }, { name: '下架', clickEvent: 'changeRole' }],
+      tableOperation: [{ name: '发布' }, { name: '下架' }],
       dialogVisible: false,
-      publiceSubjects: ['101思想政治理论', '201英语一', '202俄语', '203日语', ' 204英语二', '301数学一', '302数学二', '303数学三'],
-      professionSubjects: ['数据结构', '操作系统', '计算机组成原理', '计算机网络', ' 程序设计', ' 软件工程', '数据库'],
+      dialogTitle: '新增商品',
       ruleForm: {
-        name: '',
-        region: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        goodsId: '',
+        goodsName: '',
+        startUpload: '',
+        status: '',
+        type: '',
+        page: 1,
+        pageSize: 20
       },
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+      editForm: {
+        content: '',
+        goodsName: '',
+        price: '',
+        taobaoUrl: '',
+        type: ''
+      },
+      validForm: {
+        goodsName: [{ required: true, message: '请输入商品名称', trigger: 'blur', max: 32 }],
+        price: [{ type: 'number', required: true, message: '请输入正确格式的商品价格', trigger: 'blur' }],
+        taobaoUrl: [{ required: true, validator: vaildUrl, trigger: 'blur' }],
+        type: [{ required: true, message: '请选择课程类型', trigger: 'change' }]
       },
       thData: [
-        { name: '课程ID', indexs: 'id' },
-        { name: '课程名称', indexs: 'title' },
-        { name: '课程类型', indexs: 'pone' },
-        { name: '状态', indexs: 'email' },
-        { name: '创建时间', indexs: 'publish' }
+        { name: '课程ID', indexs: 'goodsId' },
+        { name: '课程名称', indexs: 'goodsName' },
+        { name: '课程类型', indexs: 'type' },
+        { name: '状态', indexs: 'status' },
+        { name: '创建时间', indexs: 'startUpload' }
       ],
-      tableData: [
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00'
-        }
-      ]
+      tableData: [],
+      total: 0,
+      goodsId: ''
     }
   },
+  mounted() {
+    this.getCourseList()
+  },
   methods: {
-    submitForm(formName) {
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     alert('submit!')
-      //     } else {
-      //     console.log('error submit!!')
-      //       return false
-      //     }
-      // })
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
+    searchGoodsList() {
+      this.getCourseList()
     },
     AddCourse() {
-      console.log('123')
       this.dialogVisible = true
     },
-    changeRoleVisible() {
-
+    getCourseList() {
+      goodseList(this.ruleForm).then(res => {
+        this.tableData = res.data
+        this.total = res.total
+      })
+    },
+    submitCourseData(formName) {
+      this.$refs[formName].validate((vaild) => {
+        if (vaild) {
+          console.log(this.editForm)
+          addGoods(this.editForm).then(res => {
+            this.dialogVisible = false
+            this.getCourseList()
+          })
+        }
+      })
+    },
+    goodsOperation(type, data) {
+      this.goodsId = data.goodsId
+      if (type.name === '发布') {
+        this.publishGoods(data.goodsId)
+      } else {
+        unshelveGoods({ goodsId: data.goodsId }).then(res => {
+          AlertBox('success', '下架成功')
+        })
+      }
+    },
+    publishGoods(id) {
+      publishGoods({ goodsId: id }).then(res => {
+        AlertBox('success', '发布成功')
+      })
+    },
+    changePage(pageData) {
+      this.ruleForm.page = pageData.page
+      this.ruleForm.pageSize = pageData.limit
+      this.getCourseList()
+    },
+    editGoods(row, colum) {
+      if (colum.label === '课程ID') {
+        this.dialogVisible = true
+        this.dialogTitle = '编辑商品'
+        this.goodsId = row.goodsId
+        goodsDetail({ goodsId: row.goodsId }).then(res => {
+          this.editForm = {
+            content: res.data.content,
+            goodsName: res.data.goodsName,
+            price: res.data.price,
+            taobaoUrl: res.data.taobaoUrl,
+            type: res.data.type
+          }
+        })
+      }
+    },
+    delDocument() {
+      delGoods({ goodsId: this.goodsId }).then(res => {
+        this.dialogVisible = false
+        AlertBox('success', '删除成功')
+        this.getCourseList()
+      })
     }
   }
 }

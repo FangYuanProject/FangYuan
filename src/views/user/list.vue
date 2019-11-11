@@ -153,6 +153,8 @@ export default {
       })
     },
     searchUserList() {
+      this.ruleForm.page = 1
+      this.ruleForm.pageSize = 20
       this.getUserList()
     },
     addUser() {
@@ -180,7 +182,6 @@ export default {
       })
     },
     changePage(pageData) {
-      console.log(pageData)
       this.page = pageData.page
       this.pageSize = pageData.limit
       this.getUserList(this.ruleForm)

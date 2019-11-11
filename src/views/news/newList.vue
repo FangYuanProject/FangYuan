@@ -117,7 +117,9 @@ export default {
       }
     },
     searchNewsList() {
-      console.log(this.ruleForm)
+      this.ruleForm.page = 1
+      this.ruleForm.pageSize = 20
+      this.getNewsList()
     },
     getNewsList() {
       newsList(this.ruleForm).then(res => {
