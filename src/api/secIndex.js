@@ -27,7 +27,7 @@ export async function schoolDel(data) {
   return request({
     url: '/school/delete',
     method: 'post',
-    data: clearNullValue(data)
+    data: data
   })
 }
 
@@ -36,7 +36,7 @@ export async function schoolDetail(data) {
   return request({
     url: '/school/detail',
     method: 'post',
-    data: clearNullValue(data)
+    data: data
   })
 }
 
@@ -63,6 +63,66 @@ export async function schoolUnshelve(data) {
   return request({
     url: '/school/unshelve',
     method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 学院
+ *
+ */
+
+// 新建学院
+export async function collegeAdd(data) {
+  return request({
+    url: '/college/add',
+    method: 'post',
     data: clearNullValue(data)
+  })
+}
+
+// 删除学院
+export async function collegeDel(data) {
+  return request({
+    url: '/college/delete',
+    method: 'post',
+    data: data
+  })
+}
+
+// 学院详情
+export async function collegeDetail(data) {
+  return request({
+    url: '/college/detail',
+    method: 'post',
+    data: data
+  })
+}
+
+// 编辑学院
+export async function collegeEdit(data) {
+  return request({
+    url: '/college/edit',
+    method: 'post',
+    data: clearNullValue(data)
+  })
+}
+
+/**
+ * 地区列表
+ */
+export async function regionList() {
+  return request({
+    url: '/region/list',
+    method: 'post'
+  })
+}
+/**
+ * 学校特性列表
+ */
+export async function propertyList() {
+  return request({
+    url: '/property/list',
+    method: 'post'
   })
 }

@@ -12,15 +12,13 @@
         <el-input v-model="ruleForm.universityName" />
       </el-form-item>
       <el-form-item label="地区" prop="region">
-        <el-select v-model="ruleForm.location" placeholder="请选择">
-          <el-option label="上海" value="shanghai" />
-          <el-option label="北京" value="beijing" />
+        <el-select v-model="ruleForm.region" placeholder="请选择">
+          <el-option v-for="(reg, index) in ruleForm.regions" :key="index" :label="reg" :value="reg" />
         </el-select>
       </el-form-item>
       <el-form-item label="特性" prop="region">
         <el-select v-model="ruleForm.property" placeholder="请选择">
-          <el-option label="985" value="985" />
-          <el-option label="211" value="211" />
+          <el-option v-for="(pro, index) in ruleForm.properties" :label="pro" :value="pro" />
         </el-select>
       </el-form-item>
       <el-form-item label="新建时间" prop="region">
@@ -51,6 +49,7 @@
       :table-data="tableData"
       :th-data="thData"
       :table-operation="tableOperation"
+      @pagination="changePage"
       @click="publishOrOutSell"
       @cell-click="editSchool"
     />
@@ -97,7 +96,7 @@ import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 import UploadPicBtn from '@/components/UploadPictureBtn'
-import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve } from '@/api/secIndex'
+import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList } from '@/api/secIndex'
 export default {
   components: {
     tableComponents,
@@ -131,6 +130,7 @@ export default {
       ruleForm: {
         name: '',
         region: '',
+        regions: [],
         date2: '',
         delivery: false,
         type: [],
@@ -145,6 +145,9 @@ export default {
         property: '',
         properties: ['985', '211']
       },
+      total: 0,
+      page: 1,
+      pageSize: 20,
       thData: [
         { name: '学校ID', indexs: 'id' },
         { name: '学校代码', indexs: 'schoolCode' },
@@ -191,53 +194,80 @@ export default {
   },
   methods: {
     init() {
+      this.getProperty()
+      this.getRegionList()
       this.getList()
     },
+    getProperty() {
+      propertyList()
+        .then(response => {
+          this.ruleForm.properties = response.data || []
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getRegionList() {
+      regionList()
+        .then(response => {
+          this.ruleForm.regions = response.data || []
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     getList() {
-      let data = {
-        id: '',
-        location: '',
-        page: '' || 1,
-        pageSize: '',
-        property: '',
-        universityName: ''
+      const data = {
+        // id: '',
+        location: this.ruleForm.region || '',
+        page: this.page || 1,
+        pageSize: this.pageSize || 20,
+        property: this.ruleForm.property || '',
+        universityName: this.ruleForm.universityName
       }
       schoolList(data)
         .then((response) => {
-          console.log(response)
+          const result = response
+          this.total = result.total || 0
+          this.tableData = response.data
         })
         .catch((error) => {
           console.log('error', error)
         })
     },
+    changePage(pageData) {
+      this.page = pageData.page
+      this.pageSize = pageData.limit
+      this.getList()
+    },
     submitForm(formName, saveOrPublish) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let data = {
+          const data = {
             location: this.modalForm.location,
             property: this.modalForm.property,
             universityCode: this.modalForm.universityCode,
             universityName: this.modalForm.universityName
           }
           schoolAdd(data)
-              .then(response => {
-                let detail = response.data
-                if (detail && detail.code) {
-                  console.log('新增成功')
-                  if (saveOrPublish === 1) { // 新增并发布
-                    schoolRelease({id: detail.id})
-                      .then(response1 => {
-                        console.log(response1)
-                      })
-                      .catch(error1 => {
-                        console.log('error', error1)
-                      })
-                  }
+            .then(response => {
+              const detail = response.data
+              if (detail && detail.code) {
+                console.log('新增成功')
+                if (saveOrPublish === 1) { // 新增并发布
+                  schoolRelease({ id: detail.id })
+                    .then(response1 => {
+                      console.log(response1)
+                    })
+                    .catch(error1 => {
+                      console.log('error', error1)
+                    })
                 }
-              })
-              .catch(error => {
-                console.log('error', error)
-              })
+              }
+            })
+            .catch(error => {
+              console.log('error', error)
+            })
         } else {
           console.log('error submit!!')
           return false
