@@ -194,7 +194,7 @@ export default {
       this.getList()
     },
     getList() {
-      let data = {
+      const data = {
         id: '',
         location: '',
         page: '' || 1,
@@ -213,31 +213,31 @@ export default {
     submitForm(formName, saveOrPublish) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let data = {
+          const data = {
             location: this.modalForm.location,
             property: this.modalForm.property,
             universityCode: this.modalForm.universityCode,
             universityName: this.modalForm.universityName
           }
           schoolAdd(data)
-              .then(response => {
-                let detail = response.data
-                if (detail && detail.code) {
-                  console.log('新增成功')
-                  if (saveOrPublish === 1) { // 新增并发布
-                    schoolRelease({id: detail.id})
-                      .then(response1 => {
-                        console.log(response1)
-                      })
-                      .catch(error1 => {
-                        console.log('error', error1)
-                      })
-                  }
+            .then(response => {
+              const detail = response.data
+              if (detail && detail.code) {
+                console.log('新增成功')
+                if (saveOrPublish === 1) { // 新增并发布
+                  schoolRelease({ id: detail.id })
+                    .then(response1 => {
+                      console.log(response1)
+                    })
+                    .catch(error1 => {
+                      console.log('error', error1)
+                    })
                 }
-              })
-              .catch(error => {
-                console.log('error', error)
-              })
+              }
+            })
+            .catch(error => {
+              console.log('error', error)
+            })
         } else {
           console.log('error submit!!')
           return false

@@ -3,31 +3,32 @@
     <div class="title">
       <span>新建新闻</span>
       <div>
-        <button type="primary" class="del-news">删除</button>
-        <button type="primary" class="save-news">保存</button>
+        <button v-if="params.id!==''" type="primary" class="del-news">删除</button>
+        <button type="primary" class="save-news" @click="saveNewsEvent">保存</button>
         <button type="primary" class="publish-news"><span class="iconfont iconfabu" />&nbsp;发布</button>
-        <button type="primary" class="off-sale"><span class="iconfont iconxiajia" />&nbsp;下架</button>
+        <button v-if="params.id!==''" type="primary" class="off-sale" @click="publishNewsEvent"><span class="iconfont iconxiajia" />&nbsp;下架</button>
       </div>
     </div>
     <div class="news-content">
-      <el-form label-width="100px">
-        <el-form-item label="新闻标题">
-          <el-input autocomplete="off" placeholder="请输入" />
+      <el-form ref="newsContent" label-width="100px" :rules="newsContent">
+        <el-form-item label="新闻标题" prop="title">
+          <el-input v-model="params.title" autocomplete="off" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="新闻类型" class="news-type">
-          <el-select placeholder="请选择活">
+        <el-form-item label="新闻类型" class="news-type" prop="type">
+          <el-select v-model="params.type" placeholder="请选择活">
             <el-option label="普通角色1" value="shanghai" />
             <el-option label="普通角色2" value="beijing" />
           </el-select>
         </el-form-item>
-        <el-form-item label="相关学校" class="relate-school">
-          <el-select placeholder="请选择">
+        <el-form-item label="相关学校" class="relate-school" prop="correlation">
+          <el-select v-model="params.correlation" placeholder="请选择">
             <el-option label="普通角色1" value="shanghai" />
             <el-option label="普通角色2" value="beijing" />
           </el-select>
         </el-form-item>
-        <el-form-item label="新闻摘要">
+        <el-form-item label="新闻摘要" prop="summary">
           <el-input
+            v-model="params.summary"
             type="textarea"
             autocomplete="off"
             rows="5"
@@ -35,8 +36,8 @@
             maxlength="200"
           />
         </el-form-item>
-        <el-form-item label="新闻摘要">
-          <tinymce id="tinymce" />
+        <el-form-item label="新闻内容" prop="content">
+          <tinymce id="tinymce" v-model="params.content" :content-html="params.content" @click="clickToolbar" />
         </el-form-item>
       </el-form>
     </div>
@@ -44,11 +45,43 @@
 </template>
 <script>
 import Tinymce from '@/components/Tinymce/Editor'
+import { publishNews, saveNews, unshelveNews, deleteNews, newsDetail, editNews } from '@/api/index'
 export default {
+  name: 'NewsDetail',
   components: { Tinymce },
   data() {
     return {
-      name: 'tinymce'
+      params: {
+        content: '',
+        correlation: '',
+        summary: '',
+        title: '',
+        type: '',
+        id: this.$route.query.id ? this.$route.query.id : ''
+      },
+      newsContent: {
+        content: [{ require: true, message: '请输入新闻内容', trigger: 'blur', max: '256' }],
+        correlation: [{ require: true, message: '请选择相关学校', trigger: 'change' }],
+        summary: [{ require: true, message: '请输入摘要', trigger: 'blur', max: '128' }],
+        title: [{ require: true, message: '请输入新闻标题', trigger: 'blur', max: '32' }],
+        type: [{ require: true, message: '请选择新闻类型', trigger: 'change' }]
+      }
+    }
+  },
+  methods: {
+    publishNewsEvent() {
+      publishNews(this.params).then(res => {
+        console.log(res)
+      })
+    },
+    saveNewsEvent() {
+      console.log(this.params)
+      saveNews(this.params).then(res => {
+        console.log(res)
+      })
+    },
+    clickToolbar() {
+
     }
   }
 }
