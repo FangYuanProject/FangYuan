@@ -2,42 +2,46 @@
   <div id="new-list">
     <h2 class="title">新闻列表</h2>
     <el-form ref="ruleForm" :model="ruleForm" label-width="60px" inline class="new-list-ruleForm">
-      <el-form-item label="新闻ID" prop="newId">
-        <el-input v-model="ruleForm.name" />
+      <el-form-item label="新闻ID" prop="id">
+        <el-input v-model="ruleForm.id" />
       </el-form-item>
       <el-form-item label="标题" prop="title">
-        <el-input v-model="ruleForm.name" />
+        <el-input v-model="ruleForm.title" />
       </el-form-item>
-      <el-form-item label="状态" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="ruleForm.status" placeholder="请选择活动区域">
           <el-option label="普通角色1" value="shanghai" />
           <el-option label="普通角色2" value="beijing" />
         </el-select>
       </el-form-item>
-      <el-form-item label="类型" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+      <el-form-item label="类型" prop="type">
+        <el-select v-model="ruleForm.type" placeholder="请选择活动区域">
           <el-option label="普通角色1" value="shanghai" />
           <el-option label="普通角色2" value="beijing" />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建时间" prop="region" label-width="70px">
+      <el-form-item label="创建时间" prop="createBeginTime" label-width="70px">
         <el-date-picker
+          v-model="ruleForm.createBeginTime"
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
       </el-form-item>
-      <el-form-item label="发布时间" prop="region" label-width="70px">
+      <el-form-item label="发布时间" prop="releaseBeginTime" label-width="70px">
         <el-date-picker
+          v-model="ruleForm.releaseBeginTime"
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
         />
       </el-form-item>
-      <el-form-item label="下架时间" prop="region" label-width="70px">
+      <el-form-item label="下架时间" prop="unshelveBeginTime" label-width="70px">
         <el-date-picker
+          v-model="ruleForm.unshelveBeginTime"
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
@@ -45,17 +49,19 @@
         />
       </el-form-item>
       <el-form-item>
-        <search-form-btn />
+        <search-form-btn @click="searchNewsList" />
         <add-method-btn name="新闻" @click="addNews" />
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" @cell-click="editNews" />
+    <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :total="tableData.length" @cell-click="editNews" @pagination="changePage" />
   </div>
 </template>
 <script>
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
+import { newsList } from '@/api/index'
+
 export default {
   components: {
     tableComponents,
@@ -66,13 +72,15 @@ export default {
     return {
       tableOperation: [{ name: '发布' }, { name: '下架' }],
       ruleForm: {
-        name: '',
-        region: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        id: '',
+        title: '',
+        status: '',
+        type: '',
+        releaseBeginTime: '',
+        createBeginTime: '',
+        unshelveBeginTime: '',
+        page: 1,
+        pageSize: 20
       },
       form: {
         name: '',
@@ -87,57 +95,16 @@ export default {
       thData: [
         { name: '新闻ID', indexs: 'id' },
         { name: '标题', indexs: 'title' },
-        { name: '类型', indexs: 'pone' },
-        { name: '创建时间', indexs: 'email' },
-        { name: '发布时间', indexs: 'publish' },
-        { name: '下架时间', indexs: 'time' },
+        { name: '类型', indexs: 'type' },
+        { name: '创建时间', indexs: 'createBeginTime' },
+        { name: '发布时间', indexs: 'releaseBeginTime' },
+        { name: '下架时间', indexs: 'unshelveBeginTime' },
         { name: '状态', indexs: 'status' }
       ],
-      tableData: [
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员',
-          time: '普通管理员',
-          status: '普通管理员'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员',
-          time: '普通管理员',
-          status: '普通管理员'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员',
-          time: '普通管理员',
-          status: '普通管理员'
-        }
-      ]
+      tableData: []
     }
   },
   methods: {
-    submitForm(formName) {
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     alert('submit!')
-      //     } else {
-      //     console.log('error submit!!')
-      //       return false
-      //     }
-      // })
-    },
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
@@ -146,8 +113,21 @@ export default {
     },
     editNews(row, column, cell, event) {
       if (column.label === '新闻ID') {
-        this.$router.push({ path: '/news-detail' })
+        this.$router.push({ path: '/news-detail', query: row.id })
       }
+    },
+    searchNewsList() {
+      console.log(this.ruleForm)
+    },
+    getNewsList() {
+      newsList(this.ruleForm).then(res => {
+        console.log(res)
+      })
+    },
+    changePage(pageData) {
+      this.ruleForm.page = pageData.page
+      this.ruleForm.pageSize = pageData.limit
+      this.getNewsList()
     }
   }
 }

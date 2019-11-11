@@ -8,7 +8,7 @@
       <!-- <el-dropdown class="avatar-container" trigger="click"> -->
       <div class="avatar-wrapper">
         <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
-        <span class="user-name">张一凡</span> &nbsp;| &nbsp;<span class="log-out">退出系统</span>
+        <span class="user-name">张一凡</span> &nbsp;| &nbsp;<span class="log-out" @click="logout">退出系统</span>
         <!-- <i class="el-icon-caret-bottom" /> -->
       </div>
       <!-- <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -101,6 +101,7 @@ export default {
       font-size: 14px;
       font-weight: 400;
       color: rgba(2, 102, 214, 1);
+      cursor: pointer;
     }
 
     &:focus {

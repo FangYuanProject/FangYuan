@@ -1,6 +1,6 @@
 <template>
   <div class="tinymce">
-    <Editor id="tinymce" v-model="tinymceHtml" :init="init" />
+    <Editor id="tinymce" v-model="html" :init="defaultInit" />
   </div>
 </template>
 
@@ -11,6 +11,7 @@
  */
 import tinymce from 'tinymce/tinymce'
 import Editor from '@tinymce/tinymce-vue'
+import { uploadImg } from '@/api/index'
 import 'tinymce/themes/silver'
 // 插件引入
 import 'tinymce/plugins/image'// 插入上传图片插件
@@ -72,12 +73,18 @@ export default {
   components: {
     Editor
   },
+  props: {
+    contentHtml: {
+      type: String,
+      default: () => {
 
+      }
+    }
+  },
   data() {
     return {
-      init: {
-        selector: '#tinymce', // 选择HTML元素
-
+      defaultInit: {
+        selector: '#tinymce',
         language_url: '/tinymce/zh_CN.js', // public目录下
         language: 'zh_CN',
 
@@ -102,11 +109,24 @@ export default {
         plugins:
           'lists image media table wordcount code fullscreen help  toc fullpage autosave nonbreaking insertdatetime visualchars visualblocks searchreplace spellchecker pagebreak link charmap paste print preview hr anchor',
         toolbar:
-          'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat'
+          'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat',
+        images_upload_handler: function(blobInfo, success, failure) {
+          const formData = new FormData()
+          uploadImg(formData).then(res => {
+            console.log(res)
+          })
+        }
 
       },
-
-      tinymceHtml: '123123'
+      html: this.content
+    }
+  },
+  watch: {
+    contentHtml(newVal) {
+      this.html = newVal
+    },
+    html(val) {
+      this.$emit('input', val)
     }
   },
 

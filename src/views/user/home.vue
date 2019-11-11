@@ -36,7 +36,7 @@
     <div class="float-right user-collect">
       <div class="tab">
         <ul>
-          <li v-for="(tab,key) in tabList" :key="key" :class="[tabIndex===key ? 'active' :'']" @click="changeTab(key,tab.index)"><span :class="['iconfont',tab.icon]" />&nbsp;{{ tab.name }}&nbsp;<em>{{ tab.collectNum }}</em></li>
+          <li v-for="(tab,key) in tabList" :key="key" :class="[tabIndex===key ? 'active' :'']" @click="changeTab(key,tab.index)"><span :class="['iconfont',tab.icon]" />&nbsp;{{ tab.name }}&nbsp;<em>{{ tabContentList[tabContentShow].length }}</em></li>
         </ul>
       </div>
       <div class="tab-content">
@@ -55,23 +55,30 @@
             </p>
           </li>
         </ul>
+        <div v-if="tabContentList[tabContentShow].length===0" class="pagination">
+          暂无数据
+        </div>
+        <div v-else class="pagination">
+          <Pagination :total="tabContentList[tabContentShow].length" @pagination="selectPage" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { userDetail } from '@/api/index'
+import { userDetail, collectNews, collectSchool, collectExamList, collectPostList } from '@/api/index'
 import { AlertBox } from '@/utils/util'
+import Pagination from '@/components/Pagination'
 import Clipboard from 'clipboard'
 export default {
-  components: {},
+  components: { Pagination },
   data() {
     return {
       userInfo: {
         email: [{ name: '邮箱', text: '' }],
         phoneNumber: [{ name: '手机', text: '' }],
-        prepareUniversity: [{ name: '本科院校', text: '' }],
-        undergraduateUniversity: [{ name: '考研院校', text: '' }],
+        undergraduateUniversity: [{ name: '本科院校', text: '' }],
+        prepareUniversity: [{ name: '考研院校', text: '' }],
         crossProfession: [{ name: '是否跨考', text: '' }],
         entranceYear: [{ name: '本科入学年份', text: '' }]
       },
@@ -88,53 +95,41 @@ export default {
       ],
       tabIndex: 0,
       tabContentShow: 'news',
+      tabListParams: {
+        userId: this.$route.query.id,
+        page: 1,
+        pageSize: 20
+      },
       tabContentList: {
-        news: [
-          { title: '新闻-新闻标题，今年北大又扩招50人',
-            content: '高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。',
-            date: '2019-10-31 12:12',
-            collect: '2',
-            view: '2' }
-        ],
-        school: [
-          { title: '学校-新闻标题，今年北大又扩招50人',
-            content: '高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。',
-            date: '2019-10-31 12:12',
-            collect: '2',
-            view: '2' }
-        ],
-        document: [
-          { title: '真题-新闻标题，今年北大又扩招50人',
-            content: '高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。',
-            date: '2019-10-31 12:12',
-            collect: '2',
-            view: '2' }
-        ],
-        forum: [
-          { title: '帖子-新闻标题，今年北大又扩招50人',
-            content: '高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。',
-            date: '2019-10-31 12:12',
-            collect: '2',
-            view: '2' }
-        ],
-        course: [
-          { title: '课程-新闻标题，今年北大又扩招50人',
-            content: '高校扩招，也称为大学扩招或大学生扩招，是指中华人民共和国境内（即中国大陆）自1999年开始的，基于解决经济和就业问题的扩大普通高校本专科院校招生人数的教育改革政策，简单来说即是自1999年开始的高等教育（包括大学本科、研究生）不断扩大招生人数的教育改革政策。扩招源于1999年教育部出台的《面向21世纪教育振兴行动计划》。文件提出到2010年，高等教育毛入学率将达到适龄青年的15%。进入2008年后，教育部表示1999年开始的扩招过于急躁并逐渐控制扩招比例，但在2009年环球金融风暴的背景下，教育部开始了研究生招生比例的调节。',
-            date: '2019-10-31 12:12',
-            collect: '2',
-            view: '2' }
-        ]
-
+        news: [],
+        school: [],
+        document: [],
+        forum: []
       }
     }
   },
   mounted() {
     this.getUserInfo()
+    this.getCollectNews()
   },
   methods: {
     changeTab(index, tabName) {
       this.tabIndex = index
       this.tabContentShow = tabName
+      this.tabListParams = {
+        page: 1,
+        pageSize: 20,
+        userId: this.$route.query.id
+      }
+      if (this.tabContentShow === 'news') {
+        this.getCollectNews()
+      } else if (this.tabContentShow === 'school') {
+        this.getCollectSchool()
+      } else if (this.tabContentShow === 'document') {
+        this.getCollectExam()
+      } else {
+        this.getCollectPost()
+      }
     },
     getUserInfo() {
       userDetail({ id: this.$route.query.id }).then(res => {
@@ -165,6 +160,30 @@ export default {
     },
     editUserInfo() {
       this.isReadOnly = false
+    },
+    getCollectNews() {
+      collectNews(this.tabListParams).then(res => {
+        this.tabContentList.news = res.data
+      })
+    },
+    getCollectSchool() {
+      collectSchool(this.tabListParams).then(res => {
+        this.tabContentList.school = res.data
+      })
+    },
+    getCollectExam() {
+      collectExamList(this.tabListParams).then(res => {
+        this.tabContentList.document = res.data
+      })
+    },
+    getCollectPost() {
+      collectPostList(this.tabListParams).then(res => {
+        this.tabContentList.forum = res.data
+      })
+    },
+    selectPage(pageData) {
+      this.tabListParams.page = pageData.page
+      this.tabListParams.pageSize = pageData.pageSize
     }
   }
 }
@@ -196,7 +215,7 @@ export default {
 
 .user-info {
   position: relative;
-  width: 37%;
+  width: 33%;
   height: 100%;
   padding: 0 20px;
   background-color: #fff;
@@ -295,7 +314,7 @@ export default {
 }
 
 .user-collect {
-  width: 63%;
+  width: 67%;
   height: 100%;
   background-color: #fff;
 
@@ -369,6 +388,11 @@ export default {
           }
         }
       }
+    }
+
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
     }
   }
 }
