@@ -150,13 +150,13 @@ export default {
       pageSize: 20,
       thData: [
         { name: '学校ID', indexs: 'id' },
-        { name: '学校代码', indexs: 'schoolCode' },
-        { name: '学校名称', indexs: 'title' },
-        { name: '地区', indexs: 'pone' },
-        { name: '特性', indexs: 'pone' },
+        { name: '学校代码', indexs: 'universityCode' },
+        { name: '学校名称', indexs: 'universityName' },
+        { name: '地区', indexs: 'location' },
+        { name: '特性', indexs: 'property' },
         { name: '新建时间', indexs: 'publish' },
         { name: '热度', indexs: 'undercarriage' },
-        { name: '状态', indexs: 'undercarriage' }
+        { name: '状态', indexs: 'status' }
       ],
       tableData: [
         {
