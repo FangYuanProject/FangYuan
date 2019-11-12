@@ -1,17 +1,11 @@
 <template>
   <div id="table-render">
     <el-table :data="tableData" highlight-current-row style="width: 100%;" :header-cell-style="{backgroundColor:'#FBFBFB',color:'rgba(51,51,51,1)',fontSize:'16px',height:'53px'}" @cell-click="handleCellClick">
-      <el-table-column v-for="(item,index) in thData" :key="index" :label="item.name" :prop="item.indexs" align="center" :formatter="formatter">
+      <el-table-column v-for="(item,index) in thData" :key="index" :label="item.name" :prop="item.indexs" align="center" :formatter="item.formatter">
         <template slot-scope="scope">
           <span>{{ scope.row[item.indexs] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
-        <template slot-scope="scope">
-          <el-button v-for="(item,index) in tableOperation" :key="index+1" type="primary" class="submit-data-btn" @click="clickEvent(item, scope.row)">{{ item.name }}</el-button>
-        </template>
-      </el-table-column>
-
     </el-table>
     <el-pagination
       :background="background"
@@ -116,6 +110,7 @@ export default {
 
   mounted() {
     // console.log(this.tableOperation)
+    // this.formatterThead()
   },
 
   methods: {
@@ -137,8 +132,14 @@ export default {
     handleCellClick(row, column, cell, event) {
       this.$emit('cell-click', row, column, cell, event)
     },
-    formatter(row, column) {
+    formatter(row) {
+      console.log(row)
+      console.log('row')
       return '123'
+    },
+    formatterThead(row, column) {
+      console.log(row)
+      console.log('456')
     }
   }
 }
@@ -167,6 +168,10 @@ export default {
 
   .el-table .cell {
     font-size: 14px;
+  }
+
+  .el-table__row td:last-child .cell {
+    color: #0266d6;
   }
 
   .el-button--primary {

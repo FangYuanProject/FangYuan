@@ -69,3 +69,10 @@ export const publishGoods = data => axios.post('/goods/release', clearNullValue(
 export const unshelveGoods = data => axios.post('/goods/unshelve', clearNullValue(data))
 // 课程详情
 export const goodsDetail = data => axios.post('/goods/detail', clearNullValue(data))
+// 课程类型
+export const goodsType = () => axios.post('/goods/type')
+/*
+    **** 公共模块 *****
+*/
+export const status = () => axios.post('/status/list')
+

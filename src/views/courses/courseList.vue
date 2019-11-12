@@ -10,28 +10,21 @@
       </el-form-item>
       <el-form-item label="课程类型" prop="type">
         <el-select v-model="ruleForm.type" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
+          <el-option v-for="(item,index) in typeOptions" :key="index" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="ruleForm.status" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
-        </el-select>
-      </el-form-item>
+      <StatusSelect v-model="ruleForm.status" is-inline="inline" prop="status" @change="selectStatus" />
       <el-form-item>
         <search-form-btn @click="searchGoodsList" />
         <add-method-btn name="课程" @click="AddCourse" />
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :total="total" @click="goodsOperation" @cell-click="editGoods" @pagination="changePage" />
+    <tableComponents :table-data="tableData" :th-data="thData" :total="total" @cell-click="editGoods" @pagination="changePage" />
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="508px" class="add-course-modal">
       <el-form ref="courseModal" :model="editForm" :rules="validForm">
         <el-form-item label="课程类型" prop="type">
           <el-select v-model="editForm.type" placeholder="请选择">
-            <el-option label="普通角色" value="普通1色" />
-            <el-option label="普通角色" value="普通角色" />
+            <el-option v-for="(item,index) in typeOptions" :key="index" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item label="课程名称" prop="goodsName">
@@ -53,7 +46,7 @@
           <el-button type="primary" class="edit-data-btn" @click="submitCourseData('courseModal')">
             保存
           </el-button>
-          <el-button type="primary" class="submit-data-btn" @click="submitCourseData('courseModal')">
+          <el-button type="primary" class="submit-data-btn" @click="publishGoods()">
             <span class="iconfont iconfabu">&nbsp;发布</span>
           </el-button>
         </div>
@@ -64,7 +57,7 @@
           <el-button type="primary" class="edit-data-btn" @click="submitCourseData('courseModal')">
             更新
           </el-button>
-          <el-button type="primary" class="submit-data-btn" @click="submitForm('courseModal')">
+          <el-button type="primary" class="submit-data-btn" @click="unsellGoods()">
             <span class="iconfont iconxiajia">&nbsp;下架</span>
           </el-button>
 
@@ -77,27 +70,31 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import { AlertBox } from '@/utils/util'
-import { addGoods, delGoods, editGoods, goodseList, publishGoods, unshelveGoods, goodsDetail } from '@/api/index'
+import StatusSelect from '@/components/StatusOptions'
+import { AlertBox, dateTimeStr, vaildForm } from '@/utils/util'
+import { addGoods, delGoods, editGoods, goodseList, publishGoods, unshelveGoods, goodsDetail, goodsType } from '@/api/index'
 import { validURL } from '@/utils/validate'
 export default {
   components: {
     tableComponents,
     AddMethodBtn,
-    SearchFormBtn
+    SearchFormBtn,
+    StatusSelect
   },
   data() {
     const vaildUrl = (rule, value, callback) => {
       if (validURL(value)) {
         callback()
       } else {
-        callback(new Error('请输入正确格式的邮箱'))
+        callback(new Error('请输入正确格式的链接'))
+        return
       }
     }
     return {
       tableOperation: [{ name: '发布' }, { name: '下架' }],
-      dialogVisible: false,
-      dialogTitle: '新增商品',
+      dialogVisible: false, // 弹窗判断显示
+      dialogTitle: '新增商品', // 弹窗标题
+      // 查询表单
       ruleForm: {
         goodsId: '',
         goodsName: '',
@@ -110,30 +107,34 @@ export default {
       editForm: {
         content: '',
         goodsName: '',
-        price: '',
+        price: 0,
         taobaoUrl: '',
-        type: ''
+        type: '',
+        goodsId: ''
       },
       validForm: {
         goodsName: [{ required: true, message: '请输入商品名称', trigger: 'blur', max: 32 }],
-        price: [{ type: 'number', required: true, message: '请输入正确格式的商品价格', trigger: 'blur' }],
+        price: [{ required: true, message: '请输入正确格式的商品价格', trigger: 'blur' }],
         taobaoUrl: [{ required: true, validator: vaildUrl, trigger: 'blur' }],
         type: [{ required: true, message: '请选择课程类型', trigger: 'change' }]
       },
       thData: [
-        { name: '课程ID', indexs: 'goodsId' },
+        { name: '课程ID', indexs: 'id' },
         { name: '课程名称', indexs: 'goodsName' },
         { name: '课程类型', indexs: 'type' },
         { name: '状态', indexs: 'status' },
-        { name: '创建时间', indexs: 'startUpload' }
+        { name: '创建时间', indexs: 'createTime' },
+        { name: '操作', indexs: 'operation' }
       ],
       tableData: [],
-      total: 0,
-      goodsId: ''
+      total: 0, // 列表总数
+      goodsId: '',
+      typeOptions: [] // 课程类型
     }
   },
   mounted() {
     this.getCourseList()
+    this.getCourseType()
   },
   methods: {
     searchGoodsList() {
@@ -142,16 +143,20 @@ export default {
     AddCourse() {
       this.dialogVisible = true
     },
+    // 课程列表
     getCourseList() {
       goodseList(this.ruleForm).then(res => {
-        this.tableData = res.data
         this.total = res.total
+        res.data.forEach(list => {
+          list.createTime = dateTimeStr(list.createTime)
+          list.operation = (list.status === '2002' || list.status === '2001') ? '下架' : (list.status === '2003' || list.status === '2004' ? '发布' : '')
+        })
+        this.tableData = res.data
       })
     },
     submitCourseData(formName) {
       this.$refs[formName].validate((vaild) => {
         if (vaild) {
-          console.log(this.editForm)
           addGoods(this.editForm).then(res => {
             this.dialogVisible = false
             this.getCourseList()
@@ -159,21 +164,29 @@ export default {
         }
       })
     },
-    goodsOperation(type, data) {
-      this.goodsId = data.goodsId
-      if (type.name === '发布') {
-        this.publishGoods(data.goodsId)
-      } else {
-        unshelveGoods({ goodsId: data.goodsId }).then(res => {
-          AlertBox('success', '下架成功')
-        })
-      }
-    },
+    // 发布商品
     publishGoods(id) {
-      publishGoods({ goodsId: id }).then(res => {
-        AlertBox('success', '发布成功')
+      id = id || this.goodsId
+      const params = id || this.editForm
+      // this.$refs['courseModal'].validate((vaild) => {
+      //   if (vaild) {
+      //     publishGoods(params).then(res => {
+      //       AlertBox('success', '发布成功')
+      //       this.getCourseList()
+      //     })
+      //   }
+      // })
+      vaildForm(this.$refs['courseModal'], this.getCourseList())
+    },
+    // 下架商品
+    unsellGoods(id) {
+      id = id || this.goodsId
+      unshelveGoods({ goodsId: id }).then(res => {
+        AlertBox('success', '下架成功')
+        this.getCourseList()
       })
     },
+    // 分页操作
     changePage(pageData) {
       this.ruleForm.page = pageData.page
       this.ruleForm.pageSize = pageData.limit
@@ -183,16 +196,23 @@ export default {
       if (colum.label === '课程ID') {
         this.dialogVisible = true
         this.dialogTitle = '编辑商品'
-        this.goodsId = row.goodsId
-        goodsDetail({ goodsId: row.goodsId }).then(res => {
+        this.goodsId = row.id
+        goodsDetail({ goodsId: row.id }).then(res => {
           this.editForm = {
             content: res.data.content,
             goodsName: res.data.goodsName,
             price: res.data.price,
             taobaoUrl: res.data.taobaoUrl,
-            type: res.data.type
+            type: res.data.type,
+            goodsId: res.data.id
           }
         })
+      } else if (colum.label === '操作') {
+        if (row.operation === '下架') {
+          this.unsellGoods(row.id)
+        } else {
+          this.publishGoods(row.id)
+        }
       }
     },
     delDocument() {
@@ -201,6 +221,14 @@ export default {
         AlertBox('success', '删除成功')
         this.getCourseList()
       })
+    },
+    getCourseType() {
+      goodsType().then(res => {
+        this.typeOptions = res.data
+      })
+    },
+    selectStatus(value) {
+      this.ruleForm.status = value
     }
   }
 }
