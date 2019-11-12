@@ -174,25 +174,42 @@ export default {
     // 发布商品
     publishGoods(id) {
       id = id || this.goodsId
-      const params = id || this.editForm
-      vaildForm(this.$refs['courseModal']).then(res => {
+      // 根据是否在弹窗中发布设置参数
+      const params = id ? { goodsId: id } : this.editForm
+      // 在弹窗中发布需验证参数
+      if (this.goodsId) {
+        vaildForm(this.$refs['courseModal']).then(res => {
+          publishGoods(params).then(res => {
+            AlertBox('success', '发布成功')
+            this.getCourseList()
+            this.dialogVisible = false
+          })
+        })
+      } else {
         publishGoods(params).then(res => {
           AlertBox('success', '发布成功')
           this.getCourseList()
           this.dialogVisible = false
         })
-      })
+      }
     },
     // 下架商品
     unsellGoods(id) {
       id = id || this.goodsId
-
-      vaildForm(this.$refs['courseModal']).then(res => {
+      // 在弹窗中下架需验证参数
+      if (this.goodsId) {
+        vaildForm(this.$refs['courseModal']).then(res => {
+          unshelveGoods({ goodsId: id }).then(res => {
+            AlertBox('success', '下架成功')
+            this.getCourseList()
+          })
+        })
+      } else {
         unshelveGoods({ goodsId: id }).then(res => {
           AlertBox('success', '下架成功')
           this.getCourseList()
         })
-      })
+      }
     },
     // 分页操作
     changePage(pageData) {
@@ -211,8 +228,8 @@ export default {
             goodsName: res.data.goodsName,
             price: res.data.price,
             taobaoUrl: res.data.taobaoUrl,
-            type: res.data.type,
-            goodsId: res.data.id
+            goodsId: res.data.id,
+            type: parseInt(res.data.type)
           }
         })
       } else if (colum.label === '操作') {

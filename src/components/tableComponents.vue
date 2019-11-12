@@ -177,6 +177,7 @@ export default {
 
   .el-table__row td:last-child .cell {
     color: #0266d6;
+    cursor: pointer;
   }
 
   .el-button--primary {

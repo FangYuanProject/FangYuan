@@ -41,6 +41,8 @@ export const newsDetail = data => axios.post('/news/detail', clearNullValue(data
 export const editNews = data => axios.post('/news/edit', clearNullValue(data))
 // 文件上传
 export const uploadImg = data => axios.post('/file/upload', clearNullValue(data))
+// 新闻类型
+export const newsType = data => axios.post('/news/type', clearNullValue(data))
 /*
     **** 角色模块 *****
 */
