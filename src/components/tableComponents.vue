@@ -105,6 +105,11 @@ export default {
       set(val) {
         this.$emit('update:limit', val)
       }
+    },
+    updateTableData: {
+      get() {
+        return this.tableData
+      }
     }
   },
 

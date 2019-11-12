@@ -149,7 +149,7 @@ export default {
         this.total = res.total
         res.data.forEach(list => {
           list.createTime = dateTimeStr(list.createTime)
-          list.operation = (list.status === '2002' || list.status === '2001') ? '下架' : (list.status === '2003' || list.status === '2004' ? '发布' : '')
+          list.operation = (list.status === '2002') ? '下架' : (list.status === '2003' || list.status === '2001' ? '发布' : '')
         })
         this.tableData = res.data
       })
@@ -157,10 +157,17 @@ export default {
     submitCourseData(formName) {
       this.$refs[formName].validate((vaild) => {
         if (vaild) {
-          addGoods(this.editForm).then(res => {
-            this.dialogVisible = false
-            this.getCourseList()
-          })
+          if (this.goodsId) {
+            editGoods(this.editForm).then(res => {
+              this.dialogVisible = false
+              this.getCourseList()
+            })
+          } else {
+            addGoods(this.editForm).then(res => {
+              this.dialogVisible = false
+              this.getCourseList()
+            })
+          }
         }
       })
     },
@@ -168,22 +175,23 @@ export default {
     publishGoods(id) {
       id = id || this.goodsId
       const params = id || this.editForm
-      // this.$refs['courseModal'].validate((vaild) => {
-      //   if (vaild) {
-      //     publishGoods(params).then(res => {
-      //       AlertBox('success', '发布成功')
-      //       this.getCourseList()
-      //     })
-      //   }
-      // })
-      vaildForm(this.$refs['courseModal'], this.getCourseList())
+      vaildForm(this.$refs['courseModal']).then(res => {
+        publishGoods(params).then(res => {
+          AlertBox('success', '发布成功')
+          this.getCourseList()
+          this.dialogVisible = false
+        })
+      })
     },
     // 下架商品
     unsellGoods(id) {
       id = id || this.goodsId
-      unshelveGoods({ goodsId: id }).then(res => {
-        AlertBox('success', '下架成功')
-        this.getCourseList()
+
+      vaildForm(this.$refs['courseModal']).then(res => {
+        unshelveGoods({ goodsId: id }).then(res => {
+          AlertBox('success', '下架成功')
+          this.getCourseList()
+        })
       })
     },
     // 分页操作
