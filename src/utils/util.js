@@ -41,3 +41,21 @@ export function clearNullValue(param) {
   }
   return param
 }
+/**
+ * 时间格式转换
+ */
+export function dateTimeStr(time) {
+  if(!time){
+    return ''
+  }
+  let timeStr = ''
+  let dateStr = new Date(time)
+  const year = dateStr.getFullYear()
+  const month = dateStr.getMonth() + 1
+  const day = dateStr.getDate()
+  const hour = dateStr.getHours()
+  const min = dateStr.getMinutes()
+  const sec = dateStr.getSeconds()
+  timeStr = year + '-' + (month > 9 ? month : ('0' + month)) + '-' + (day > 9 ? day : ('0' + day)) + ' ' + (hour > 9 ? hour : ('0' + hour)) + ':' + (min > 9 ? min : ('0' + min)) + ':' + (sec > 9 ? sec : ('0' + sec))
+  return timeStr
+}

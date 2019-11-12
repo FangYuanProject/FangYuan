@@ -97,6 +97,7 @@ import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 import UploadPicBtn from '@/components/UploadPictureBtn'
 import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList } from '@/api/secIndex'
+import { dateTimeStr } from '@/utils/util'
 export default {
   components: {
     tableComponents,
@@ -154,39 +155,11 @@ export default {
         { name: '学校名称', indexs: 'universityName' },
         { name: '地区', indexs: 'location' },
         { name: '特性', indexs: 'property' },
-        { name: '新建时间', indexs: 'publish' },
-        { name: '热度', indexs: 'undercarriage' },
+        { name: '新建时间', indexs: 'createTimeStr' },
+        { name: '热度', indexs: 'visitor' },
         { name: '状态', indexs: 'status' }
       ],
-      tableData: [
-        {
-          id: '0001',
-          schoolCode: '56789',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员'
-        },
-        {
-          id: '0001',
-          schoolCode: '56789',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员'
-        },
-        {
-          id: '0001',
-          schoolCode: '56789',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员'
-        }
-      ]
+      tableData: []
     }
   },
   created() {
@@ -230,6 +203,9 @@ export default {
           const result = response
           this.total = result.total || 0
           this.tableData = response.data
+          for(let i in this.tableData) {
+            this.tableData[i].createTimeStr = dateTimeStr(this.tableData[i].createTime)
+          }
         })
         .catch((error) => {
           console.log('error', error)
