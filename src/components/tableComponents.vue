@@ -1,6 +1,6 @@
 <template>
   <div id="table-render">
-    <el-table :data="tableData" highlight-current-row style="width: 100%;" :header-cell-style="{backgroundColor:'#FBFBFB',color:'rgba(51,51,51,1)',fontSize:'16px',height:'53px'}" @cell-click="handleCellClick">
+    <el-table :data="tableData" highlight-current-row style="width: 100%;" :header-cell-style="{backgroundColor:'#FBFBFB',color:'rgba(51,51,51,1)',fontSize:'16px',height:'53px'}" :cell-style="cellStyle" @cell-click="handleCellClick">
       <el-table-column v-for="(item,index) in thData" :key="index" :label="item.name" :prop="item.indexs" align="center" :formatter="item.formatter">
         <template slot-scope="scope">
           <span>{{ scope.row[item.indexs] }}</span>
@@ -145,6 +145,13 @@ export default {
     formatterThead(row, column) {
       console.log(row)
       console.log('456')
+    },
+    cellStyle(data) {
+      if (data.columnIndex === 0) {
+        return 'cursor:pointer;'
+      } else {
+        return ''
+      }
     }
   }
 }

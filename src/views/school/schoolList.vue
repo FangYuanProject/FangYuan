@@ -13,17 +13,17 @@
       </el-form-item>
       <el-form-item label="地区">
         <el-select v-model="ruleForm.location" placeholder="请选择">
-          <el-option v-for="(reg, index1) in regions" :key="index1 + 100000" :label="reg" :value="reg" />
+          <el-option v-for="(reg, index1) in regions" :key="index1 + '100000'" :label="reg" :value="reg" />
         </el-select>
       </el-form-item>
       <el-form-item label="特性">
         <el-select v-model="ruleForm.property" placeholder="请选择">
-          <el-option v-for="(pro, index2) in properties" :key="index2 + 1000000" :label="pro.value" :value="pro.key" />
+          <el-option v-for="(pro, index2) in properties" :key="index2 + '1000000'" :label="pro.value" :value="pro.key" />
         </el-select>
       </el-form-item>
       <el-form-item label="新建时间">
         <el-date-picker
-          v-model="ruleForm.date"
+          v-model="ruleForm.createTime"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
@@ -34,15 +34,13 @@
         <el-input v-model="ruleForm.visitor" />
       </el-form-item>
       <el-form-item label="状态">
-        <el-select v-model="ruleForm.region" placeholder="请选择">
-          <el-option label="未发布" value="0" />
-          <el-option label="已发布" value="1" />
-          <el-option label="已下架" value="2" />
+        <el-select v-model="ruleForm.status" placeholder="请选择">
+          <el-option v-for="(st, index) in statusData" :key="index + '10000000'" :label="st.value" :value="st.key" />
         </el-select>
       </el-form-item>
       <el-form-item>
         <search-form-btn @click="searchList" />
-        <add-method-btn name="学校" @click="addSchool" />
+        <add-method-btn name="学校" class="mb0" @click="addSchool" />
       </el-form-item>
     </el-form>
     <tableComponents
@@ -70,12 +68,12 @@
         </el-form-item>
         <el-form-item label="所在地区" class="score-input" prop="location">
           <el-select v-model="modalForm.location" placeholder="请选择">
-            <el-option v-for="(loc, index3) in regions" :key="index3 + 1000" :label="loc" :value="loc" />
+            <el-option v-for="(loc, index3) in regions" :key="index3 + '1000'" :label="loc" :value="loc" />
           </el-select>
         </el-form-item>
         <el-form-item label="特性" class="score-input" prop="property">
           <el-select v-model="modalForm.property" placeholder="请选择">
-            <el-option v-for="(pro, index4) in properties" :key="index4 + 10000" :label="pro.value" :value="pro.key" />
+            <el-option v-for="(pro, index4) in properties" :key="index4 + '10000'" :label="pro.value" :value="pro.key" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -95,6 +93,7 @@ import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 import UploadPicBtn from '@/components/UploadPictureBtn'
+import { status } from '@/api'
 import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList } from '@/api/secIndex'
 import { dateTimeStr, AlertBox } from '@/utils/util'
 export default {
@@ -106,12 +105,7 @@ export default {
   },
   data() {
     return {
-      tableOperation: [
-        { name: '发布', clickEvent: 'changeRole' },
-        { name: '下架', clickEvent: 'changeRole' }
-      ],
       modalTitle: '新增学校',
-      status: 'add',
       rules: {
         universityName: [
           { required: true, message: '请输入学校名称', trigger: 'blur' }
@@ -134,7 +128,8 @@ export default {
         universityName: '',
         location: '',
         property: '',
-        date: '',
+        status: '',
+        createTime: '',
         visitor: ''
       },
       modalForm: {
@@ -159,7 +154,8 @@ export default {
       ],
       tableData: [],
       properties: [],
-      regions: []
+      regions: [],
+      statusData: []
     }
   },
   created() {
@@ -167,9 +163,19 @@ export default {
   },
   methods: {
     init() {
+      this.getStatus()
       this.getProperty()
       this.getRegionList()
       this.getList()
+    },
+    getStatus() {
+      status()
+        .then(res => {
+          this.statusData = res.data || []
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
     getProperty() {
       propertyList()
@@ -196,6 +202,7 @@ export default {
       this.getList()
     },
     getList() {
+      console.log(this.ruleForm)
       schoolList(this.ruleForm).then((res) => {
         res.data.forEach(list => {
           list.createTimeStr = dateTimeStr(list.createTime)
@@ -262,7 +269,6 @@ export default {
     },
     addSchool() {
       this.dialogVisible = true
-      this.status = 'add'
       this.modalTitle = '新增学校'
     },
     uploadSchoolBadge(file) {
@@ -270,7 +276,7 @@ export default {
     },
     publishOrOutSell(row, column, cell, event) {
       if (column.label === '学校ID') {
-        this.$router.push({ path: '/school-detail', query: { id: row.id }})
+        this.$router.push({ path: '/school/detail', query: { id: row.id }})
       } else if (column.label === '操作') {
         const title = row.operation === '发布' ? '是否发布该学校' : '是否确认将该学校下架'
         const successTip = row.operation === '发布' ? '发布' : '下架'

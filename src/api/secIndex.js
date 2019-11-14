@@ -71,6 +71,14 @@ export async function schoolUnshelve(data) {
  * 学院
  *
  */
+// 获取学校的所有学院
+export async function collegeSearch(data) {
+  return request({
+    url: '/college/search',
+    method: 'post',
+    data: data
+  })
+}
 
 // 新建学院
 export async function collegeAdd(data) {

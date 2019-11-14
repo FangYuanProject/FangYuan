@@ -62,12 +62,13 @@ export const constantRoutes = [
         path: '/school-list',
         component: () => import('@/views/school/schoolList'),
         name: 'school-list',
-        meta: { title: '学校列表', noCache: true }
+        meta: { title: '学校管理', noCache: true }
       },
       {
         path: '/school/detail',
         component: () => import('@/views/school/schoolDetail'),
         name: 'school-detail',
+        hidden: true,
         meta: { title: '学校主页', noCache: true }
       }
     ]

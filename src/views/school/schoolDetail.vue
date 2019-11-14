@@ -4,19 +4,41 @@
     <div class="school-content">
       <div class="school">
         <div class="school-logo">
-          <img src="@/assets/schoolBadge@2x.png" />
+          <img v-if="!school.badgeUrl" src="@/assets/schoolBadge@2x.png" />
+          <img v-if="school.badgeUrl" :src="school.badgeUrl" />
         </div>
         <el-button type="primary" class="change-badge">更换校徽</el-button>
       </div>
       <div class="edit-scholl-info">
         <div>
-          <span class="school-name">北京大学</span>
-          <span class="edit-btn">编辑资料</span>
+          <span class="school-name">{{ school.universityName }}</span>
+          <span class="edit-btn cp">编辑资料</span>
         </div>
         <div>
-          <p class="lh30"><span class="label-name">学校代码:</span><span class="value-name">12312</span></p>
-          <p class="lh30"><span class="label-name">所在地区:</span><span class="value-name">北京</span></p>
-          <p class="lh30"><span class="label-name">特性:</span><span class="value-name">211</span></p>
+          <p class="lh30">
+            <span class="label-name">
+              学校代码:
+            </span>
+            <span class="value-name">
+              {{ schoolDetail.universityCode }}
+            </span>
+          </p>
+          <p class="lh30">
+            <span class="label-name">
+              所在地区:
+            </span>
+            <span class="value-name">
+              {{ schoolDetail.location }}
+            </span>
+          </p>
+          <p class="lh30">
+            <span class="label-name">
+              特性:
+            </span>
+            <span class="value-name">
+              {{ school.property && school.property.value }}
+            </span>
+          </p>
         </div>
       </div>
     </div>
@@ -124,12 +146,14 @@
 // import tableComponents from '@/components/tableComponents'
 import UlFolder from '@/components/treeFolder/UlFolders'
 import Bus from '@/assets/js/eventBus'
+import { schoolDetail, collegeSearch } from '@/api/secIndex'
 export default {
   components: {
     UlFolder
   },
   data() {
     return {
+      schoolDetail: {}, // 学校详情信息
       changeDirectionVisible: false, // 弹窗显示--新增方向
       changeMajorVisible: false, // 弹窗显示--新增专业
       changeYearVisible: false, // 弹窗显示--新增年份
@@ -315,7 +339,18 @@ export default {
   },
   methods: {
     init() {
-
+      this.getSchoolDetail()
+    },
+    getSchoolDetail() {
+      schoolDetail({ id: this.$route.query.id }).then(res => {
+        this.school = res.data
+        this.getCollegeDetail()
+      })
+    },
+    getCollegeDetail() {
+      collegeSearch({ id: this.school.id }).then(res => {
+        console.log(res)
+      })
     },
     showDirection() {
       this.changeDirectionVisible = true
