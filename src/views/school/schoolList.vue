@@ -2,38 +2,38 @@
   <div class="school-list">
     <h2 class="title">学校列表</h2>
     <el-form ref="ruleForm" :model="ruleForm" label-width="70px" inline class="list-ruleForm">
-      <el-form-item label="学校ID" prop="newId">
+      <el-form-item label="学校ID">
         <el-input v-model="ruleForm.id" />
       </el-form-item>
-      <el-form-item label="学校代码" prop="schoolCode">
+      <el-form-item label="学校代码">
         <el-input v-model="ruleForm.universityCode" />
       </el-form-item>
-      <el-form-item label="学校名称" prop="title">
+      <el-form-item label="学校名称">
         <el-input v-model="ruleForm.universityName" />
       </el-form-item>
-      <el-form-item label="地区" prop="region">
-        <el-select v-model="ruleForm.region" placeholder="请选择">
-          <el-option v-for="(reg, index) in ruleForm.regions" :key="index" :label="reg" :value="reg" />
+      <el-form-item label="地区">
+        <el-select v-model="ruleForm.location" placeholder="请选择">
+          <el-option v-for="(reg, index1) in regions" :key="index1 + 100000" :label="reg" :value="reg" />
         </el-select>
       </el-form-item>
-      <el-form-item label="特性" prop="region">
+      <el-form-item label="特性">
         <el-select v-model="ruleForm.property" placeholder="请选择">
-          <el-option v-for="(pro, index) in ruleForm.properties" :label="pro" :value="pro" />
+          <el-option v-for="(pro, index2) in properties" :key="index2 + 1000000" :label="pro.value" :value="pro.key" />
         </el-select>
       </el-form-item>
-      <el-form-item label="新建时间" prop="region">
+      <el-form-item label="新建时间">
         <el-date-picker
-          v-model="ruleForm.region"
+          v-model="ruleForm.date"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
       </el-form-item>
-      <el-form-item label="热度" prop="title">
-        <el-input v-model="ruleForm.name" />
+      <el-form-item label="热度">
+        <el-input v-model="ruleForm.visitor" />
       </el-form-item>
-      <el-form-item label="状态" prop="region">
+      <el-form-item label="状态">
         <el-select v-model="ruleForm.region" placeholder="请选择">
           <el-option label="未发布" value="0" />
           <el-option label="已发布" value="1" />
@@ -41,17 +41,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <search-form-btn />
+        <search-form-btn @click="searchList" />
         <add-method-btn name="学校" @click="addSchool" />
       </el-form-item>
     </el-form>
     <tableComponents
+      :total="total"
       :table-data="tableData"
       :th-data="thData"
-      :table-operation="tableOperation"
       @pagination="changePage"
-      @click="publishOrOutSell"
-      @cell-click="editSchool"
+      @cell-click="publishOrOutSell"
     />
     <el-dialog :title="modalTitle" :visible.sync="dialogVisible" width="508px" class="add-school-modal">
       <el-form ref="modalForm" :model="modalForm" :rules="rules">
@@ -71,12 +70,12 @@
         </el-form-item>
         <el-form-item label="所在地区" class="score-input" prop="location">
           <el-select v-model="modalForm.location" placeholder="请选择">
-            <el-option v-for="(loc, index) in modalForm.locations" :key="index" :label="loc" :value="loc" />
+            <el-option v-for="(loc, index3) in regions" :key="index3 + 1000" :label="loc" :value="loc" />
           </el-select>
         </el-form-item>
         <el-form-item label="特性" class="score-input" prop="property">
           <el-select v-model="modalForm.property" placeholder="请选择">
-            <el-option v-for="(pro, index) in modalForm.properties" :key="index" :label="pro" :value="pro" />
+            <el-option v-for="(pro, index4) in properties" :key="index4 + 10000" :label="pro.value" :value="pro.key" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -97,7 +96,7 @@ import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 import UploadPicBtn from '@/components/UploadPictureBtn'
 import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList } from '@/api/secIndex'
-import { dateTimeStr } from '@/utils/util'
+import { dateTimeStr, AlertBox } from '@/utils/util'
 export default {
   components: {
     tableComponents,
@@ -129,22 +128,20 @@ export default {
       },
       dialogVisible: false,
       ruleForm: {
-        name: '',
-        region: '',
-        regions: [],
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        page: 1,
+        pageSize: 20,
+        universityCode: '',
+        universityName: '',
+        location: '',
+        property: '',
+        date: '',
+        visitor: ''
       },
       modalForm: {
         universityName: '',
         universityCode: '',
         location: '',
-        locations: ['北京', '上海'],
-        property: '',
-        properties: ['985', '211']
+        property: ''
       },
       total: 0,
       page: 1,
@@ -154,12 +151,15 @@ export default {
         { name: '学校代码', indexs: 'universityCode' },
         { name: '学校名称', indexs: 'universityName' },
         { name: '地区', indexs: 'location' },
-        { name: '特性', indexs: 'property' },
+        { name: '特性', indexs: 'propertyStr' },
         { name: '新建时间', indexs: 'createTimeStr' },
         { name: '热度', indexs: 'visitor' },
-        { name: '状态', indexs: 'status' }
+        { name: '状态', indexs: 'statusStr' },
+        { name: '操作', indexs: 'operation' }
       ],
-      tableData: []
+      tableData: [],
+      properties: [],
+      regions: []
     }
   },
   created() {
@@ -175,6 +175,7 @@ export default {
       propertyList()
         .then(response => {
           this.ruleForm.properties = response.data || []
+          this.properties = response.data || []
         })
         .catch(error => {
           console.log(error)
@@ -184,66 +185,72 @@ export default {
       regionList()
         .then(response => {
           this.ruleForm.regions = response.data || []
+          this.regions = response.data || []
         })
         .catch(error => {
           console.log(error)
         })
     },
+    searchList() {
+      this.page = 1
+      this.getList()
+    },
     getList() {
-      const data = {
-        // id: '',
-        location: this.ruleForm.region || '',
-        page: this.page || 1,
-        pageSize: this.pageSize || 20,
-        property: this.ruleForm.property || '',
-        universityName: this.ruleForm.universityName
-      }
-      schoolList(data)
-        .then((response) => {
-          const result = response
-          this.total = result.total || 0
-          this.tableData = response.data
-          for(let i in this.tableData) {
-            this.tableData[i].createTimeStr = dateTimeStr(this.tableData[i].createTime)
-          }
+      schoolList(this.ruleForm).then((res) => {
+        res.data.forEach(list => {
+          list.createTimeStr = dateTimeStr(list.createTime)
+          list.statusStr = list.status.value
+          list.propertyStr = list.property.value
+          list.operation = (list.status.value === '下架' || list.status.value === '新增') ? '发布' : '下架'
         })
-        .catch((error) => {
-          console.log('error', error)
-        })
+        this.total = res.total || 0
+        this.tableData = res.data
+      }).catch((error) => {
+        console.log('error', error)
+      })
     },
     changePage(pageData) {
-      this.page = pageData.page
-      this.pageSize = pageData.limit
+      this.ruleForm.page = pageData.page
+      this.ruleForm.pageSize = pageData.limit
       this.getList()
     },
     submitForm(formName, saveOrPublish) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const data = {
+            badgeUrl: '',
             location: this.modalForm.location,
             property: this.modalForm.property,
             universityCode: this.modalForm.universityCode,
             universityName: this.modalForm.universityName
           }
-          schoolAdd(data)
-            .then(response => {
-              const detail = response.data
-              if (detail && detail.code) {
-                console.log('新增成功')
-                if (saveOrPublish === 1) { // 新增并发布
-                  schoolRelease({ id: detail.id })
-                    .then(response1 => {
-                      console.log(response1)
-                    })
-                    .catch(error1 => {
-                      console.log('error', error1)
-                    })
-                }
-              }
-            })
-            .catch(error => {
-              console.log('error', error)
-            })
+          if (saveOrPublish === 1) {
+            schoolRelease(data)
+              .then(response => {
+                AlertBox('success', '发布成功！')
+                setTimeout(() => {
+                  this.dialogVisible = false
+                  this.ruleForm.page = 1
+                  this.getList()
+                }, 1000)
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          } else {
+            schoolAdd(data)
+              .then(response => {
+                AlertBox('success', '保存成功！')
+                setTimeout(() => {
+                  this.dialogVisible = false
+                  this.ruleForm.page = 1
+                  this.getList()
+                }, 1000)
+              })
+              .catch(error => {
+                console.log('error', error)
+              })
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -261,33 +268,35 @@ export default {
     uploadSchoolBadge(file) {
       console.log(file)
     },
-    publishOrOutSell(data) {
-      this.dialogVisible = false
-      const title = data.name === '发布' ? '是否发布该学校' : '是否确认将该学校下架'
-      const successTip = data.name === '发布' ? '发布' : '下架'
-      this.$confirm(title, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        center: true
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '成功' + successTip
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消' + successTip
-        })
-      })
-    },
-    editSchool(row, column) {
-      console.log(column)
+    publishOrOutSell(row, column, cell, event) {
       if (column.label === '学校ID') {
-        this.dialogVisible = true
-        this.modalTitle = '编辑学校'
-        this.status = 'edit'
+        this.$router.push({ path: '/school-detail', query: { id: row.id }})
+      } else if (column.label === '操作') {
+        const title = row.operation === '发布' ? '是否发布该学校' : '是否确认将该学校下架'
+        const successTip = row.operation === '发布' ? '发布' : '下架'
+        this.$confirm(title, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          if (row.operation === '下架') {
+            schoolUnshelve({ id: row.id }).then(res => {
+              AlertBox('success', '下架成功')
+              this.getList()
+            })
+          } else {
+            schoolRelease({ id: row.id }).then(res => {
+              AlertBox('success', '发布成功')
+              this.getList()
+            })
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消' + successTip
+          })
+        })
       }
     }
   }
