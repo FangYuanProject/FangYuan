@@ -11,7 +11,7 @@
  */
 import tinymce from 'tinymce/tinymce'
 import Editor from '@tinymce/tinymce-vue'
-import { uploadImg } from '@/api/index'
+import { uploadFile } from '@/api/index'
 import 'tinymce/themes/silver'
 // 插件引入
 import 'tinymce/plugins/image'// 插入上传图片插件
@@ -94,8 +94,6 @@ export default {
 
         menubar: true, // 隐藏最上方menu菜单
 
-        // toolbar: true, // false禁用工具栏（隐藏工具栏）
-
         browser_spellcheck: true, // 拼写检查
 
         branding: false, // 去水印
@@ -110,10 +108,12 @@ export default {
           'lists image media table wordcount code fullscreen help  toc fullpage autosave nonbreaking insertdatetime visualchars visualblocks searchreplace spellchecker pagebreak link charmap paste print preview hr anchor',
         toolbar:
           'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat',
-        images_upload_handler: function(blobInfo, success, failure) {
+        images_upload_handler: (blobInfo, success, failure) => {
           const formData = new FormData()
-          uploadImg(formData).then(res => {
-            console.log(res)
+          formData.append('file', blobInfo.blob())
+          uploadFile(formData).then(res => {
+            // console.log(res)
+            // failure()
           })
         }
 

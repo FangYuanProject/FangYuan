@@ -39,10 +39,10 @@ export const deleteNews = data => axios.post('/news/delete', clearNullValue(data
 export const newsDetail = data => axios.post('/news/detail', clearNullValue(data))
 // 更新新闻
 export const editNews = data => axios.post('/news/edit', clearNullValue(data))
-// 文件上传
-export const uploadImg = data => axios.post('/file/upload', clearNullValue(data))
 // 新闻类型
 export const newsType = data => axios.post('/news/type', clearNullValue(data))
+// 相关学校
+export const schoolCorrelation = data => axios.post('/school/correlation', data)
 /*
     **** 角色模块 *****
 */
@@ -74,7 +74,53 @@ export const goodsDetail = data => axios.post('/goods/detail', clearNullValue(da
 // 课程类型
 export const goodsType = () => axios.post('/goods/type')
 /*
+    **** 意见反馈 *****
+*/
+// 意见列表
+export const feedbackList = data => axios.post('/feedback/search', clearNullValue(data))
+// 反馈详情
+export const feedbackDetail = data => axios.post('/feedback/detail', clearNullValue(data))
+// 邮箱回复
+export const emailFeedback = data => axios.post('/feedback/email', clearNullValue(data))
+// 短信回复
+export const messageFeedBack = data => axios.post('/feedback/message', clearNullValue(data))
+/*
+    **** 菜单管理 *****
+*/
+// 菜单列表
+export const menuList = data => axios.post('/menu/list', clearNullValue(data))
+// 编辑菜单
+export const editMenu = data => axios.post('/menu/edit', clearNullValue(data))
+// 新增菜单
+export const addMenu = data => axios.post('/menu/add', clearNullValue(data))
+// 删除菜单
+export const deleteMenu = data => axios.post('/menu/delete', clearNullValue(data))
+/*
+    **** 论坛管理 *****
+*/
+// 新增
+export const addForum = data => axios.post('/forum/add', clearNullValue(data))
+// 删除
+export const delForum = data => axios.post('/forum/delete', clearNullValue(data))
+// 详情
+export const forumDeatil = data => axios.post('/forum/detail', clearNullValue(data))
+// 发布
+export const publishForum = data => axios.post('/forum/release', clearNullValue(data))
+// 回复
+export const replyForum = data => axios.post('/forum/reply', clearNullValue(data))
+// 列表
+export const forumList = data => axios.post('/forum/search', clearNullValue(data))
+// 置顶
+export const setTopForum = data => axios.post('/forum/top', clearNullValue(data))
+// 类型
+export const forumType = data => axios.post('/forum/type', clearNullValue(data))
+// 下架
+export const unsellForum = data => axios.post('/forum/unshelve', clearNullValue(data))
+/*
     **** 公共模块 *****
 */
+// 状态
 export const status = () => axios.post('/status/list')
+// 文件上传
+export const uploadFile = () => axios.post('/file/upload?privilege=PUBLIC')
 

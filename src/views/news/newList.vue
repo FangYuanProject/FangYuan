@@ -8,16 +8,10 @@
       <el-form-item label="标题" prop="title">
         <el-input v-model="ruleForm.title" />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="ruleForm.status" placeholder="请选择活动区域">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
-        </el-select>
-      </el-form-item>
+      <StatusOptions v-model="ruleForm.status" is-inline="inline" @change="selectStatus" />
       <el-form-item label="类型" prop="type">
-        <el-select v-model="ruleForm.type" placeholder="请选择活动区域">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
+        <el-select v-model="ruleForm.type" placeholder="请选择">
+          <el-option v-for="(item,index) in newsTypeOptions" :key="index+10" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
       <el-form-item label="创建时间" prop="createBeginTime" label-width="70px">
@@ -53,56 +47,56 @@
         <add-method-btn name="新闻" @click="addNews" />
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" :table-operation="tableOperation" :total="tableData.length" @cell-click="editNews" @pagination="changePage" />
+    <tableComponents :table-data="tableData" :th-data="thData" :total="total" @cell-click="editNews" @pagination="changePage" />
   </div>
 </template>
 <script>
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import { newsList } from '@/api/index'
+import StatusOptions from '@/components/StatusOptions'
+import { newsList, newsType, publishNews, unshelveNews } from '@/api/index'
+import { AlertBox, dateTimeStr } from '@/utils/util'
 
 export default {
   components: {
     tableComponents,
     SearchFormBtn,
-    AddMethodBtn
+    AddMethodBtn,
+    StatusOptions
   },
   data() {
     return {
-      tableOperation: [{ name: '发布' }, { name: '下架' }],
+      // tableOperation: [{ name: '发布' }, { name: '下架' }],
       ruleForm: {
         id: '',
         title: '',
         status: '',
         type: '',
-        releaseBeginTime: '',
-        createBeginTime: '',
-        unshelveBeginTime: '',
+        releaseTime: '',
+        createTime: '',
+        unshelveTime: '',
         page: 1,
         pageSize: 20
-      },
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
       },
       thData: [
         { name: '新闻ID', indexs: 'id' },
         { name: '标题', indexs: 'title' },
         { name: '类型', indexs: 'type' },
-        { name: '创建时间', indexs: 'createBeginTime' },
-        { name: '发布时间', indexs: 'releaseBeginTime' },
-        { name: '下架时间', indexs: 'unshelveBeginTime' },
-        { name: '状态', indexs: 'status' }
+        { name: '创建时间', indexs: 'createTime' },
+        { name: '发布时间', indexs: 'releaseTime' },
+        { name: '下架时间', indexs: 'unshelveTime' },
+        { name: '状态', indexs: 'status' },
+        { name: '操作', indexs: 'operation' }
+
       ],
-      tableData: []
+      tableData: [],
+      total: 0,
+      newsTypeOptions: []
     }
+  },
+  mounted() {
+    this.getNewsList()
   },
   methods: {
     resetForm(formName) {
@@ -113,7 +107,19 @@ export default {
     },
     editNews(row, column, cell, event) {
       if (column.label === '新闻ID') {
-        this.$router.push({ path: '/news-detail', query: row.id })
+        this.$router.push({ path: '/news-detail', query: { id: row.id }})
+      } else if (column.label === '操作') {
+        if (row.operation === '下架') {
+          unshelveNews({ id: row.id }).then(res => {
+            AlertBox('下架成功')
+            this.getNewsList()
+          })
+        } else {
+          publishNews({ id: row.id }).then(res => {
+            AlertBox('success', '发布成功')
+            this.getNewsList()
+          })
+        }
       }
     },
     searchNewsList() {
@@ -121,15 +127,32 @@ export default {
       this.ruleForm.pageSize = 20
       this.getNewsList()
     },
+    getNewsType() {
+      newsType().then(res => {
+        this.newsTypeOptions = res.data
+      })
+    },
     getNewsList() {
       newsList(this.ruleForm).then(res => {
-        console.log(res)
+        res.data.forEach(list => {
+          list.createTime = dateTimeStr(list.createTime)
+          list.releaseTime = dateTimeStr(list.releaseTime)
+          list.unshelveTime = dateTimeStr(list.unshelveTime)
+          list.status = list.status.value
+          list.type = list.type.value
+          list.operation = (list.status === '下架' || list.status === '新增') ? '发布' : '下架'
+        })
+        this.tableData = res.data
+        this.total = res.total
       })
     },
     changePage(pageData) {
       this.ruleForm.page = pageData.page
       this.ruleForm.pageSize = pageData.limit
       this.getNewsList()
+    },
+    selectStatus(value) {
+      this.ruleForm.status = value
     }
   }
 }

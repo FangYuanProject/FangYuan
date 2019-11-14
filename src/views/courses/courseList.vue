@@ -1,6 +1,6 @@
 <template>
   <div class="course-list">
-    <h2 class="title">课程列表</h2>
+    <h2 class="title">商品列表</h2>
     <el-form ref="ruleForm" :model="ruleForm" label-width="70px" inline class="new-list-ruleForm">
       <el-form-item label="课程ID" prop="goodsId">
         <el-input v-model="ruleForm.goodsId" />
@@ -119,9 +119,9 @@ export default {
         type: [{ required: true, message: '请选择课程类型', trigger: 'change' }]
       },
       thData: [
-        { name: '课程ID', indexs: 'id' },
-        { name: '课程名称', indexs: 'goodsName' },
-        { name: '课程类型', indexs: 'type' },
+        { name: '商品ID', indexs: 'id' },
+        { name: '商品名称', indexs: 'goodsName' },
+        { name: '商品类型', indexs: 'type' },
         { name: '状态', indexs: 'status' },
         { name: '创建时间', indexs: 'createTime' },
         { name: '操作', indexs: 'operation' }
@@ -218,7 +218,7 @@ export default {
       this.getCourseList()
     },
     editGoods(row, colum) {
-      if (colum.label === '课程ID') {
+      if (colum.label === '商品ID') {
         this.dialogVisible = true
         this.dialogTitle = '编辑商品'
         this.goodsId = row.id

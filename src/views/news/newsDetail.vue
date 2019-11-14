@@ -1,12 +1,18 @@
 <template>
   <div class="news-detail">
     <div class="title">
-      <span>新建新闻</span>
+      <span v-if="params.id===''">新建新闻</span>
+      <span v-else>编辑新闻</span>
       <div>
-        <button v-if="params.id!==''" type="primary" class="del-news">删除</button>
-        <button type="primary" class="save-news" @click="saveNewsEvent">保存</button>
-        <button type="primary" class="publish-news"><span class="iconfont iconfabu" />&nbsp;发布</button>
-        <button v-if="params.id!==''" type="primary" class="off-sale" @click="publishNewsEvent"><span class="iconfont iconxiajia" />&nbsp;下架</button>
+        <div v-if="params.id!==''">
+          <button type="primary" class="del-news" @click="delOffNews('del')">删除</button>
+          <button type="primary" class="save-news" @click="saveNewsEvent('edit')">更新</button>
+          <button type="primary" class="off-sale" @click="delOffNews('off')"><span class="iconfont iconxiajia" />&nbsp;下架</button>
+        </div>
+        <div v-else>
+          <button type="primary" class="save-news" @click="saveNewsEvent('save')">保存</button>
+          <button type="primary" class="publish-news" @click="saveNewsEvent('publish')"><span class="iconfont iconfabu" />&nbsp;发布</button>
+        </div>
       </div>
     </div>
     <div class="news-content">
@@ -21,7 +27,7 @@
         </el-form-item>
         <el-form-item label="相关学校" class="relate-school" prop="correlation">
           <el-select v-model="params.correlation" filterable remote :remote-method="getSchoolList" placeholder="请选择">
-            <el-option v-for="(item,index) in schoolOptions" :key="item.id" :label="item.universityName" :value="item.id" />
+            <el-option v-for="(item,index) in schoolOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
         <el-form-item label="新闻摘要" prop="summary">
@@ -43,13 +49,13 @@
 </template>
 <script>
 import Tinymce from '@/components/Tinymce/Editor'
-import { publishNews, saveNews, unshelveNews, deleteNews, newsDetail, editNews, newsType } from '@/api/index'
-import { schoolList } from '@/api/secIndex'
+import { publishNews, saveNews, unshelveNews, deleteNews, newsDetail, editNews, newsType, schoolCorrelation } from '@/api/index'
 import { AlertBox, vaildForm } from '@/utils/util'
 export default {
   name: 'NewsDetail',
   components: { Tinymce },
   data() {
+    // const id = this.$route.query.id
     return {
       params: {
         content: '',
@@ -69,8 +75,6 @@ export default {
       newsTypeOptions: [], // 新闻类型
       schoolOptions: [], // 相关学校
       searchSchoolParam: {
-        page: 1,
-        pageSize: 50,
         universityName: ''
       }
     }
@@ -78,19 +82,37 @@ export default {
   mounted() {
     this.getNewsType()
     this.getSchoolList()
+    if (this.params.id) {
+      this.getNewsDetail()
+    }
   },
   methods: {
-    publishNewsEvent() {
+    saveNewsEvent(type) {
       vaildForm(this.$refs['newsContent']).then(res => {
-        publishNews(this.params).then(res => {
-          console.log(res)
-        })
-      })
-    },
-    saveNewsEvent() {
-      console.log(this.params)
-      saveNews(this.params).then(res => {
-        console.log(res)
+        if (type === 'save') {
+          saveNews(this.params).then(res => {
+            AlertBox('success', '保存成功')
+            this.$router.push({ name: 'new-list' })
+          })
+        } else if (type === 'publish') {
+          publishNews(this.params).then(res => {
+            AlertBox('success', '发布成功')
+            this.$router.push({ name: 'new-list' })
+          })
+        } else {
+          editNews(this.params).then(res => {
+            this.params = {
+              content: '',
+              correlation: '',
+              summary: '',
+              title: '',
+              type: '',
+              id: this.$route.query.id ? this.$route.query.id : ''
+            }
+            AlertBox('success', '发布成功')
+            this.$router.push({ name: 'new-list' })
+          })
+        }
       })
     },
     clickToolbar() {
@@ -102,14 +124,33 @@ export default {
       })
     },
     getSchoolList(query) {
-      console.log(query)
-      if (query !== '') {
-        schoolList({ universityName: query }).then(res => {
-          this.schoolOptions = res.data
+      this.searchSchoolParam.universityName = query || ''
+      schoolCorrelation(this.searchSchoolParam).then(res => {
+        this.schoolOptions = res.data
+      })
+    },
+    getNewsDetail() {
+      newsDetail({ id: this.params.id }).then(res => {
+        this.params = {
+          content: res.data.content,
+          correlation: res.data.correlation,
+          summary: res.data.summary,
+          title: res.data.title,
+          type: res.data.type,
+          id: res.data.id
+        }
+      })
+    },
+    delOffNews(type) {
+      if (type === 'del') {
+        deleteNews({ id: this.params.id }).then(res => {
+          AlertBox('删除成功')
+          this.$router.push({ name: 'new-list' })
         })
       } else {
-        schoolList({ page: 1, pageSize: 50 }).then(res => {
-          this.schoolOptions = res.data
+        unshelveNews({ id: this.params.id }).then(res => {
+          AlertBox('下架成功')
+          this.$router.push({ name: 'new-list' })
         })
       }
     }
@@ -143,6 +184,7 @@ button {
     .del-news {
       width: 87px;
       height: 40px;
+      padding: 0;
       font-size: 14px;
       font-weight: 600;
       line-height: 40px;

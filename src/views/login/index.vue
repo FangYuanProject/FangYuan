@@ -34,7 +34,7 @@
       </el-form-item>
       <!-- <el-checkbox :checked="isAutoLogin" label="自动登录" fill="#455A64" /> -->
 
-      <el-button :loading="loading" type="primary" class="login-btn" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button :loading="loading" type="primary" class="login-btn" @click.native.prevent="handleLogin" @keyup.enter.native="handleLogin">登录</el-button>
     </el-form>
   </div>
 </template>

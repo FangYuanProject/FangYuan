@@ -7,29 +7,28 @@
       :table-data="tableData"
       :th-data="thData"
       :table-operation="tableOperation"
-      :dialog-type="changeRoleVisible"
       @click="editRole"
     />
     <el-dialog title="权限" :visible.sync="dialogVisible" width="508px" class="edit-menu-modal">
-      <el-form :model="form">
+      <el-form :model="form" :rules="vaildFormContent">
         <el-form-item label="菜单名称">
-          <el-input v-model="form.name" autocomplete="off" />
+          <el-input v-model="form.menuName" autocomplete="off" />
         </el-form-item>
         <el-form-item label="上级菜单" class="active-origin">
-          <el-input v-model="form.name" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="排序" xx>
-          <el-select v-model="form.region" placeholder="请选择活动区域" class="menu-sort">
+          <el-select v-model="form.superiorName" placeholder="请选择" class="menu-sort">
             <el-option label="普通角色1" value="shanghai" />
             <el-option label="普通角色2" value="beijing" />
           </el-select>
         </el-form-item>
+        <el-form-item label="排序">
+          <el-input v-model="form.order" autocomplete="off" />
+        </el-form-item>
         <el-form-item label="菜单url">
-          <el-input v-model="form.name" autocomplete="off" />
+          <el-input v-model="form.url" autocomplete="off" />
         </el-form-item>
         <el-form-item label="状态">
-          <el-checkbox v-model="checked">显示</el-checkbox>
-          <el-checkbox v-model="checked">隐藏</el-checkbox>
+          <el-radio v-model="form.status">显示</el-radio>
+          <el-radio v-model="form.status">隐藏</el-radio>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -41,6 +40,7 @@
 <script>
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
+import { menuList, editMenu, addMenu, deleteMenu } from '@/api/index'
 export default {
   components: {
     tableComponents,
@@ -52,42 +52,31 @@ export default {
       checked: true,
       dialogVisible: false,
       form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        menuName: '',
+        order: '',
+        status: 0,
+        superiorName: '',
+        url: ''
       },
+      vaildFormContent: {
+        menuName: [{ requied: true, message: '请输入菜单名称', trigger: 'blur' }],
+        order: [{ requied: true, message: '请选择排序', trigger: 'blur' }],
+        status: [{ requied: true, message: '请选择上级菜单', trigger: 'blur' }],
+        superiorName: [{ requied: true, message: '请输入菜单名称', trigger: 'blur' }],
+        url: [{ requied: true, message: '请输入链接', trigger: 'blur' }]
+      },
+      menuFormStatus: false,
       thData: [
         { name: '菜单名称', indexs: 'id' },
         { name: '上级菜单', indexs: 'title' },
         { name: '链接', indexs: 'pone' },
         { name: '状态', indexs: 'email' }
       ],
-      tableData: [
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com'
-        }
-      ]
+      tableData: []
     }
+  },
+  mounted() {
+    this.getMenuList()
   },
   methods: {
     submitForm(formName) {
@@ -112,6 +101,11 @@ export default {
     },
     changeRoleVisible() {
 
+    },
+    getMenuList() {
+      menuList().then(res => {
+        this.tableData = res.data
+      })
     }
   }
 }

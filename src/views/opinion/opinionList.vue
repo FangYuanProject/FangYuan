@@ -4,15 +4,16 @@
     <tableComponents
       :table-data="tableData"
       :th-data="thData"
-      :table-operation="tableOperation"
-      :dialog-type="changeRoleVisible"
+      :total="total"
+      @pagination="changePage"
     />
   </div>
 </template>
 <script>
-import tableComponents from "@/components/tableComponents";
-import AddMethodBtn from "@/components/AddMethodBtn";
-import SearchFormBtn from "@/components/SearchFormBtn";
+import tableComponents from '@/components/tableComponents'
+import AddMethodBtn from '@/components/AddMethodBtn'
+import SearchFormBtn from '@/components/SearchFormBtn'
+import { feedbackList, feedbackDetail, emailFeedback, messageFeedBack } from '@/api/index'
 export default {
   components: {
     tableComponents,
@@ -21,36 +22,24 @@ export default {
   },
   data() {
     return {
-      tableOperation: [{ name: "短信回复" }, { name: "邮件回复" }],
+      // tableOperation: [{ name: '短信回复' }, { name: '邮件回复' }],
       thData: [
-        { name: "意见标题", indexs: "id" },
-        { name: "内容详情", indexs: "title" },
-        { name: "提交人", indexs: "pone" },
-        { name: "提交时间", indexs: "publish" }
+        { name: '意见标题', indexs: 'title' },
+        { name: '内容详情', indexs: 'content' },
+        { name: '提交人', indexs: 'pone' },
+        { name: '提交时间', indexs: 'publish' },
+        { name: '操作', indexs: 'operation' }
       ],
-      tableData: [
-        {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-          publish: "2019-10-21 10:00"
-        },
-        {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-
-          publish: "2019-10-21 10:00"
-        },
-        {
-          id: "0001",
-          title: "新闻标题1",
-          pone: "18825055554",
-
-          publish: "2019-10-21 10:00"
-        }
-      ]
-    };
+      tableData: [],
+      total: 0,
+      params: {
+        page: 1,
+        pageSize: 20
+      }
+    }
+  },
+  mounted() {
+    this.getList()
   },
   methods: {
     submitForm(formName) {
@@ -64,13 +53,29 @@ export default {
       // })
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
     },
     addDocument() {
-      this.dialogVisible = true;
+      this.dialogVisible = true
+    },
+    getList() {
+      feedbackList(this.params).then(res => {
+        //         res.data.forEach(list => {
+        // // list.operation =
+        //         })
+        this.tableData = res.data
+        this.total = res.total
+      })
+    },
+    changePage(pageData) {
+      this.params = {
+        page: pageData.page,
+        pageSize: pageData.limit
+      }
+      this.getList()
     }
   }
-};
+}
 </script>
 
 <style lang='scss' scoped>
