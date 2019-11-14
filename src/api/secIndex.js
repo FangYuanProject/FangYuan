@@ -122,7 +122,7 @@ export async function regionList() {
  */
 export async function propertyList() {
   return request({
-    url: '/property/list',
+    url: '/school/property',
     method: 'post'
   })
 }
