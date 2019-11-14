@@ -202,7 +202,6 @@ export default {
       this.getList()
     },
     getList() {
-      console.log(this.ruleForm)
       schoolList(this.ruleForm).then((res) => {
         res.data.forEach(list => {
           list.createTimeStr = dateTimeStr(list.createTime)

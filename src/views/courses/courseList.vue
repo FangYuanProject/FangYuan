@@ -2,35 +2,45 @@
   <div class="course-list">
     <h2 class="title">商品列表</h2>
     <el-form ref="ruleForm" :model="ruleForm" label-width="70px" inline class="new-list-ruleForm">
-      <el-form-item label="课程ID" prop="goodsId">
+      <el-form-item label="商品ID" prop="goodsId">
         <el-input v-model="ruleForm.goodsId" />
       </el-form-item>
-      <el-form-item label="课程名称" prop="goodsName">
+      <el-form-item label="商品名称" prop="goodsName">
         <el-input v-model="ruleForm.goodsName" />
       </el-form-item>
-      <el-form-item label="课程类型" prop="type">
+      <el-form-item label="商品类型" prop="type">
         <el-select v-model="ruleForm.type" placeholder="请选择">
           <el-option v-for="(item,index) in typeOptions" :key="index" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
       <StatusSelect v-model="ruleForm.status" is-inline="inline" prop="status" @change="selectStatus" />
+      <el-form-item label="上传时间" prop="uploadTime" label-width="70px">
+        <el-date-picker
+          v-model="uploadTime"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+        />
+      </el-form-item>
       <el-form-item>
         <search-form-btn @click="searchGoodsList" />
-        <add-method-btn name="课程" @click="AddCourse" />
+        <add-method-btn name="商品" @click="AddCourse" />
       </el-form-item>
     </el-form>
     <tableComponents :table-data="tableData" :th-data="thData" :total="total" @cell-click="editGoods" @pagination="changePage" />
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="508px" class="add-course-modal">
-      <el-form ref="courseModal" :model="editForm" :rules="validForm">
-        <el-form-item label="课程类型" prop="type">
+      <el-form ref="courseModal" :model="editForm" :rules="validForms">
+        <el-form-item label="商品类型" prop="type">
           <el-select v-model="editForm.type" placeholder="请选择">
             <el-option v-for="(item,index) in typeOptions" :key="index" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
-        <el-form-item label="课程名称" prop="goodsName">
+        <el-form-item label="商品名称" prop="goodsName">
           <el-input v-model="editForm.goodsName" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="课程内容" class="active-origin" prop="content">
+        <el-form-item label="商品内容" class="active-origin" prop="content">
           <el-input v-model="editForm.content" autocomplete="off" />
 
         </el-form-item>
@@ -54,7 +64,7 @@
           <el-button class="del-document" @click="delDocument('courseModal')">
             删除
           </el-button>
-          <el-button type="primary" class="edit-data-btn" @click="submitCourseData('courseModal')">
+          <el-button type="primary" class="edit-data-btn" @click="submitCourseData()">
             更新
           </el-button>
           <el-button type="primary" class="submit-data-btn" @click="unsellGoods()">
@@ -91,16 +101,15 @@ export default {
       }
     }
     return {
-      tableOperation: [{ name: '发布' }, { name: '下架' }],
       dialogVisible: false, // 弹窗判断显示
       dialogTitle: '新增商品', // 弹窗标题
       // 查询表单
       ruleForm: {
         goodsId: '',
         goodsName: '',
-        startUpload: '',
         status: '',
         type: '',
+        uploadTime: '',
         page: 1,
         pageSize: 20
       },
@@ -112,7 +121,7 @@ export default {
         type: '',
         goodsId: ''
       },
-      validForm: {
+      validForms: {
         goodsName: [{ required: true, message: '请输入商品名称', trigger: 'blur', max: 32 }],
         price: [{ required: true, message: '请输入正确格式的商品价格', trigger: 'blur' }],
         taobaoUrl: [{ required: true, validator: vaildUrl, trigger: 'blur' }],
@@ -126,6 +135,7 @@ export default {
         { name: '创建时间', indexs: 'createTime' },
         { name: '操作', indexs: 'operation' }
       ],
+      uploadTime: '',
       tableData: [],
       total: 0, // 列表总数
       goodsId: '',
@@ -138,6 +148,8 @@ export default {
   },
   methods: {
     searchGoodsList() {
+      console.log(this.ruleForm.uploadTime)
+
       this.getCourseList()
     },
     AddCourse() {
@@ -145,11 +157,14 @@ export default {
     },
     // 课程列表
     getCourseList() {
+      this.ruleForm.uploadTime = this.uploadTime ? (this.uploadTime[0] + '~' + this.uploadTime[1]) : ''
       goodseList(this.ruleForm).then(res => {
         this.total = res.total
         res.data.forEach(list => {
           list.createTime = dateTimeStr(list.createTime)
-          list.operation = (list.status === '2002') ? '下架' : (list.status === '2003' || list.status === '2001' ? '发布' : '')
+          list.status = list.status.value
+          list.type = list.type.value
+          list.operation = (list.status === '下架' || list.status === '新增') ? '发布' : '下架'
         })
         this.tableData = res.data
       })
@@ -174,16 +189,20 @@ export default {
     // 发布商品
     publishGoods(id) {
       id = id || this.goodsId
+      console.log(id)
       // 根据是否在弹窗中发布设置参数
       const params = id ? { goodsId: id } : this.editForm
       // 在弹窗中发布需验证参数
-      if (this.goodsId) {
+      if (!id) {
         vaildForm(this.$refs['courseModal']).then(res => {
-          publishGoods(params).then(res => {
-            AlertBox('success', '发布成功')
-            this.getCourseList()
-            this.dialogVisible = false
-          })
+          console.log(res)
+          if (res) {
+            publishGoods(params).then(res => {
+              AlertBox('success', '发布成功')
+              this.getCourseList()
+              this.dialogVisible = false
+            })
+          }
         })
       } else {
         publishGoods(params).then(res => {

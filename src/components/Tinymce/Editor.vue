@@ -112,8 +112,6 @@ export default {
           const formData = new FormData()
           formData.append('file', blobInfo.blob())
           uploadFile(formData).then(res => {
-            // console.log(res)
-            // failure()
           })
         }
 

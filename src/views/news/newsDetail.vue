@@ -89,29 +89,31 @@ export default {
   methods: {
     saveNewsEvent(type) {
       vaildForm(this.$refs['newsContent']).then(res => {
-        if (type === 'save') {
-          saveNews(this.params).then(res => {
-            AlertBox('success', '保存成功')
-            this.$router.push({ name: 'new-list' })
-          })
-        } else if (type === 'publish') {
-          publishNews(this.params).then(res => {
-            AlertBox('success', '发布成功')
-            this.$router.push({ name: 'new-list' })
-          })
-        } else {
-          editNews(this.params).then(res => {
-            this.params = {
-              content: '',
-              correlation: '',
-              summary: '',
-              title: '',
-              type: '',
-              id: this.$route.query.id ? this.$route.query.id : ''
-            }
-            AlertBox('success', '发布成功')
-            this.$router.push({ name: 'new-list' })
-          })
+        if (res) {
+          if (type === 'save') {
+            saveNews(this.params).then(res => {
+              AlertBox('success', '保存成功')
+              this.$router.push({ name: 'new-list' })
+            })
+          } else if (type === 'publish') {
+            publishNews(this.params).then(res => {
+              AlertBox('success', '发布成功')
+              this.$router.push({ name: 'new-list' })
+            })
+          } else {
+            editNews(this.params).then(res => {
+              this.params = {
+                content: '',
+                correlation: '',
+                summary: '',
+                title: '',
+                type: '',
+                id: this.$route.query.id ? this.$route.query.id : ''
+              }
+              AlertBox('success', '发布成功')
+              this.$router.push({ name: 'new-list' })
+            })
+          }
         }
       })
     },
