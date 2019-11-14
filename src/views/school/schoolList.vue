@@ -13,12 +13,12 @@
       </el-form-item>
       <el-form-item label="地区" prop="region">
         <el-select v-model="ruleForm.region" placeholder="请选择">
-          <el-option v-for="(reg, index) in ruleForm.regions" :key="index" :label="reg" :value="reg" />
+          <el-option v-for="(reg, index) in ruleForm.regions" :key="index+10" :label="reg" :value="reg" />
         </el-select>
       </el-form-item>
       <el-form-item label="特性" prop="region">
         <el-select v-model="ruleForm.property" placeholder="请选择">
-          <el-option v-for="(pro, index) in ruleForm.properties" :label="pro" :value="pro" />
+          <el-option v-for="(pro, index) in ruleForm.properties" :key="pro+16+index" :label="pro" :value="pro" />
         </el-select>
       </el-form-item>
       <el-form-item label="新建时间" prop="region">
@@ -71,12 +71,12 @@
         </el-form-item>
         <el-form-item label="所在地区" class="score-input" prop="location">
           <el-select v-model="modalForm.location" placeholder="请选择">
-            <el-option v-for="(loc, index) in modalForm.locations" :key="index" :label="loc" :value="loc" />
+            <el-option v-for="(loc, index) in modalForm.locations" :key="index+11" :label="loc" :value="loc" />
           </el-select>
         </el-form-item>
         <el-form-item label="特性" class="score-input" prop="property">
           <el-select v-model="modalForm.property" placeholder="请选择">
-            <el-option v-for="(pro, index) in modalForm.properties" :key="index" :label="pro" :value="pro" />
+            <el-option v-for="(pro, index) in modalForm.properties" :key="index+13" :label="pro" :value="pro" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -203,7 +203,7 @@ export default {
           const result = response
           this.total = result.total || 0
           this.tableData = response.data
-          for(let i in this.tableData) {
+          for (const i in this.tableData) {
             this.tableData[i].createTimeStr = dateTimeStr(this.tableData[i].createTime)
           }
         })

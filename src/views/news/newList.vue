@@ -14,18 +14,9 @@
           <el-option v-for="(item,index) in newsTypeOptions" :key="index+10" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建时间" prop="createBeginTime" label-width="70px">
+      <el-form-item label="创建时间" prop="createTime" label-width="70px">
         <el-date-picker
-          v-model="ruleForm.createBeginTime"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
-      </el-form-item>
-      <el-form-item label="发布时间" prop="releaseBeginTime" label-width="70px">
-        <el-date-picker
-          v-model="ruleForm.releaseBeginTime"
+          v-model="createTime"
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
@@ -33,13 +24,24 @@
           value-format="yyyy-MM-dd"
         />
       </el-form-item>
-      <el-form-item label="下架时间" prop="unshelveBeginTime" label-width="70px">
+      <el-form-item label="发布时间" prop="releaseTime" label-width="70px">
         <el-date-picker
-          v-model="ruleForm.unshelveBeginTime"
+          v-model="releaseTime"
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+        />
+      </el-form-item>
+      <el-form-item label="下架时间" prop="unshelveTime" label-width="70px">
+        <el-date-picker
+          v-model="unshelveTime"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
         />
       </el-form-item>
       <el-form-item>
@@ -92,7 +94,10 @@ export default {
       ],
       tableData: [],
       total: 0,
-      newsTypeOptions: []
+      newsTypeOptions: [],
+      releaseTime: '',
+      unshelveTime: '',
+      createTime: ''
     }
   },
   mounted() {
@@ -125,6 +130,9 @@ export default {
     searchNewsList() {
       this.ruleForm.page = 1
       this.ruleForm.pageSize = 20
+      this.ruleForm.releaseTime = this.releaseTime ? this.releaseTime[0] + '~' + this.releaseTime[1] : ''
+      this.ruleForm.createTime = this.createTime ? this.createTime[0] + '~' + this.createTime[1] : ''
+      this.ruleForm.unshelveTime = this.unshelveTime ? this.unshelveTime[0] + '~' + this.unshelveTime[1] : ''
       this.getNewsList()
     },
     getNewsType() {
