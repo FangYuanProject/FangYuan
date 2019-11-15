@@ -49,7 +49,7 @@
         <add-method-btn name="新闻" @click="addNews" />
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" :total="total" @cell-click="editNews" @pagination="changePage" />
+    <tableComponents :table-data="tableData" :th-data="thData" :total="total" @cell-click="editNews" @pagination="changePage" @handleClick="chooseOperation" />
   </div>
 </template>
 <script>
@@ -113,18 +113,6 @@ export default {
     editNews(row, column, cell, event) {
       if (column.label === '新闻ID') {
         this.$router.push({ path: '/news-detail', query: { id: row.id }})
-      } else if (column.label === '操作') {
-        if (row.operation === '下架') {
-          unshelveNews({ id: row.id }).then(res => {
-            AlertBox('下架成功')
-            this.getNewsList()
-          })
-        } else {
-          publishNews({ id: row.id }).then(res => {
-            AlertBox('success', '发布成功')
-            this.getNewsList()
-          })
-        }
       }
     },
     searchNewsList() {
@@ -148,7 +136,12 @@ export default {
           list.unshelveTime = dateTimeStr(list.unshelveTime)
           list.status = list.status.value
           list.type = list.type.value
-          list.operation = (list.status === '下架' || list.status === '新增') ? '发布' : '下架'
+          list.operation = []
+          if (list.status === '下架' || list.status === '新增') {
+            list.operation.push({ name: '发布', clickEvent: 'publish' })
+          } else {
+            list.operation.push({ name: '下架', clickEvent: 'outSell' })
+          }
         })
         this.tableData = res.data
         this.total = res.total
@@ -161,6 +154,19 @@ export default {
     },
     selectStatus(value) {
       this.ruleForm.status = value
+    },
+    chooseOperation(type, data) {
+      if (type === 'publish') {
+        publishNews({ id: data.id }).then(res => {
+          AlertBox('success', '发布成功')
+          this.getNewsList()
+        })
+      } else {
+        unshelveNews({ id: data.id }).then(res => {
+          AlertBox('success', '下架成功')
+          this.getNewsList()
+        })
+      }
     }
   }
 }

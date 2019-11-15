@@ -38,7 +38,7 @@
       @handleClick="chooseOperation"
       @cell-click="editForum"
     />
-    <el-dialog :title="publishDialogTitle" width="508px" :visible.sync="publishDialogVisible" class="add-document-modal">
+    <el-dialog :title="publishDialogTitle" width="508px" :visible.sync="publishDialogVisible" class="add-document-modal" :close-on-click-modal="false">
       <el-form ref="publishForm" :model="publishForm" :rules="publishFormRules">
         <el-form-item label="帖子类型" prop="type">
           <el-select v-model="publishForm.type" placeholder="请选择">
@@ -61,15 +61,14 @@
         </el-button>
       </span>
     </el-dialog>
-    <el-dialog title="下架帖子" :visible.sync="outSellDialogVisible" width="508px" class="out-sell-modal">
+    <el-dialog :title="outSellDialogTitle" :visible.sync="outSellDialogVisible" width="508px" class="out-sell-modal" :close-on-click-modal="false">
       <el-form ref="outSellForm" :model="outSellForm" :rules="outSellFormRules">
         <el-form-item label="帖子ID" prop="id">
           <el-input v-model="outSellForm.id" autocomplete="off" />
         </el-form-item>
         <el-form-item label="帖子类型" prop="type">
           <el-select v-model="outSellForm.type" placeholder="请选择">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
+            <el-option v-for="(item,index) in forumTypeOption" :key="index+10" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item label="帖子标题" prop="title">
@@ -97,7 +96,7 @@ import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 import StatusSelect from '@/components/StatusOptions'
 import { comfirmBox, AlertBox, dateTimeStr, vaildForm } from '@/utils/util'
-import { addForum, delForum, forumDeatil, publishForum, replyForum, forumList, setTopForum, forumType, unsellForum } from '@/api/index'
+import { addForum, delForum, forumDeatil, publishForum, forumList, setTopForum, forumType, unsellForum } from '@/api/index'
 export default {
   components: {
     tableComponents,
@@ -108,13 +107,14 @@ export default {
   data() {
     return {
       outSellDialogVisible: false,
+      outSellDialogTitle: '下架帖子',
       publishDialogVisible: false,
       publishDialogTitle: '发布帖子',
       publishFormRules: {
         type: [{ required: true, message: '请输入帖子类型', trigger: 'change' }],
         title: [{ required: true, message: '请输入帖子标题', trigger: 'blur' }]
       },
-      status: 'checkReason',
+      status: 'checkReason', // 判断帖子是否已下架
       searchForm: {
         id: '',
         type: '',
@@ -171,24 +171,48 @@ export default {
               this.getForumList()
             })
           } else {
-            publishForum(this.publishForm).then(res => {
-              this.publishDialogVisible = false
-              AlertBox('success', '保存成功')
-              this.getForumList()
-            })
+            this.publishForum()
           }
         }
       })
     },
-    comfirmOutSell(form) {
-      this.$refs[form].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+    publishForum(id) {
+      const params = id ? { id: id } : this.publishForm
+      if (id) {
+        vaildForm(this.$refs['publishForm']).then(res => {
+          if (res) {
+            publishForum(params).then(res => {
+              this.publishDialogVisible = false
+              AlertBox('success', '发布成功')
+              this.getForumList()
+            })
+          }
+        })
+      } else {
+        publishForum(params).then(res => {
+          AlertBox('success', '发布成功')
+          this.getForumList()
+        })
+      }
+    },
+    outSellForum(id) {
+      const params = id ? { id: id } : this.outSellForm
+      if (id) {
+        vaildForm(this.$refs['outSellForm']).then(res => {
+          if (res) {
+            unsellForum(params).then(res => {
+              AlertBox('success', '下架成功')
+              this.publishDialogVisible = false
+              this.getForumList()
+            })
+          }
+        })
+      } else {
+        unsellForum(params).then(res => {
+          AlertBox('success', '下架成功')
+          this.getForumList()
+        })
+      }
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
@@ -198,12 +222,29 @@ export default {
       this.publishDialogTitle = '发布帖子'
       this.status = 'add'
     },
-    editForum() {},
+    editForum(row, colum) {
+      this.forumId = row.id
+      forumDeatil({ id: row.id }).then(res => {
+        this.publishForm = {
+          title: res.data.title,
+          type: res.data.type,
+          content: res.data.content,
+          id: row.id
+        }
+      })
+      if (colum.label === '帖子ID') {
+        this.publishDialogVisible = true
+        this.publishDialogTitle = '编辑帖子'
+      }
+    },
     delForum() {
       const _this = this
       comfirmBox('warning', '是否确认删除该条数据', () => {
-        AlertBox('success', '删除成功')
-        _this.outSellDialogVisible = false
+        delForum({ id: _this.outSellForm.id }).then(res => {
+          AlertBox('success', '删除成功')
+          _this.outSellDialogVisible = false
+          _this.getForumList()
+        })
       }, () => {
         console.log('456')
       })
@@ -214,7 +255,20 @@ export default {
         this.total = res.total
         res.data.forEach(list => {
           list.createTime = dateTimeStr(list.createTime)
-          list.operation = [{ name: '置顶', clickEvent: 'setTop' }, { name: '取消置顶', clickEvent: 'cancelTop' }, { name: '下架', clickEvent: 'outSell' }, { name: '发布', clickEvent: 'publish' }, { name: '查看', clickEvent: 'check' }]
+          list.operation = []
+          switch (list.status) {
+            case 2001:
+              list.operation.push({ name: '发布', clickEvent: 'publish' })
+              break
+            case 2002:
+              list.operation.push({ name: '下架', clickEvent: 'outSell' }, { name: '置顶', clickEvent: 'setTop' })
+              this.status = 'outSell'
+              break
+            case 2003:
+              list.operation.push({ name: '查看', clickEvent: 'check' })
+              this.status = 'checkReason'
+              break
+          }
         })
         this.tableData = res.data
       })
@@ -228,8 +282,26 @@ export default {
       })
     },
     chooseOperation(type, data) {
-      if (type === 'setTop') {
-        // setTopForum({})
+      if (type === 'setTop' || type === 'cancelTop') {
+        const operation = type === 'setTop' ? 1 : 0
+        const text = type === 'setTop' ? '置顶' : '取消置顶'
+        setTopForum({ id: data.id, operation: operation }).then(res => {
+          AlertBox('success', text + '成功')
+          this.getForumList()
+        })
+      } else if (type === 'outSell') {
+        this.outSellForum(data.id)
+      } else if (type === 'publish') {
+        this.publishForum(data.id)
+      } else if (type === 'check') {
+        this.outSellDialogVisible = true
+        this.outSellDialogTitle = '查看帖子'
+        this.outSellForm = {
+          id: data.id,
+          type: parseInt(data.type),
+          title: data.title,
+          reason: data.content
+        }
       }
     }
   }
@@ -280,8 +352,7 @@ export default {
   }
 }
 
-.forum-list .el-table__body tr td:first-child,
-.forum-list .el-table__body tr td:nth-child(3) {
+.forum-list .el-table__body tr td:first-child {
   color: #0266d6;
 }
 </style>

@@ -29,8 +29,8 @@
         <add-method-btn name="商品" @click="AddCourse" />
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" :total="total" @cell-click="editGoods" @pagination="changePage" />
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="508px" class="add-course-modal">
+    <tableComponents :table-data="tableData" :th-data="thData" :total="total" @cell-click="editGoods" @pagination="changePage" @handleClick="chooseOperation" />
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="508px" class="add-course-modal" :close-on-click-modal="false">
       <el-form ref="courseModal" :model="editForm" :rules="validForms">
         <el-form-item label="商品类型" prop="type">
           <el-select v-model="editForm.type" placeholder="请选择">
@@ -164,7 +164,12 @@ export default {
           list.createTime = dateTimeStr(list.createTime)
           list.status = list.status.value
           list.type = list.type.value
-          list.operation = (list.status === '下架' || list.status === '新增') ? '发布' : '下架'
+          list.operation = []
+          if (list.status === '下架' || list.status === '新增') {
+            list.operation.push({ name: '发布', clickEvent: 'publish' })
+          } else {
+            list.operation.push({ name: '下架', clickEvent: 'outSell' })
+          }
         })
         this.tableData = res.data
       })
@@ -251,12 +256,6 @@ export default {
             type: parseInt(res.data.type)
           }
         })
-      } else if (colum.label === '操作') {
-        if (row.operation === '下架') {
-          this.unsellGoods(row.id)
-        } else {
-          this.publishGoods(row.id)
-        }
       }
     },
     delDocument() {
@@ -273,6 +272,13 @@ export default {
     },
     selectStatus(value) {
       this.ruleForm.status = value
+    },
+    chooseOperation(type, data) {
+      if (type === 'publish') {
+        this.publishGoods(data.id)
+      } else {
+        this.unsellGoods(data.id)
+      }
     }
   }
 }
