@@ -16,18 +16,19 @@
       <el-form-item label="创建人" prop="createName">
         <el-input v-model="searchForm.createName" />
       </el-form-item>
-      <el-form-item label="上传时间" prop="createName">
+      <el-form-item label="上传时间" prop="uploadTime">
         <el-date-picker
-          v-model="searchForm.createName"
+          v-model="uploadTime"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
         />
       </el-form-item>
       <StatusSelect v-model="searchForm.status" is-inline="inline" prop="status" @change="selectStatus" />
       <el-form-item>
-        <search-form-btn @click="searchForm" />
+        <search-form-btn @click="searchFormEvent" />
         <add-method-btn name="帖子" @click="addForum" />
       </el-form-item>
     </el-form>
@@ -37,6 +38,7 @@
       :total="total"
       @handleClick="chooseOperation"
       @cell-click="editForum"
+      @pagination="changePage"
     />
     <el-dialog :title="publishDialogTitle" width="508px" :visible.sync="publishDialogVisible" class="add-document-modal" :close-on-click-modal="false">
       <el-form ref="publishForm" :model="publishForm" :rules="publishFormRules">
@@ -195,6 +197,14 @@ export default {
         })
       }
     },
+    searchFormEvent() {
+      this.getForumList()
+    },
+    changePage(pageData) {
+      this.searchForm.page = pageData.page
+      this.searchForm.pageSize = pageData.limit
+      this.getForumList()
+    },
     outSellForum(id) {
       const params = id ? { id: id } : this.outSellForm
       if (!id) {
@@ -216,9 +226,6 @@ export default {
     },
     comfirmOutSell() {
       this.outSellForum()
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
     },
     addForum() {
       this.publishDialogVisible = true
