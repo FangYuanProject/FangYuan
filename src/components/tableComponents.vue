@@ -145,8 +145,6 @@ export default {
       }
     },
     chooseTab(type, data) {
-      console.log(type)
-      console.log(data)
       this.$emit('handleClick', type, data)
     }
   }

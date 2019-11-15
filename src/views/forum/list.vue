@@ -27,7 +27,7 @@
       </el-form-item>
       <StatusSelect v-model="searchForm.status" is-inline="inline" prop="status" @change="selectStatus" />
       <el-form-item>
-        <search-form-btn />
+        <search-form-btn @click="searchForm" />
         <add-method-btn name="帖子" @click="addForum" />
       </el-form-item>
     </el-form>
@@ -197,7 +197,7 @@ export default {
     },
     outSellForum(id) {
       const params = id ? { id: id } : this.outSellForm
-      if (id) {
+      if (!id) {
         vaildForm(this.$refs['outSellForm']).then(res => {
           if (res) {
             unsellForum(params).then(res => {
@@ -214,6 +214,9 @@ export default {
         })
       }
     },
+    comfirmOutSell() {
+      this.outSellForum()
+    },
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
@@ -224,17 +227,17 @@ export default {
     },
     editForum(row, colum) {
       this.forumId = row.id
-      forumDeatil({ id: row.id }).then(res => {
-        this.publishForm = {
-          title: res.data.title,
-          type: res.data.type,
-          content: res.data.content,
-          id: row.id
-        }
-      })
       if (colum.label === '帖子ID') {
         this.publishDialogVisible = true
         this.publishDialogTitle = '编辑帖子'
+        forumDeatil({ id: row.id }).then(res => {
+          this.publishForm = {
+            title: res.data.title,
+            type: res.data.type,
+            content: res.data.content,
+            id: row.id
+          }
+        })
       }
     },
     delForum() {
