@@ -96,6 +96,23 @@ export const addMenu = data => axios.post('/menu/add', clearNullValue(data))
 // 删除菜单
 export const deleteMenu = data => axios.post('/menu/delete', clearNullValue(data))
 /*
+    **** 试题管理 *****
+*/
+// 增加试题
+export const addTest = data => axios.post('/test/add', clearNullValue(data))
+// 删除试题
+export const delTest = data => axios.post('/test/delete', clearNullValue(data))
+// 试题详情
+export const testDetail = data => axios.post('/test/detail', clearNullValue(data))
+// 编辑试题
+export const editTest = data => axios.post('/test/edit', clearNullValue(data))
+// 发布试题
+export const publishTest = data => axios.post('/test/release', clearNullValue(data))
+// 试题列表
+export const testList = data => axios.post('/test/search', clearNullValue(data))
+// 试题下架
+export const outsellTest = data => axios.post('/test/unshelve', clearNullValue(data))
+/*
     **** 论坛管理 *****
 */
 // 新增

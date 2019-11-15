@@ -2,63 +2,58 @@
   <div class="document-list">
     <h2 class="title">试题列表</h2>
     <el-form ref="ruleForm" :model="searchForm" label-width="70px" inline class="list-ruleForm">
-      <el-form-item label="试题ID" prop="newId">
-        <el-input v-model="searchForm.name" />
+      <el-form-item label="试题ID" prop="id">
+        <el-input v-model="searchForm.id" />
       </el-form-item>
-      <el-form-item label="试题名称" prop="title">
-        <el-input v-model="searchForm.name" />
+      <el-form-item label="试题名称" prop="testName">
+        <el-input v-model="searchForm.testName" />
       </el-form-item>
-      <el-form-item label="试题类型" prop="region">
-        <el-select v-model="searchForm.region" placeholder="请选择活动区域">
+      <el-form-item label="试题类型" prop="type">
+        <el-select v-model="searchForm.type" placeholder="请选择">
           <el-option label="普通角色1" value="shanghai" />
           <el-option label="普通角色2" value="beijing" />
         </el-select>
       </el-form-item>
-      <el-form-item label="学校" prop="region">
-        <el-select v-model="searchForm.region" placeholder="请选择活动区域">
+      <el-form-item label="学校" prop="university">
+        <el-select v-model="searchForm.university" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="selectSchool">
+          <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="学院" prop="college">
+        <el-select v-model="searchForm.college" placeholder="请选择">
+          <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="专业" prop="major">
+        <el-select v-model="searchForm.major" placeholder="请选择">
           <el-option label="普通角色1" value="shanghai" />
           <el-option label="普通角色2" value="beijing" />
         </el-select>
       </el-form-item>
-      <el-form-item label="学院" prop="region">
-        <el-select v-model="searchForm.region" placeholder="请选择活动区域">
+      <el-form-item label="科目" prop="subject">
+        <el-select v-model="searchForm.subject" placeholder="请选择">
           <el-option label="普通角色1" value="shanghai" />
           <el-option label="普通角色2" value="beijing" />
         </el-select>
       </el-form-item>
-      <el-form-item label="专业" prop="region">
-        <el-select v-model="searchForm.region" placeholder="请选择活动区域">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="科目" prop="region">
-        <el-select v-model="searchForm.region" placeholder="请选择活动区域">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="年份" prop="region">
-        <el-select v-model="searchForm.region" placeholder="请选择活动区域">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="上传时间" prop="region">
+      <el-form-item label="年份" prop="year">
         <el-date-picker
-          v-model="searchForm.region"
+          v-model="searchForm.year"
+          type="year"
+          placeholder="选择年"
+        />
+      </el-form-item>
+      <el-form-item label="上传时间" prop="uploadTime">
+        <el-date-picker
+          v-model="uploadTime"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="region">
-        <el-select v-model="searchForm.region" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
-        </el-select>
-      </el-form-item>
+      <StatusOptions v-model="searchForm.status" is-inline="inline" prop="status" @change="selectStatus" />
       <el-form-item>
         <search-form-btn />
         <add-method-btn name="试题" @click="addDocument" />
@@ -67,65 +62,64 @@
     <tableComponents
       :table-data="tableData"
       :th-data="thData"
-      :table-operation="tableOperation"
+      :total="total"
       @click="operationCell"
       @cell-click="editDocument"
     />
-    <el-dialog :title="modalTitle" :visible.sync="dialogVisible" width="508px" class="add-document-modal">
+    <el-dialog :title="modalTitle" :visible.sync="dialogVisible" width="508px" class="add-document-modal" :close-on-click-modal="false">
       <el-form ref="modalForm" :model="modalForm" :rules="ruleForm">
         <el-form-item label="试题类型" prop="type">
-          <el-select v-model="modalForm.region" placeholder="请选择" class="modal-select">
+          <el-select v-model="modalForm.type" placeholder="请选择" class="modal-select">
             <el-option label="普通角色1" value="shanghai" />
             <el-option label="普通角色2" value="beijing" />
           </el-select>
         </el-form-item>
-        <el-form-item label="试题名称" prop="name">
-          <el-input v-model="modalForm.name" autocomplete="off" />
+        <el-form-item label="试题名称" prop="testName">
+          <el-input v-model="modalForm.ntestNameame" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="试题描述" prop="desc">
-          <el-input v-model="modalForm.name" type="textarea" autocomplete="off" rows="5" />
+        <el-form-item label="试题描述" prop="describe">
+          <el-input v-model="modalForm.describe" type="textarea" autocomplete="off" rows="5" />
         </el-form-item>
         <el-form-item label="学校" prop="school">
-          <el-select v-model="modalForm.region" placeholder="请选择" class="modal-select">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
+          <el-select v-model="modalForm.university" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="modalSelectSchool">
+            <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="学院" prop="college">
-          <el-select v-model="modalForm.region" placeholder="请选择" class="modal-select">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
+          <el-select v-model="modalForm.college" placeholder="请选择">
+            <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="专业" prop="pro">
-          <el-select v-model="modalForm.region" placeholder="请选择" class="modal-select">
+        <el-form-item label="专业" prop="major">
+          <el-select v-model="modalForm.major" placeholder="请选择" class="modal-select">
             <el-option label="普通角色1" value="shanghai" />
             <el-option label="普通角色2" value="beijing" />
           </el-select>
         </el-form-item>
         <el-form-item label="科目" prop="subject">
-          <el-select v-model="modalForm.region" placeholder="请选择" class="modal-select">
+          <el-select v-model="modalForm.subject" placeholder="请选择" class="modal-select">
             <el-option label="普通角色1" value="shanghai" />
             <el-option label="普通角色2" value="beijing" />
           </el-select>
         </el-form-item>
         <el-form-item label="年份" prop="year">
-          <el-select v-model="modalForm.region" placeholder="请选择" class="modal-select">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
-          </el-select>
+          <el-date-picker
+            v-model="modalForm.year"
+            type="year"
+            placeholder="选择年"
+          />
         </el-form-item>
-        <el-form-item label="上传试题" prop="doc">
-          <el-input v-model="modalForm.region" placeholder="支持扩展名pdf,jpg">
+        <!-- <el-form-item label="上传试题" prop="doc">
+          <el-input v-model="modalForm.answerId" placeholder="支持扩展名pdf,jpg">
             <template slot="append">
               <upload-pic-btn btn-name="上传" @click="uploadDocument" />
             </template>
           </el-input>
-        </el-form-item>
-        <el-form-item label="上传答案" prop="answer">
-          <el-input placeholder="支持扩展名pdf,jpg">
+        </el-form-item> -->
+        <el-form-item label="上传答案" prop="answerId">
+          <el-input v-model="modalForm.answerName" placeholder="支持扩展名pdf,jpg">
             <template slot="append">
-              <upload-pic-btn btn-name="上传" @click="uploadDocumentAnswer" />
+              <upload-pic-btn btn-name="上传" @getUrlSuccess="uploadDocumentAnswer" />
             </template>
           </el-input>
         </el-form-item>
@@ -159,53 +153,74 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
+import StatusOptions from '@/components/StatusOptions'
 import UploadPicBtn from '@/components/UploadPictureBtn'
+import { addTest, delTest, testDetail, editTest, publishTest, testList, outsellTest } from '@/api/index'
+import { schoolList, collegeSearch } from '@/api/secIndex'
 export default {
   components: {
     tableComponents,
     AddMethodBtn,
     SearchFormBtn,
-    UploadPicBtn
+    UploadPicBtn,
+    StatusOptions
   },
   data() {
     return {
-      tableOperation: [{ name: '下载' }, { name: '答案' }, { name: '下架' }, { name: '发布' }],
       dialogVisible: false,
       modalTitle: '新建试题',
       status: 'add',
       searchForm: {
-        name: '',
-        region: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        id: '',
+        college: '',
+        major: '',
+        page: 1,
+        pageSize: 20,
+        testName: '',
+        subject: '',
+        type: '',
+        university: '',
+        uploadTime: '',
+        year: ''
       },
+      searchOptions: {
+        university: [],
+        colleges: [],
+        // 避免查询数据相互影响，增加mdoal学校，学院字段
+        modalUniverity: [],
+        modalcolleges: []
+      },
+      uploadTime: '', // 处理查询上传时间格式
       modalForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        major: '',
+        questionHash: '',
+        college: '',
+        describe: '',
+        questionId: '',
+        subject: '',
+        testName: '',
+        type: '',
+        university: '',
+        year: '',
+        answerId: '',
+        answerHash: '',
+        answerName: ''
       },
+
       ruleForm: {
-        name: [
+        testName: [
           { required: true, message: '请输入试题名称', trigger: 'blur' }
         ],
-        school: [
+        university: [
           { required: true, message: '请选择学校', trigger: 'change' }
         ],
-        desc: [
+        describe: [
           { required: true, message: '请输入试题描述', trigger: 'blur' }
         ],
         college: [
           { required: true, message: '请选择学院', trigger: 'change' }
         ],
-        pro: [
+        major: [
           { required: true, message: '请选择专业', trigger: 'change' }
         ],
         subject: [
@@ -214,7 +229,7 @@ export default {
         year: [
           { required: true, message: '请选择年份', trigger: 'change' }
         ],
-        doc: [
+        answerId: [
           { required: true, message: '请上传试题', trigger: 'blur' }
         ],
         type: [
@@ -232,38 +247,29 @@ export default {
         { name: '上传时间', indexs: 'undercarriage' },
         { name: '操作', indexs: 'publishOrUndercarriage' }
       ],
-      tableData: [
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员',
-          publishOrUndercarriage: '1'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员',
-          publishOrUndercarriage: '0'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00',
-          undercarriage: '普通管理员',
-          publishOrUndercarriage: '0'
-        }
-      ]
+      tableData: [],
+      total: 0
     }
   },
+  mounted() {
+    this.getTestList()
+    this.getSchoolList()
+  },
   methods: {
+    selectSchool(data) {
+      collegeSearch({ universityId: data }).then(res => {
+        this.searchOptions.colleges = res.data
+      })
+    },
+    modalSelectSchool(id) {
+      collegeSearch({ universityId: id }).then(res => {
+        this.searchOptions.modalcolleges = res.data
+      })
+    },
+    selectStatus(val) {
+      this.searchForm.status = val
+    },
+    remoteMethodSchool() {},
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -288,8 +294,11 @@ export default {
     uploadDocument() {
 
     },
-    uploadDocumentAnswer() {
-
+    uploadDocumentAnswer(file) {
+      console.log(file)
+      this.modalForm.answerId = file.data.id
+      this.modalForm.answerHash = file.data.path
+      this.modalForm.answerName = file.data.name
     },
     operationCell(type, data) {
       if (type.name === '下载') {
@@ -309,6 +318,18 @@ export default {
         this.status = 'edit'
         this.modalTitle = '编辑试题'
       }
+    },
+    getTestList() {
+      this.searchForm.uploadTime = this.uploadTime ? this.uploadTime[0] + '~' + this.uploadTime[1] : ''
+      testList(this.searchForm).then(res => {
+        this.tableData = res.data
+        this.total = res.total
+      })
+    },
+    getSchoolList() {
+      schoolList({ page: 1, pageSize: 20 }).then(res => {
+        this.searchOptions.university = res.data
+      })
     }
 
   }

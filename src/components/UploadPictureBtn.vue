@@ -34,7 +34,8 @@ export default {
   },
   data() {
     return {
-      baseURLFileUpload
+      baseURLFileUpload,
+      fileList: []
     }
   },
   methods: {
@@ -71,6 +72,20 @@ export default {
     background-color: #fff;
     border: 1px solid rgba(69, 90, 100, 1);
     border-radius: 4px;
+  }
+
+  .el-upload-list--picture .el-upload-list__item {
+    display: none;
+  }
+
+  .el-button.upload-pic.el-button--primary.el-button--small,
+  .el-input-group__append {
+    padding: 0;
+    margin: 0;
+  }
+
+  .upload-pic-btn {
+    width: 30px;
   }
 }
 </style>
