@@ -2,36 +2,30 @@
   <div class="forum-list">
     <h2 class="title">论坛列表</h2>
     <el-form ref="ruleForm" :model="searchForm" label-width="70px" inline class="list-ruleForm">
-      <el-form-item label="帖子ID" prop="newId">
-        <el-input v-model="searchForm.name" />
+      <el-form-item label="帖子ID" prop="id">
+        <el-input v-model="searchForm.id" />
       </el-form-item>
-      <el-form-item label="帖子类型" prop="region">
-        <el-select v-model="searchForm.region" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
+      <el-form-item label="帖子类型" prop="type">
+        <el-select v-model="searchForm.type" placeholder="请选择">
+          <el-option v-for="(item,index) in forumTypeOption" :key="item+index" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
       <el-form-item label="帖子标题" prop="title">
-        <el-input v-model="searchForm.name" />
+        <el-input v-model="searchForm.title" />
       </el-form-item>
-      <el-form-item label="创建人" prop="region">
-        <el-input v-model="searchForm.name" />
+      <el-form-item label="创建人" prop="createName">
+        <el-input v-model="searchForm.createName" />
       </el-form-item>
-      <el-form-item label="上传时间" prop="region">
+      <el-form-item label="上传时间" prop="createName">
         <el-date-picker
-          v-model="searchForm.region"
+          v-model="searchForm.createName"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="region">
-        <el-select v-model="searchForm.region" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
-        </el-select>
-      </el-form-item>
+      <StatusSelect v-model="searchForm.status" is-inline="inline" prop="status" @change="selectStatus" />
       <el-form-item>
         <search-form-btn />
         <add-method-btn name="帖子" @click="addForum" />
@@ -40,16 +34,15 @@
     <tableComponents
       :table-data="tableData"
       :th-data="thData"
-      :table-operation="tableOperation"
-      @click="handleClick"
+      :total="total"
+      @handleClick="chooseOperation"
       @cell-click="editForum"
     />
     <el-dialog :title="publishDialogTitle" width="508px" :visible.sync="publishDialogVisible" class="add-document-modal">
       <el-form ref="publishForm" :model="publishForm" :rules="publishFormRules">
         <el-form-item label="帖子类型" prop="type">
           <el-select v-model="publishForm.type" placeholder="请选择">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
+            <el-option v-for="(item,index) in forumTypeOption" :key="index+10" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item label="帖子标题" prop="title">
@@ -60,10 +53,10 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="edit-data-btn" @click="submitForm('publishForm')">
+        <el-button type="primary" class="edit-data-btn" @click="submitForm('publishForm','save')">
           保存
         </el-button>
-        <el-button type="primary" class="submit-data-btn" @click="submitForm('publishForm')">
+        <el-button type="primary" class="submit-data-btn" @click="submitForm('publishForm','publish')">
           <span class="iconfont iconfabu">&nbsp;发布</span>
         </el-button>
       </span>
@@ -102,16 +95,18 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import { comfirmBox, AlertBox } from '@/utils/util'
+import StatusSelect from '@/components/StatusOptions'
+import { comfirmBox, AlertBox, dateTimeStr, vaildForm } from '@/utils/util'
+import { addForum, delForum, forumDeatil, publishForum, replyForum, forumList, setTopForum, forumType, unsellForum } from '@/api/index'
 export default {
   components: {
     tableComponents,
     AddMethodBtn,
-    SearchFormBtn
+    SearchFormBtn,
+    StatusSelect
   },
   data() {
     return {
-      tableOperation: [{ name: '置顶' }, { name: '取消置顶' }, { name: '下架' }, { name: '查看' }],
       outSellDialogVisible: false,
       publishDialogVisible: false,
       publishDialogTitle: '发布帖子',
@@ -121,18 +116,20 @@ export default {
       },
       status: 'checkReason',
       searchForm: {
-        name: '',
-        region: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
-      publishForm: {
-        name: '',
+        id: '',
         type: '',
-        content: ''
+        status: '',
+        uploadTime: '',
+        title: '',
+        page: 1,
+        pageSize: 20
+      },
+      uploadTime: '', // 处理查询的时间插件
+      publishForm: {
+        title: '',
+        type: '',
+        content: '',
+        id: ''
       },
       outSellForm: {
         id: '',
@@ -145,46 +142,41 @@ export default {
       },
       thData: [
         { name: '帖子ID', indexs: 'id' },
-        { name: '帖子类型', indexs: 'title' },
+        { name: '帖子类型', indexs: 'type' },
         { name: '帖子标题', indexs: 'title' },
-        { name: '帖子链接', indexs: 'pone' },
-        { name: '创建人', indexs: 'email' },
-        { name: '创建时间', indexs: 'publish' },
-        { name: '状态', indexs: 'publish' }
+        { name: '帖子链接', indexs: 'url' },
+        { name: '创建人', indexs: 'createName' },
+        { name: '创建时间', indexs: 'createTime' },
+        { name: '状态', indexs: 'status' },
+        { name: '操作', indexs: 'operation' }
+
       ],
-      tableData: [
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00'
-        },
-        {
-          id: '0001',
-          title: '新闻标题1',
-          pone: '18825055554',
-          email: '1758265002@qq.com',
-          publish: '2019-10-21 10:00'
-        }
-      ]
+      tableData: [],
+      total: 0,
+      forumTypeOption: []
     }
   },
+  mounted() {
+    this.getForumList()
+    this.getForumType()
+  },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
+    submitForm(formName, type) {
+      vaildForm(this.$refs[formName]).then(res => {
+        if (res) {
+          if (type === 'save') {
+            addForum(this.publishForm).then(res => {
+              this.publishDialogVisible = false
+              AlertBox('success', '保存成功')
+              this.getForumList()
+            })
+          } else {
+            publishForum(this.publishForm).then(res => {
+              this.publishDialogVisible = false
+              AlertBox('success', '保存成功')
+              this.getForumList()
+            })
+          }
         }
       })
     },
@@ -206,33 +198,7 @@ export default {
       this.publishDialogTitle = '发布帖子'
       this.status = 'add'
     },
-    handleClick(type) {
-      console.log(type)
-      if (type.name === '置顶') {
-        this.$message({
-          message: '置顶成功',
-          type: 'success'
-        })
-      } else if (type.name === '取消置顶') {
-        this.$message({
-          message: '取消置顶成功',
-          type: 'success'
-        })
-      } else {
-        this.outSellDialogVisible = true
-        this.publishDialogVisible = false
-        this.status = type.name === '下架' ? 'outSell' : 'checkReason'
-      }
-    },
-    editForum(row, colum) {
-      if (colum.label === '帖子ID') {
-        this.publishDialogVisible = true
-        this.publishDialogTitle = '编辑帖子'
-        this.status = 'edit'
-      } else if (colum.label === '帖子链接') {
-        window.open('http://www.baidu.com')
-      }
-    },
+    editForum() {},
     delForum() {
       const _this = this
       comfirmBox('warning', '是否确认删除该条数据', () => {
@@ -241,6 +207,30 @@ export default {
       }, () => {
         console.log('456')
       })
+    },
+    getForumList() {
+      this.searchForm.uploadTime = this.uploadTime ? this.uploadTime[0] + '~' + this.uploadTime[1] : ''
+      forumList(this.searchForm).then(res => {
+        this.total = res.total
+        res.data.forEach(list => {
+          list.createTime = dateTimeStr(list.createTime)
+          list.operation = [{ name: '置顶', clickEvent: 'setTop' }, { name: '取消置顶', clickEvent: 'cancelTop' }, { name: '下架', clickEvent: 'outSell' }, { name: '发布', clickEvent: 'publish' }, { name: '查看', clickEvent: 'check' }]
+        })
+        this.tableData = res.data
+      })
+    },
+    selectStatus(val) {
+      this.searchForm.status = val
+    },
+    getForumType() {
+      forumType().then(res => {
+        this.forumTypeOption = res.data
+      })
+    },
+    chooseOperation(type, data) {
+      if (type === 'setTop') {
+        // setTopForum({})
+      }
     }
   }
 }
