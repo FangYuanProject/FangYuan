@@ -140,6 +140,42 @@
         <el-button type="primary" class="submit-data-btn" @click="submitMajor">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog :title="modalTitle" :visible.sync="dialogVisible" width="508px" class="add-school-modal" :close-on-click-modal="false">
+      <el-form ref="modalForm" :model="modalForm" :rules="rules">
+        <el-form-item label="校徽">
+          <!-- <span class="school-head">
+            <img src="@/assets/schoolBadge@1x.png">
+          </span> -->
+          <div style="display: inline-block; width: calc(100% - 90px); margin-top: 10px; vertical-align: top;">
+            <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @getUrlSuccess="getUrlSuccess" @click="uploadSchoolBadge" />
+          </div>
+        </el-form-item>
+        <el-form-item label="学校代码" prop="universityCode">
+          <el-input v-model="modalForm.universityCode" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="学校名称" class="active-origin" prop="universityName">
+          <el-input v-model="modalForm.universityName" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="所在地区" class="score-input" prop="location">
+          <el-select v-model="modalForm.location" placeholder="请选择">
+            <el-option v-for="(loc, index3) in regions" :key="index3 + '1000'" :label="loc" :value="loc" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="特性" class="score-input" prop="property">
+          <el-select v-model="modalForm.property" placeholder="请选择">
+            <el-option v-for="(pro, index4) in properties" :key="index4 + '10000'" :label="pro.value" :value="pro.key" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm', 0)">
+          <span>保存</span>
+        </el-button>
+        <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm', 1)">
+          <span class="iconfont iconfabu">发布</span>
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
