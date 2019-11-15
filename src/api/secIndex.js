@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { clearNullValue } from '@/utils/util.js'
+import { clearNullValue } from '@/utils/util'
 
 /** **********
  *  学校接口
@@ -132,5 +132,16 @@ export async function propertyList() {
   return request({
     url: '/school/property',
     method: 'post'
+  })
+}
+
+// 学校logo图片上传
+export async function schoolLogoUpload(data) {
+  return request({
+    url: '/file/upload?privilege=PUBLIC',
+    method: 'post',
+    data: data,
+    processData: false,
+    contentType: false
   })
 }

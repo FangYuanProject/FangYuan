@@ -146,7 +146,7 @@
 // import tableComponents from '@/components/tableComponents'
 import UlFolder from '@/components/treeFolder/UlFolders'
 import Bus from '@/assets/js/eventBus'
-import { schoolDetail, collegeSearch } from '@/api/secIndex'
+import { schoolDetail, collegeSearch, collegeDetail } from '@/api/secIndex'
 export default {
   components: {
     UlFolder
@@ -348,8 +348,11 @@ export default {
       })
     },
     getCollegeDetail() {
-      collegeSearch({ id: this.school.id }).then(res => {
-        console.log(res)
+      collegeSearch({ universityId: this.school.id }).then(res => {
+        const collegeData = res.data
+        collegeDetail({ id: collegeData[0].id, universityId: this.$route.query.id }).then(resCol => {
+          console.log(resCol)
+        })
       })
     },
     showDirection() {

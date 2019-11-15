@@ -57,7 +57,7 @@
             <img src="@/assets/schoolBadge@1x.png">
           </span>
           <div style="display: inline-block; margin-top: 10px; vertical-align: top;">
-            <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @click="uploadSchoolBadge" />
+            <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @getUrlSuccess="getUrlSuccess" @click="uploadSchoolBadge" />
           </div>
         </el-form-item>
         <el-form-item label="学校代码" prop="universityCode">
@@ -94,7 +94,7 @@ import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 import UploadPicBtn from '@/components/UploadPictureBtn'
 import { status } from '@/api'
-import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList } from '@/api/secIndex'
+import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList, schoolLogoUpload } from '@/api/secIndex'
 import { dateTimeStr, AlertBox } from '@/utils/util'
 export default {
   components: {
@@ -155,7 +155,8 @@ export default {
       tableData: [],
       properties: [],
       regions: [],
-      statusData: []
+      statusData: [],
+      schoolLogoInfo: {}
     }
   },
   created() {
@@ -224,7 +225,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const data = {
-            badgeUrl: '',
+            badgeUrl: (this.schoolLogoInfo && this.schoolLogoInfo.path) || '',
             location: this.modalForm.location,
             property: this.modalForm.property,
             universityCode: this.modalForm.universityCode,
@@ -269,9 +270,18 @@ export default {
     addSchool() {
       this.dialogVisible = true
       this.modalTitle = '新增学校'
+      this.schoolLogoInfo = {}
+      this.modalForm.location = ''
+      this.modalForm.property = ''
+      this.modalForm.universityCode = ''
+      this.modalForm.universityName = ''
     },
     uploadSchoolBadge(file) {
       console.log(file)
+    },
+    getUrlSuccess(file) {
+      console.log('图片上传成功返回数据', file)
+      this.schoolLogoInfo = file.data
     },
     publishOrOutSell(row, column, cell, event) {
       if (column.label === '学校ID') {

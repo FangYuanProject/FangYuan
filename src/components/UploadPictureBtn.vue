@@ -4,8 +4,10 @@
       class="upload-demo"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
+      :on-success="handleUploadSuccess"
       list-type="picture"
-      action="https://jsonplaceholder.typicode.com/posts/"
+      :limit="1"
+      :action="baseURLFileUpload + '/file/upload?privilege=PUBLIC'"
     >
       <el-button size="small" type="primary" class="upload-pic">{{ btnName }}</el-button>
       <span slot="tip" class="el-upload__tip" :style="{'display':uploadTips===''?'none' :'inline'}">{{ uploadTips }}</span>
@@ -13,6 +15,7 @@
   </div>
 </template>
 <script>
+import { baseURLFileUpload } from '@/utils/request'
 export default {
   name: 'Upload',
   props: {
@@ -23,7 +26,7 @@ export default {
       }
     },
     uploadTips: {
-      type: Object,
+      type: String,
       default: () => {
 
       }
@@ -31,7 +34,7 @@ export default {
   },
   data() {
     return {
-
+      baseURLFileUpload
     }
   },
   methods: {
@@ -41,8 +44,10 @@ export default {
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)
+    },
+    handleUploadSuccess(file) {
+      this.$emit('getUrlSuccess', file)
     }
-
   }
 }
 </script>
