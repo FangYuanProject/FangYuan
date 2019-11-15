@@ -43,7 +43,7 @@ export async function schoolDetail(data) {
 // 学校编辑
 export async function schoolEdit(data) {
   return request({
-    url: '/school/edit',
+    url: '/school/edit/university',
     method: 'post',
     data: clearNullValue(data)
   })

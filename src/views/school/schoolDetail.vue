@@ -20,7 +20,7 @@
               学校代码:
             </span>
             <span class="value-name">
-              {{ schoolDetail.universityCode }}
+              {{ school.universityCode }}
             </span>
           </p>
           <p class="lh30">
@@ -28,7 +28,7 @@
               所在地区:
             </span>
             <span class="value-name">
-              {{ schoolDetail.location }}
+              {{ school.location }}
             </span>
           </p>
           <p class="lh30">
@@ -146,14 +146,14 @@
 // import tableComponents from '@/components/tableComponents'
 import UlFolder from '@/components/treeFolder/UlFolders'
 import Bus from '@/assets/js/eventBus'
-import { schoolDetail, collegeSearch, collegeDetail } from '@/api/secIndex'
+import { schoolDetail, collegeSearch, collegeDetail, schoolEdit } from '@/api/secIndex'
 export default {
   components: {
     UlFolder
   },
   data() {
     return {
-      schoolDetail: {}, // 学校详情信息
+      school: {}, // 学校详情信息
       changeDirectionVisible: false, // 弹窗显示--新增方向
       changeMajorVisible: false, // 弹窗显示--新增专业
       changeYearVisible: false, // 弹窗显示--新增年份
@@ -349,10 +349,10 @@ export default {
     },
     getCollegeDetail() {
       collegeSearch({ universityId: this.school.id }).then(res => {
-        const collegeData = res.data
-        collegeDetail({ id: collegeData[0].id, universityId: this.$route.query.id }).then(resCol => {
-          console.log(resCol)
-        })
+        const collegeData = res.data || []
+        // collegeDetail({ id: collegeData[0].id, universityId: this.$route.query.id }).then(resCol => {
+        //   console.log(resCol)
+        // })
       })
     },
     showDirection() {

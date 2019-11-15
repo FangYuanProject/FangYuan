@@ -47,16 +47,17 @@
       :total="total"
       :table-data="tableData"
       :th-data="thData"
+      @handleClick="chooseOperation"
       @pagination="changePage"
       @cell-click="publishOrOutSell"
     />
-    <el-dialog :title="modalTitle" :visible.sync="dialogVisible" width="508px" class="add-school-modal">
+    <el-dialog :title="modalTitle" :visible.sync="dialogVisible" width="508px" class="add-school-modal" :close-on-click-modal="false">
       <el-form ref="modalForm" :model="modalForm" :rules="rules">
         <el-form-item label="校徽">
-          <span class="school-head">
+          <!-- <span class="school-head">
             <img src="@/assets/schoolBadge@1x.png">
-          </span>
-          <div style="display: inline-block; margin-top: 10px; vertical-align: top;">
+          </span> -->
+          <div style="display: inline-block; width: calc(100% - 90px); margin-top: 10px; vertical-align: top;">
             <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @getUrlSuccess="getUrlSuccess" @click="uploadSchoolBadge" />
           </div>
         </el-form-item>
@@ -204,11 +205,15 @@ export default {
     },
     getList() {
       schoolList(this.ruleForm).then((res) => {
+        let operateName = ''
+        let clickEvent = ''
         res.data.forEach(list => {
           list.createTimeStr = dateTimeStr(list.createTime)
           list.statusStr = list.status.value
           list.propertyStr = list.property.value
-          list.operation = (list.status.value === '下架' || list.status.value === '新增') ? '发布' : '下架'
+          operateName = (list.status.value === '下架' || list.status.value === '新增') ? '发布' : '下架'
+          clickEvent = (list.status.value === '下架' || list.status.value === '新增') ? 'release' : 'unShelve'
+          list.operation = [{ name: operateName, clickEvent }]
         })
         this.total = res.total || 0
         this.tableData = res.data
@@ -283,35 +288,41 @@ export default {
       console.log('图片上传成功返回数据', file)
       this.schoolLogoInfo = file.data
     },
+    chooseOperation(type, data) {
+      let title = '是否发布该学校'
+      let successTip = '发布'
+      // release unShelve
+      if (type === 'unShelve') {
+        title = '是否确认将该学校下架'
+        successTip = '下架'
+      }
+      this.$confirm(title, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        if (type === 'unShelve') {
+          schoolUnshelve({ id: data.id }).then(res => {
+            AlertBox('success', '下架成功')
+            this.getList()
+          })
+        } else {
+          schoolRelease({ id: data.id }).then(res => {
+            AlertBox('success', '发布成功')
+            this.getList()
+          })
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消' + successTip
+        })
+      })
+    },
     publishOrOutSell(row, column, cell, event) {
       if (column.label === '学校ID') {
         this.$router.push({ path: '/school/detail', query: { id: row.id }})
-      } else if (column.label === '操作') {
-        const title = row.operation === '发布' ? '是否发布该学校' : '是否确认将该学校下架'
-        const successTip = row.operation === '发布' ? '发布' : '下架'
-        this.$confirm(title, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          if (row.operation === '下架') {
-            schoolUnshelve({ id: row.id }).then(res => {
-              AlertBox('success', '下架成功')
-              this.getList()
-            })
-          } else {
-            schoolRelease({ id: row.id }).then(res => {
-              AlertBox('success', '发布成功')
-              this.getList()
-            })
-          }
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消' + successTip
-          })
-        })
       }
     }
   }
