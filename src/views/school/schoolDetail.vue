@@ -7,7 +7,7 @@
           <img v-if="school && !school.badgeUrl" src="@/assets/schoolBadge@2x.png" />
           <img v-if="school && school.badgeUrl" :src="school.badgeUrl" />
         </div>
-        <el-button type="primary" class="change-badge">更换校徽</el-button>
+        <el-button type="primary" class="change-badge" @click="changeLogo">更换校徽</el-button>
       </div>
       <div class="edit-scholl-info">
         <div>
@@ -141,19 +141,37 @@
       </span>
     </el-dialog>
     <SchoolInfo ref="schoolInfo" :title="modalTitle" :dialog-visible="dialogVisible" @submitForm="submitForm" />
+    <el-dialog title="更换校徽" :visible.sync="dialogVisibleLogo" width="508px" class="add-school-modal" :close-on-click-modal="false">
+      <el-form>
+        <el-form-item label="校徽">
+          <span class="school-head" v-if="schoolLogoInfo">
+            <img :src="schoolLogoInfo" />
+          </span>
+          <div style="display: inline-block; width: calc(100% - 90px); margin-top: 10px; vertical-align: top;">
+            <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @getUrlSuccess="getUrlSuccess" />
+          </div>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" class="edit-data-btn" @click="submitLogo">
+          <span>保存</span>
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-// import tableComponents from '@/components/tableComponents'
 import UlFolder from '@/components/treeFolder/UlFolders'
 import Bus from '@/assets/js/eventBus'
-import { schoolDetail, collegeSearch, collegeDetail, schoolEdit } from '@/api/secIndex'
+import { schoolDetail, schoolEdit, collegeAdd, collegeDel } from '@/api/secIndex'
 import SchoolInfo from './components/schoolInfo'
 import { AlertBox } from '@/utils/util'
+import UploadPicBtn from '@/components/UploadPictureBtn'
 export default {
   components: {
     UlFolder,
-    SchoolInfo
+    SchoolInfo,
+    UploadPicBtn
   },
   data() {
     return {
@@ -164,6 +182,8 @@ export default {
       changeMajorVisible: false, // 弹窗显示--新增专业
       changeYearVisible: false, // 弹窗显示--新增年份
       changeAcademicVisible: false, // 弹窗显示--新增学院
+      dialogVisibleLogo: false, // 弹窗显示--更换校徽
+      schoolLogoInfo: '', // 校徽地址
       formDirection: {
         name: ''
       },
@@ -364,6 +384,7 @@ export default {
     showAcademic() {
       this.changeAcademicVisible = true
     },
+    // 新增方向
     submitDirection() {
       this.$refs.formDirection.validate((valid) => {
         if (valid) {
@@ -374,6 +395,7 @@ export default {
         }
       })
     },
+    // 新增专业
     submitMajor() {
       this.$refs.formMajor.validate((valid) => {
         if (valid) {
@@ -384,6 +406,7 @@ export default {
         }
       })
     },
+    // 新增年份
     submitYear() {
       this.$refs.formYear.validate((valid) => {
         if (valid) {
@@ -394,23 +417,34 @@ export default {
         }
       })
     },
+    // 新增学院
     submitAcademic() {
       this.$refs.formAcademic.validate((valid) => {
         if (valid) {
-          this.changeAcademicVisible = false
+          const data = {
+            collegeCode: this.formAcademic.code,
+            collegeName: this.formAcademic.name,
+            universityId: this.school.universityId
+          }
+          collegeAdd(data).then(res => {
+            AlertBox('success', '新增成功！')
+            this.changeAcademicVisible = false
+            this.init()
+          })
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
+    // 编辑资料按钮
     editSchool() {
       this.dialogVisible = true
       const schoolInfo = this.$refs.schoolInfo
       schoolInfo.clear(this.school)
     },
+    // 保存修改学校
     submitForm(data) {
-      debugger
       schoolEdit(data).then(response => {
         AlertBox('success', '保存成功！')
         setTimeout(() => {
@@ -418,6 +452,47 @@ export default {
           this.init()
         }, 1000)
       })
+    },
+    // 删除学院
+    delCollege(college) {
+      this.$confirm('是否确定删除该学院', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        const data = {
+          id: college.collegeId
+        }
+        collegeDel(data).then(res => {
+          AlertBox('success', '删除成功！')
+          setTimeout(() => {
+            this.init()
+          }, 1000)
+        })
+      })
+    },
+    getUrlSuccess(file) {
+      this.schoolLogoInfo = file.data.path
+    },
+    changeLogo() {
+      this.dialogVisibleLogo = true
+      this.schoolLogoInfo = this.school.badgeUrl || ''
+    },
+    submitLogo() {
+      if (this.schoolLogoInfo) {
+        const data = {
+          badgeUrl: this.schoolLogoInfo,
+          id: this.school.universityId
+        }
+        schoolEdit(data).then(res => {
+          this.dialogVisibleLogo = false
+          AlertBox('success', '跟换成功！')
+          this.init()
+        })
+      } else {
+        AlertBox('warning', '请选择校徽！')
+      }
     }
   }
 }

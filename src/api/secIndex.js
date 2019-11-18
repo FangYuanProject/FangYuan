@@ -116,6 +116,24 @@ export async function collegeEdit(data) {
   })
 }
 
+// 新建专业
+export async function majorAdd(data) {
+  return request({
+    url: '/major/add',
+    method: 'post',
+    data: clearNullValue(data)
+  })
+}
+
+// 删除专业
+export async function majorDel(data) {
+  return request({
+    url: '/major/delete',
+    method: 'post',
+    data: clearNullValue(data)
+  })
+}
+
 /**
  * 地区列表
  */
