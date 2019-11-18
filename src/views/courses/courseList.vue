@@ -13,7 +13,11 @@
           <el-option v-for="(item,index) in typeOptions" :key="index" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
-      <StatusSelect v-model="ruleForm.status" is-inline="inline" prop="status" @change="selectStatus" />
+      <el-form-item label="商品状态" prop="status">
+        <el-select v-model="ruleForm.status" placeholder="请选择">
+          <el-option v-for="(item,index) in statusOptions" :key="index+item" :label="item.value" :value="item.key" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="上传时间" prop="uploadTime" label-width="70px">
         <el-date-picker
           v-model="uploadTime"
@@ -80,16 +84,14 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import StatusSelect from '@/components/StatusOptions'
 import { AlertBox, dateTimeStr, vaildForm } from '@/utils/util'
-import { addGoods, delGoods, editGoods, goodseList, publishGoods, unshelveGoods, goodsDetail, goodsType } from '@/api/index'
+import { addGoods, delGoods, editGoods, goodseList, publishGoods, unshelveGoods, goodsDetail, goodsType, goodsStatus } from '@/api/index'
 import { validURL } from '@/utils/validate'
 export default {
   components: {
     tableComponents,
     AddMethodBtn,
-    SearchFormBtn,
-    StatusSelect
+    SearchFormBtn
   },
   data() {
     const vaildUrl = (rule, value, callback) => {
@@ -139,12 +141,13 @@ export default {
       tableData: [],
       total: 0, // 列表总数
       goodsId: '',
-      typeOptions: [] // 课程类型
+      typeOptions: [], // 课程类型
+      statusOptions: []
     }
   },
   mounted() {
     this.getCourseList()
-    this.getCourseType()
+    this.getCourseOptions()
   },
   methods: {
     searchGoodsList() {
@@ -265,9 +268,12 @@ export default {
         this.getCourseList()
       })
     },
-    getCourseType() {
+    getCourseOptions() {
       goodsType().then(res => {
         this.typeOptions = res.data
+      })
+      goodsStatus().then(res => {
+        this.statusOptions = res.data
       })
     },
     selectStatus(value) {

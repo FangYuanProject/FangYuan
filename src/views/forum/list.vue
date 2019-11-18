@@ -26,7 +26,12 @@
           value-format="yyyy-MM-dd"
         />
       </el-form-item>
-      <StatusSelect v-model="searchForm.status" is-inline="inline" prop="status" @change="selectStatus" />
+      <!-- <StatusSelect v-model="searchForm.status" is-inline="inline" prop="status" @change="selectStatus" /> -->
+      <el-form-item label="帖子状态" prop="status">
+        <el-select v-model="searchForm.status" placeholder="请选择">
+          <el-option v-for="(item,index) in statusOptions" :key="item+index" :label="item.value" :value="item.key" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <search-form-btn @click="searchFormEvent" />
         <add-method-btn name="帖子" @click="addForum" />
@@ -96,15 +101,15 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import StatusSelect from '@/components/StatusOptions'
+// import StatusSelect from '@/components/StatusOptions'
 import { comfirmBox, AlertBox, dateTimeStr, vaildForm } from '@/utils/util'
-import { addForum, delForum, forumDeatil, publishForum, forumList, setTopForum, forumType, unsellForum } from '@/api/index'
+import { addForum, delForum, forumDeatil, publishForum, forumList, setTopForum, forumType, unsellForum, forumStatus } from '@/api/index'
 export default {
   components: {
     tableComponents,
     AddMethodBtn,
-    SearchFormBtn,
-    StatusSelect
+    SearchFormBtn
+    // StatusSelect
   },
   data() {
     return {
@@ -155,7 +160,8 @@ export default {
       ],
       tableData: [],
       total: 0,
-      forumTypeOption: []
+      forumTypeOption: [],
+      statusOptions: []
     }
   },
   mounted() {
@@ -289,6 +295,9 @@ export default {
     getForumType() {
       forumType().then(res => {
         this.forumTypeOption = res.data
+      })
+      forumStatus().then(res => {
+        this.statusOptions = res.data
       })
     },
     chooseOperation(type, data) {

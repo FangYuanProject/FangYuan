@@ -10,8 +10,7 @@
       </el-form-item>
       <el-form-item label="试题类型" prop="type">
         <el-select v-model="searchForm.type" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
+          <el-option v-for="(item,index) in searchOptions.typeOptions" :key="item+index" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
       <el-form-item label="学校" prop="university">
@@ -53,7 +52,11 @@
           value-format="yyyy-MM-dd"
         />
       </el-form-item>
-      <StatusOptions v-model="searchForm.status" is-inline="inline" prop="status" @change="selectStatus" />
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="searchForm.status" placeholder="请选择">
+          <el-option v-for="(item,index) in searchOptions.statusOptions" :key="item+index" :label="item.value" :value="item.key" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <search-form-btn />
         <add-method-btn name="试题" @click="addDocument" />
@@ -70,12 +73,11 @@
       <el-form ref="modalForm" :model="modalForm" :rules="ruleForm">
         <el-form-item label="试题类型" prop="type">
           <el-select v-model="modalForm.type" placeholder="请选择" class="modal-select">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
+            <el-option v-for="(item,index) in searchOptions.typeOptions" :key="item+index+10" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item label="试题名称" prop="testName">
-          <el-input v-model="modalForm.ntestNameame" autocomplete="off" />
+          <el-input v-model="modalForm.testName" autocomplete="off" />
         </el-form-item>
         <el-form-item label="试题描述" prop="describe">
           <el-input v-model="modalForm.describe" type="textarea" autocomplete="off" rows="5" />
@@ -109,15 +111,15 @@
             placeholder="选择年"
           />
         </el-form-item>
-        <!-- <el-form-item label="上传试题" prop="doc">
-          <el-input v-model="modalForm.answerId" placeholder="支持扩展名pdf,jpg">
+        <el-form-item label="上传试题" prop="doc">
+          <el-input v-model="modalForm.answerName" placeholder="支持扩展名pdf,jpg">
             <template slot="append">
               <upload-pic-btn btn-name="上传" @click="uploadDocument" />
             </template>
           </el-input>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="上传答案" prop="answerId">
-          <el-input v-model="modalForm.answerName" placeholder="支持扩展名pdf,jpg">
+          <el-input v-model="modalForm.questionName" placeholder="支持扩展名pdf,jpg">
             <template slot="append">
               <upload-pic-btn btn-name="上传" @getUrlSuccess="uploadDocumentAnswer" />
             </template>
@@ -153,17 +155,15 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import StatusOptions from '@/components/StatusOptions'
 import UploadPicBtn from '@/components/UploadPictureBtn'
-import { addTest, delTest, testDetail, editTest, publishTest, testList, outsellTest } from '@/api/index'
+import { addTest, delTest, testDetail, editTest, publishTest, testList, outsellTest, testStatus, testType } from '@/api/index'
 import { schoolList, collegeSearch } from '@/api/secIndex'
 export default {
   components: {
     tableComponents,
     AddMethodBtn,
     SearchFormBtn,
-    UploadPicBtn,
-    StatusOptions
+    UploadPicBtn
   },
   data() {
     return {
@@ -188,7 +188,9 @@ export default {
         colleges: [],
         // 避免查询数据相互影响，增加mdoal学校，学院字段
         modalUniverity: [],
-        modalcolleges: []
+        modalcolleges: [],
+        statusOptions: [],
+        typeOptions: []
       },
       uploadTime: '', // 处理查询上传时间格式
       modalForm: {
@@ -204,9 +206,11 @@ export default {
         year: '',
         answerId: '',
         answerHash: '',
-        answerName: ''
+        answerName: '',
+        questionId: '',
+        questionHash: '',
+        questionName: ''
       },
-
       ruleForm: {
         testName: [
           { required: true, message: '请输入试题名称', trigger: 'blur' }
@@ -254,6 +258,7 @@ export default {
   mounted() {
     this.getTestList()
     this.getSchoolList()
+    this.getSearchOption()
   },
   methods: {
     selectSchool(data) {
@@ -273,7 +278,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+
         } else {
           console.log('error submit!!')
           return false
@@ -291,11 +296,20 @@ export default {
         type: 'success'
       })
     },
-    uploadDocument() {
-
+    getSearchOption() {
+      testStatus().then(res => {
+        this.searchOptions.statusOptions = res.data
+      })
+      testType().then(res => {
+        this.searchOptions.typeOptions = res.data
+      })
     },
     uploadDocumentAnswer(file) {
-      console.log(file)
+      this.modalForm.questionId = file.data.id
+      this.modalForm.questionHash = file.data.path
+      this.modalForm.questionName = file.data.name
+    },
+    uploadDocument(file) {
       this.modalForm.answerId = file.data.id
       this.modalForm.answerHash = file.data.path
       this.modalForm.answerName = file.data.name

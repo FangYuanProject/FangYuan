@@ -43,6 +43,8 @@ export const editNews = data => axios.post('/news/edit', clearNullValue(data))
 export const newsType = data => axios.post('/news/type', clearNullValue(data))
 // 相关学校
 export const schoolCorrelation = data => axios.post('/school/correlation', data)
+// 状态
+export const newsStatus = data => axios.post('/news/status', data)
 /*
     **** 角色模块 *****
 */
@@ -55,24 +57,26 @@ export const editRole = data => axios.post('/role/edit', clearNullValue(data))
 // 角色列表
 export const roleList = () => axios.post('/role/list')
 /*
-    **** 课程模块 *****
+    **** 商品模块 *****
 */
-// 新增课程
+// 新增商品
 export const addGoods = data => axios.post('/goods/add', clearNullValue(data))
-// 删除课程
+// 删除商品
 export const delGoods = data => axios.post('/goods/delete', clearNullValue(data))
-// 编辑课程
+// 编辑商品
 export const editGoods = data => axios.post('/goods/edit', clearNullValue(data))
-// 课程列表
+// 商品列表
 export const goodseList = data => axios.post('/goods/search', clearNullValue(data))
-// 发布课程
+// 发布商品
 export const publishGoods = data => axios.post('/goods/release', clearNullValue(data))
-// 下架课程
+// 下架商品
 export const unshelveGoods = data => axios.post('/goods/unshelve', clearNullValue(data))
-// 课程详情
+// 商品详情
 export const goodsDetail = data => axios.post('/goods/detail', clearNullValue(data))
-// 课程类型
+// 商品类型
 export const goodsType = () => axios.post('/goods/type')
+// 商品状态
+export const goodsStatus = () => axios.post('/goods/status')
 /*
     **** 意见反馈 *****
 */
@@ -112,6 +116,11 @@ export const publishTest = data => axios.post('/test/release', clearNullValue(da
 export const testList = data => axios.post('/test/search', clearNullValue(data))
 // 试题下架
 export const outsellTest = data => axios.post('/test/unshelve', clearNullValue(data))
+// 试题状态
+export const testStatus = data => axios.post('/test/status', clearNullValue(data))
+// 试题类型
+export const testType = data => axios.post('/test/type', clearNullValue(data))
+
 /*
     **** 论坛管理 *****
 */
@@ -133,6 +142,8 @@ export const setTopForum = data => axios.post('/forum/top', clearNullValue(data)
 export const forumType = data => axios.post('/forum/type', clearNullValue(data))
 // 下架
 export const unsellForum = data => axios.post('/forum/unshelve', clearNullValue(data))
+// 状态
+export const forumStatus = data => axios.post('/forum/status', clearNullValue(data))
 /*
     **** 公共模块 *****
 */

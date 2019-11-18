@@ -8,7 +8,11 @@
       <el-form-item label="标题" prop="title">
         <el-input v-model="ruleForm.title" />
       </el-form-item>
-      <StatusOptions v-model="ruleForm.status" is-inline="inline" @change="selectStatus" />
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="ruleForm.status" placeholder="请选择">
+          <el-option v-for="(item,index) in newsStatusOptions" :key="index" :label="item.value" :value="item.key" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="类型" prop="type">
         <el-select v-model="ruleForm.type" placeholder="请选择">
           <el-option v-for="(item,index) in newsTypeOptions" :key="index+10" :label="item.value" :value="item.key" />
@@ -56,16 +60,14 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import StatusOptions from '@/components/StatusOptions'
-import { newsList, newsType, publishNews, unshelveNews } from '@/api/index'
+import { newsList, newsType, publishNews, unshelveNews, newsStatus } from '@/api/index'
 import { AlertBox, dateTimeStr } from '@/utils/util'
 
 export default {
   components: {
     tableComponents,
     SearchFormBtn,
-    AddMethodBtn,
-    StatusOptions
+    AddMethodBtn
   },
   data() {
     return {
@@ -97,11 +99,13 @@ export default {
       newsTypeOptions: [],
       releaseTime: '',
       unshelveTime: '',
-      createTime: ''
+      createTime: '',
+      newsStatusOptions: []
     }
   },
   mounted() {
     this.getNewsList()
+    this.getNewsOptions()
   },
   methods: {
     resetForm(formName) {
@@ -123,9 +127,12 @@ export default {
       this.ruleForm.unshelveTime = this.unshelveTime ? this.unshelveTime[0] + '~' + this.unshelveTime[1] : ''
       this.getNewsList()
     },
-    getNewsType() {
+    getNewsOptions() {
       newsType().then(res => {
         this.newsTypeOptions = res.data
+      })
+      newsStatus().then(res => {
+        this.newsStatusOptions = res.data
       })
     },
     getNewsList() {

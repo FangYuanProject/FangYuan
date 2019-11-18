@@ -86,6 +86,12 @@ export default {
     hidden: {
       type: Boolean,
       default: false
+    },
+    cellColor: {
+      type: String,
+      default() {
+        return '#757575'
+      }
     }
   },
   data() {
@@ -139,7 +145,7 @@ export default {
     },
     cellStyle(data) {
       if (data.columnIndex === 0) {
-        return 'cursor:pointer;'
+        return { cursor: 'pointer' }
       } else {
         return ''
       }
