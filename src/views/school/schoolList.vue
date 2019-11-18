@@ -51,76 +51,26 @@
       @pagination="changePage"
       @cell-click="publishOrOutSell"
     />
-    <el-dialog :title="modalTitle" :visible.sync="dialogVisible" width="508px" class="add-school-modal" :close-on-click-modal="false">
-      <el-form ref="modalForm" :model="modalForm" :rules="rules">
-        <el-form-item label="校徽">
-          <!-- <span class="school-head">
-            <img src="@/assets/schoolBadge@1x.png">
-          </span> -->
-          <div style="display: inline-block; width: calc(100% - 90px); margin-top: 10px; vertical-align: top;">
-            <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @getUrlSuccess="getUrlSuccess" @click="uploadSchoolBadge" />
-          </div>
-        </el-form-item>
-        <el-form-item label="学校代码" prop="universityCode">
-          <el-input v-model="modalForm.universityCode" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="学校名称" class="active-origin" prop="universityName">
-          <el-input v-model="modalForm.universityName" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="所在地区" class="score-input" prop="location">
-          <el-select v-model="modalForm.location" placeholder="请选择">
-            <el-option v-for="(loc, index3) in regions" :key="index3 + '1000'" :label="loc" :value="loc" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="特性" class="score-input" prop="property">
-          <el-select v-model="modalForm.property" placeholder="请选择">
-            <el-option v-for="(pro, index4) in properties" :key="index4 + '10000'" :label="pro.value" :value="pro.key" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm', 0)">
-          <span>保存</span>
-        </el-button>
-        <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm', 1)">
-          <span class="iconfont iconfabu">发布</span>
-        </el-button>
-      </span>
-    </el-dialog>
+    <SchoolInfo ref="schoolInfo" :title="modalTitle" :dialog-visible="dialogVisible" @submitForm="submitForm" />
   </div>
 </template>
 <script>
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import UploadPicBtn from '@/components/UploadPictureBtn'
-import { status } from '@/api'
-import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList, schoolLogoUpload } from '@/api/secIndex'
+import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList, schoolLogoUpload, status } from '@/api/secIndex'
 import { dateTimeStr, AlertBox } from '@/utils/util'
+import SchoolInfo from './components/schoolInfo'
 export default {
   components: {
     tableComponents,
     AddMethodBtn,
     SearchFormBtn,
-    UploadPicBtn
+    SchoolInfo
   },
   data() {
     return {
       modalTitle: '新增学校',
-      rules: {
-        universityName: [
-          { required: true, message: '请输入学校名称', trigger: 'blur' }
-        ],
-        location: [
-          { required: true, message: '请选择所在区域', trigger: 'change' }
-        ],
-        universityCode: [
-          { required: true, message: '请输入学校代码', trigger: 'blur' }
-        ],
-        property: [
-          { required: true, message: '请选择学校特性', trigger: 'change' }
-        ]
-      },
       dialogVisible: false,
       ruleForm: {
         page: 1,
@@ -132,12 +82,6 @@ export default {
         status: '',
         createTime: '',
         visitor: ''
-      },
-      modalForm: {
-        universityName: '',
-        universityCode: '',
-        location: '',
-        property: ''
       },
       total: 0,
       page: 1,
@@ -156,8 +100,7 @@ export default {
       tableData: [],
       properties: [],
       regions: [],
-      statusData: [],
-      schoolLogoInfo: {}
+      statusData: []
     }
   },
   created() {
@@ -226,67 +169,43 @@ export default {
       this.ruleForm.pageSize = pageData.limit
       this.getList()
     },
-    submitForm(formName, saveOrPublish) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          const data = {
-            badgeUrl: (this.schoolLogoInfo && this.schoolLogoInfo.path) || '',
-            location: this.modalForm.location,
-            property: this.modalForm.property,
-            universityCode: this.modalForm.universityCode,
-            universityName: this.modalForm.universityName
-          }
-          if (saveOrPublish === 1) {
-            schoolRelease(data)
-              .then(response => {
-                AlertBox('success', '发布成功！')
-                setTimeout(() => {
-                  this.dialogVisible = false
-                  this.ruleForm.page = 1
-                  this.getList()
-                }, 1000)
-              })
-              .catch(err => {
-                console.log(err)
-              })
-          } else {
-            schoolAdd(data)
-              .then(response => {
-                AlertBox('success', '保存成功！')
-                setTimeout(() => {
-                  this.dialogVisible = false
-                  this.ruleForm.page = 1
-                  this.getList()
-                }, 1000)
-              })
-              .catch(error => {
-                console.log('error', error)
-              })
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+    submitForm(data, saveOrPublish) {
+      debugger
+      if (saveOrPublish === 1) {
+        schoolRelease(data)
+          .then(response => {
+            AlertBox('success', '发布成功！')
+            setTimeout(() => {
+              this.dialogVisible = false
+              this.ruleForm.page = 1
+              this.getList()
+            }, 1000)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        schoolAdd(data)
+          .then(response => {
+            AlertBox('success', '保存成功！')
+            setTimeout(() => {
+              this.dialogVisible = false
+              this.ruleForm.page = 1
+              this.getList()
+            }, 1000)
+          })
+          .catch(error => {
+            console.log('error', error)
+          })
+      }
     },
     resetForm(formName) {
       // this.$refs[formName].resetFields()
     },
     addSchool() {
       this.dialogVisible = true
-      this.modalTitle = '新增学校'
-      this.schoolLogoInfo = {}
-      this.modalForm.location = ''
-      this.modalForm.property = ''
-      this.modalForm.universityCode = ''
-      this.modalForm.universityName = ''
-    },
-    uploadSchoolBadge(file) {
-      console.log(file)
-    },
-    getUrlSuccess(file) {
-      console.log('图片上传成功返回数据', file)
-      this.schoolLogoInfo = file.data
+      const schoolInfo = this.$refs.schoolInfo
+      schoolInfo.clear()
     },
     chooseOperation(type, data) {
       let title = '是否发布该学校'
@@ -338,27 +257,6 @@ export default {
   color: #202431;
   border-bottom: 1px solid #ebeef5;
 }
-
-.add-school-modal {
-  .school-head {
-    display: inline-block;
-    width: 70px;
-    height: 70px;
-    line-height: 85px;
-    text-align: center;
-    vertical-align: middle;
-
-    img {
-      width: 52px;
-      height: 52px;
-    }
-  }
-
-  .tips {
-    font-size: 12px;
-    color: rgba(207, 207, 207, 1);
-  }
-}
 </style>
 
 <style lang='scss'>
@@ -366,14 +264,6 @@ export default {
 .list-ruleForm .el-input--medium .el-input__inner {
   width: 170px;
   height: 40px;
-}
-
-.add-school-modal {
-  .el-form-item.el-form-item--medium {
-    margin-right: 0;
-    margin-bottom: 20px;
-    margin-left: 30px;
-  }
 }
 
 .school-list .el-table__body tr td:first-child {

@@ -135,6 +135,16 @@ export async function propertyList() {
   })
 }
 
+/**
+ * 学校状态
+ */
+export async function status() {
+  return request({
+    url: '/school/status',
+    method: 'post'
+  })
+}
+
 // 学校logo图片上传
 export async function schoolLogoUpload(data) {
   return request({
