@@ -1,10 +1,10 @@
 <template>
-  <el-dialog :title="title" :visible.sync="dialogVisibles" width="508px" class="add-school-modal" :close-on-click-modal="false">
+  <el-dialog :title="title" :visible.sync="dialogVisible" width="508px" class="add-school-modal" :close-on-click-modal="false" :show-close="true" :before-close="closeModal">
     <el-form ref="modalForm" :model="modalForm" :rules="rules">
       <el-form-item label="校徽">
-        <span class="school-head" v-if="schoolLogoInfo">
+        <span v-if="schoolLogoInfo" class="school-head">
           <!-- <img src="@/assets/schoolBadge@1x.png"> -->
-          <img :src="schoolLogoInfo" />
+          <img :src="schoolLogoInfo">
         </span>
         <div style="display: inline-block; width: calc(100% - 90px); margin-top: 10px; vertical-align: top;">
           <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @getUrlSuccess="getUrlSuccess" />
@@ -78,19 +78,15 @@ export default {
       schoolLogoInfo: '',
       properties: [],
       regions: []
+      // modalStatus: this.dialogVisible
     }
   },
-  computed: {
-    dialogVisibles: {
-      get() {
-        return this.dialogVisible
-      },
-      set(val) {
-        this.$emit('update:dialogVisible', val)
-      }
-    }
+  mounted() {
   },
   methods: {
+    closeModal() {
+      this.$emit('closeHandel')
+    },
     clear(school) {
       this.getProperty()
       this.getRegionList()

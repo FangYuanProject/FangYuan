@@ -51,7 +51,7 @@
       @pagination="changePage"
       @cell-click="publishOrOutSell"
     />
-    <SchoolInfo ref="schoolInfo" :title="modalTitle" :dialog-visible="dialogVisible" @submitForm="submitForm" />
+    <SchoolInfo ref="schoolInfo" :title="modalTitle" :dialog-visible="dialogVisible" @submitForm="submitForm" @closeHandel="closeModal" />
   </div>
 </template>
 <script>
@@ -107,6 +107,9 @@ export default {
     this.init()
   },
   methods: {
+    closeModal() {
+      this.dialogVisible = false
+    },
     init() {
       this.getStatus()
       this.getProperty()
@@ -170,7 +173,6 @@ export default {
       this.getList()
     },
     submitForm(data, saveOrPublish) {
-      debugger
       if (saveOrPublish === 1) {
         schoolRelease(data)
           .then(response => {
