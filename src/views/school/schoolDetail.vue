@@ -4,8 +4,8 @@
     <div class="school-content">
       <div class="school">
         <div class="school-logo">
-          <img v-if="school && !school.badgeUrl" src="@/assets/schoolBadge@2x.png" />
-          <img v-if="school && school.badgeUrl" :src="school.badgeUrl" />
+          <img v-if="school && !school.badgeUrl" src="@/assets/schoolBadge@2x.png">
+          <img v-if="school && school.badgeUrl" :src="school.badgeUrl">
         </div>
         <el-button type="primary" class="change-badge">更换校徽</el-button>
       </div>
@@ -140,7 +140,7 @@
         <el-button type="primary" class="submit-data-btn" @click="submitMajor">确 定</el-button>
       </span>
     </el-dialog>
-    <SchoolInfo ref="schoolInfo" :title="modalTitle" :dialog-visible="dialogVisible" @submitForm="submitForm" />
+    <SchoolInfo ref="schoolInfo" :title="modalTitle" :dialog-visible="dialogVisible" @submitForm="submitForm" @closeHandel="closeModal" />
   </div>
 </template>
 <script>
@@ -344,6 +344,10 @@ export default {
     Bus.$off('newYear')
   },
   methods: {
+    closeModal() {
+      console.log('12')
+      this.dialogVisible = false
+    },
     init() {
       this.getSchoolDetail()
     },
@@ -410,7 +414,6 @@ export default {
       schoolInfo.clear(this.school)
     },
     submitForm(data) {
-      debugger
       schoolEdit(data).then(response => {
         AlertBox('success', '保存成功！')
         setTimeout(() => {

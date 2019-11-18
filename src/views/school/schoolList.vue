@@ -170,7 +170,6 @@ export default {
       this.getList()
     },
     submitForm(data, saveOrPublish) {
-      debugger
       if (saveOrPublish === 1) {
         schoolRelease(data)
           .then(response => {
