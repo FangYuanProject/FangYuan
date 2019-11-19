@@ -458,7 +458,7 @@ export default {
     },
     // 删除学院
     delCollege(college) {
-      this.$confirm('是否确定删除该学院', '提示', {
+      this.$confirm('是否确定删除该学院？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',

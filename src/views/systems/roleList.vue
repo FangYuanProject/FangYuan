@@ -6,13 +6,15 @@
     <tableComponents
       :table-data="tableData"
       :th-data="thData"
-      :table-operation="tableOperation"
       :total="tableData.length"
-      @click="editRole"
+      @handleClick="chooseOperation"
     />
     <el-dialog title="权限" :visible.sync="dialogVisible" width="508px" class="add-course-modal">
-
-      <span class="current-role">角色名称：管理员</span>
+      <el-form ref="validContent" :model="modal" :rules="vaildFormContent">
+        <el-form-item label="角色名称：" prop="roleName">
+          <el-input v-model="modal.roleName" autocomplete="off" placeholder="请输入角色名称" />
+        </el-form-item>
+      </el-form>
       <el-tree
         ref="tree"
         :data="data"
@@ -23,7 +25,7 @@
         :props="defaultProps"
       />
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="submit-data-btn" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" class="submit-data-btn" @click="submitForm('validContent')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -39,10 +41,15 @@ export default {
   },
   data() {
     return {
-      tableOperation: [
-        { name: '权限', clickEvent: 'changeRole' },
-        { name: '删除', clickEvent: 'changeRole' }
-      ],
+      modal: {
+        roleName: '' // 弹窗角色名称
+      },
+      vaildFormContent: {
+        roleName: [
+          { requied: true, message: '请输入角色名称', trigger: 'blur' }
+          // { validator: this.validLength(16), trigger: 'blur' }
+        ]
+      },
       dialogVisible: false,
       data: [{
         id: 1,
@@ -83,7 +90,7 @@ export default {
         children: 'children',
         label: 'label'
       },
-      thData: [{ name: 'ID', indexs: 'roleCode' }, { name: '角色', indexs: 'roleName' }],
+      thData: [{ name: '角色', indexs: 'value' }, { name: '操作', indexs: 'operation' }],
       tableData: []
     }
   },
@@ -91,24 +98,23 @@ export default {
     this.getRoleList()
   },
   methods: {
-    submitForm(formName) {
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     alert('submit!')
-      //     } else {
-      //     console.log('error submit!!')
-      //       return false
-      //     }
-      // })
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
+    submitForm(data) {
+      this.$refs[data].validate((valid) => {
+        debugger
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     AddRole() {
-      console.log('123')
+      this.modal.roleName = ''
       this.dialogVisible = true
     },
-    editRole() {
+    editRole(data) {
+      this.modal.roleName = data.value
       this.dialogVisible = true
     },
     changeRoleVisible() {
@@ -116,8 +122,35 @@ export default {
     },
     getRoleList() {
       roleList().then(res => {
-        console.log(res)
+        res.data.forEach(list => {
+          list.operation = [{name: '权限', clickEvent: 'limit'}, {name: '删除', clickEvent: 'deleteRole'}]
+        })
+        this.tableData = res.data
       })
+    },
+    chooseOperation(type, data) {
+      if (type === 'limit') {
+        // 权限操作,打开弹窗
+        this.editRole(data)
+      } else {
+        this.$confirm('是否确定删除该角色？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          delRole({ id: data.key }).then(res => {
+            AlertBox('success', '删除成功！')
+            this.getRoleList()
+          })
+        })
+      }
+    },
+    validLength(rule, value, callback) {
+      debugger
+      if (true) {
+
+      }
     }
   }
 }
@@ -131,6 +164,10 @@ export default {
   line-height: 0;
   color: #202431;
   border-bottom: 1px solid #ebeef5;
+}
+
+.font-red {
+  color: red;
 }
 
 .submit-data-btn {
@@ -148,8 +185,13 @@ export default {
 
 .current-role {
   display: inline-block;
+  width: 100%;
   margin-bottom: 30px;
   font-size: 14px;
   color: #202431;
+
+  .el-input {
+    display: inline-block;
+  }
 }
 </style>

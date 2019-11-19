@@ -210,11 +210,11 @@ export default {
       schoolInfo.clear()
     },
     chooseOperation(type, data) {
-      let title = '是否发布该学校'
+      let title = '是否发布该学校？'
       let successTip = '发布'
       // release unShelve
       if (type === 'unShelve') {
-        title = '是否确认将该学校下架'
+        title = '是否确认将该学校下架？'
         successTip = '下架'
       }
       this.$confirm(title, '提示', {
