@@ -58,7 +58,7 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList, schoolLogoUpload, status } from '@/api/secIndex'
+import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList, status } from '@/api/secIndex'
 import { dateTimeStr, AlertBox } from '@/utils/util'
 import SchoolInfo from './components/schoolInfo'
 export default {

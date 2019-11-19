@@ -144,7 +144,7 @@
     <el-dialog title="更换校徽" :visible.sync="dialogVisibleLogo" width="508px" class="add-school-modal" :close-on-click-modal="false">
       <el-form>
         <el-form-item label="校徽">
-          <span class="school-head" v-if="schoolLogoInfo">
+          <span v-if="schoolLogoInfo" class="school-head">
             <img :src="schoolLogoInfo" />
           </span>
           <div style="display: inline-block; width: calc(100% - 90px); margin-top: 10px; vertical-align: top;">
