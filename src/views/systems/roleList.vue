@@ -33,6 +33,7 @@
 <script>
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
+import { AlertBox } from '@/utils/util'
 import { addRole, delRole, editRole, roleList } from '@/api/index'
 export default {
   components: {
@@ -46,8 +47,8 @@ export default {
       },
       vaildFormContent: {
         roleName: [
-          { requied: true, message: '请输入角色名称', trigger: 'blur' }
-          // { validator: this.validLength(16), trigger: 'blur' }
+          { required: true, message: '请输入角色名称', trigger: 'blur' },
+          { validator: this.validLength, trigger: 'blur' }
         ]
       },
       dialogVisible: false,
@@ -100,7 +101,6 @@ export default {
   methods: {
     submitForm(data) {
       this.$refs[data].validate((valid) => {
-        debugger
         if (valid) {
           alert('submit!')
         } else {
@@ -123,7 +123,7 @@ export default {
     getRoleList() {
       roleList().then(res => {
         res.data.forEach(list => {
-          list.operation = [{name: '权限', clickEvent: 'limit'}, {name: '删除', clickEvent: 'deleteRole'}]
+          list.operation = [{ name: '权限', clickEvent: 'limit' }, { name: '删除', clickEvent: 'deleteRole' }]
         })
         this.tableData = res.data
       })
@@ -147,9 +147,8 @@ export default {
       }
     },
     validLength(rule, value, callback) {
-      debugger
-      if (true) {
-
+      if (value && value.length > 16) {
+        callback(new Error('不能超过16个字符！'))
       }
     }
   }
@@ -193,5 +192,13 @@ export default {
   .el-input {
     display: inline-block;
   }
+}
+
+.course-list .el-dialog__body .el-form-item__label {
+  width: 100px;
+}
+
+.course-list .el-dialog__body .el-input {
+  width: 78%;
 }
 </style>

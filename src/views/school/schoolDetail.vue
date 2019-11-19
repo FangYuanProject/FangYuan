@@ -95,6 +95,9 @@
         <el-form-item label="专业名称" prop="name">
           <el-input v-model="formMajor.name" autocomplete="off" />
         </el-form-item>
+        <el-form-item label="招生类型" prop="enrollmentType">
+          <el-input v-model="formMajor.enrollmentType" autocomplete="off" />
+        </el-form-item>
         <el-form-item label="拟招生人数">
           <el-input v-model="formMajor.studentRecruitment" autocomplete="off" />
         </el-form-item>
@@ -135,6 +138,33 @@
         <el-form-item label="参考书目">
           <el-input v-model="formMajor.consultBooks" type="textarea" autocomplete="off" />
         </el-form-item>
+        <el-form-item label="复试内容">
+          <el-input v-model="formMajor.proCourseMark" autocomplete="off" />
+        </el-form-item>
+        <div class="col-xs-6">
+          <el-form-item label="笔试">
+            <el-raido-group :model="formMajor.writtenExam">
+              <el-radio name="writtenExam" size="small" :label="1">
+                是
+              </el-radio>
+              <el-radio name="writtenExam" size="small" :label="0">
+                否
+              </el-radio>
+            </el-raido-group>
+          </el-form-item>
+        </div>
+        <div class="col-xs-6">
+          <el-form-item label="机试">
+            <el-raido-group :model="formMajor.operatingExam">
+              <el-radio name="operatingExam" size="small" :label="1">
+                是
+              </el-radio>
+              <el-radio name="operatingExam" size="small" :label="0">
+                否
+              </el-radio>
+            </el-raido-group>
+          </el-form-item>
+        </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" class="submit-data-btn" @click="submitMajor">确 定</el-button>
@@ -190,6 +220,7 @@ export default {
       formMajor: {
         code: '', // 专业代码
         name: '', // 专业名称
+        enrollmentType: '', // 招生类型
         studentRecruitment: '', // 拟招生人数
         studentFree: '', // 推免生人数
         learnWay: '', // 学习方式
@@ -209,7 +240,9 @@ export default {
         scoreLine: '', // 录取线
         firstProCourse: '', // 初试专业课
         proCourseMark: '', // 专业课备注
-        consultBooks: '' // 参考书目
+        consultBooks: '', // 参考书目
+        operatingExam: 1, // 机试
+        writtenExam: 1 // 笔试
       },
       formYear: {
         year: '', // 所选年份
@@ -232,6 +265,7 @@ export default {
       ruleMajor: {
         code: [{ required: true, trigger: 'blur', message: '请输入专业代码' }],
         name: [{ required: true, trigger: 'blur', message: '请输入专业名称' }],
+        enrollmentType: [{ required: true, trigger: 'blur', message: '请输入招生类型' }],
         learnWay: [{ required: true, trigger: 'change', message: '请选择学习方式' }],
         learnYear: [{ required: true, trigger: 'change', message: '请输入学习年限' }],
         publicCourse: [{ required: true, trigger: 'blur', message: '请输入公共课' }],
@@ -372,7 +406,45 @@ export default {
     },
     getSchoolDetail() {
       schoolDetail({ id: this.$route.query.id }).then(res => {
+        const tData = res.data.collegeRespList || []
+        let hasYear = false // 组装抽离年份数据
+        let yearIndex = 0 // 所处年份位置
+        tData.forEach(list => {
+          list.level = 1
+          list.name = list.collegeName
+          list.children = []
+          list.detailMajorRespList.forEach(li => {
+            const theYear = li.year
+            li.level = 3
+            li.researchResps.forEach(levelFour => {
+              levelFour.level = 4
+              levelFour.name = levelFour.research
+            })
+            li.children = li.researchResps
+            li.name = li.majorName
+            hasYear = false
+            yearIndex = 0
+            list.children.forEach((yearData, indYear) => {
+              if (theYear === yearData.name) {
+                hasYear = true
+                yearIndex = indYear
+                return
+              }
+            })
+            if (hasYear) {
+              list.children[yearIndex].children.push(li)
+            } else { // 新增年份数据
+              list.children.push({
+                name: theYear,
+                level: 2,
+                children: [{ ...li }]
+              })
+            }
+          })
+        })
         this.school = res.data
+        this.tableData = tData
+        console.log(tData)
       })
     },
     showDirection() {
