@@ -151,9 +151,7 @@ export default {
   },
   methods: {
     searchGoodsList() {
-      console.log(this.ruleForm.uploadTime)
-
-      this.getCourseList()
+      // this.()
     },
     AddCourse() {
       this.dialogVisible = true

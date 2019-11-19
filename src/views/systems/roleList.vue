@@ -47,8 +47,13 @@ export default {
       },
       vaildFormContent: {
         roleName: [
+<<<<<<< HEAD
           { required: true, message: '请输入角色名称', trigger: 'blur' },
           { validator: this.validLength, trigger: 'blur' }
+=======
+          { required: true, message: '请输入角色名称', trigger: 'blur' }
+          // { validator: this.validLength(16), trigger: 'blur' }
+>>>>>>> d1d05d0262672a57e853c1da44ca2c8e2bde0a74
         ]
       },
       dialogVisible: false,
@@ -145,11 +150,14 @@ export default {
           })
         })
       }
+<<<<<<< HEAD
     },
     validLength(rule, value, callback) {
       if (value && value.length > 16) {
         callback(new Error('不能超过16个字符！'))
       }
+=======
+>>>>>>> d1d05d0262672a57e853c1da44ca2c8e2bde0a74
     }
   }
 }

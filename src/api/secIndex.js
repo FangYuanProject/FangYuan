@@ -134,6 +134,15 @@ export async function majorDel(data) {
   })
 }
 
+// 专业列表
+export async function majorList(data) {
+  return request({
+    url: '/major/search',
+    method: 'post',
+    data: clearNullValue(data)
+  })
+}
+
 /**
  * 地区列表
  */
