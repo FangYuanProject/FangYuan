@@ -122,9 +122,6 @@ export default {
     searchNewsList() {
       this.ruleForm.page = 1
       this.ruleForm.pageSize = 20
-      this.ruleForm.releaseTime = this.releaseTime ? this.releaseTime[0] + '~' + this.releaseTime[1] : ''
-      this.ruleForm.createTime = this.createTime ? this.createTime[0] + '~' + this.createTime[1] : ''
-      this.ruleForm.unshelveTime = this.unshelveTime ? this.unshelveTime[0] + '~' + this.unshelveTime[1] : ''
       this.getNewsList()
     },
     getNewsOptions() {
@@ -136,6 +133,9 @@ export default {
       })
     },
     getNewsList() {
+      this.ruleForm.releaseTime = this.releaseTime ? this.releaseTime[0] + '~' + this.releaseTime[1] : ''
+      this.ruleForm.createTime = this.createTime ? this.createTime[0] + '~' + this.createTime[1] : ''
+      this.ruleForm.unshelveTime = this.unshelveTime ? this.unshelveTime[0] + '~' + this.unshelveTime[1] : ''
       newsList(this.ruleForm).then(res => {
         res.data.forEach(list => {
           list.createTime = dateTimeStr(list.createTime)

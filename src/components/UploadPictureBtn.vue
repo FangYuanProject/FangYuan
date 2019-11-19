@@ -7,7 +7,7 @@
       :on-success="handleUploadSuccess"
       list-type="picture"
       :limit="1"
-      :action="baseURLFileUpload + '/file/upload?privilege=PUBLIC'"
+      :action="baseURLFileUpload + '/file/upload?privilege=' + uploadType"
     >
       <el-button size="small" type="primary" class="upload-pic">{{ btnName }}</el-button>
       <span slot="tip" class="el-upload__tip" :style="{'display':uploadTips===''?'none' :'inline'}">{{ uploadTips }}</span>
@@ -30,6 +30,10 @@ export default {
       default: () => {
 
       }
+    },
+    uploadType: {
+      type: String,
+      default: 'PUBLIC'
     }
   },
   data() {

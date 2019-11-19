@@ -3,10 +3,10 @@
     <h2 class="title">试题列表</h2>
     <el-form ref="ruleForm" :model="searchForm" label-width="70px" inline class="list-ruleForm">
       <el-form-item label="试题ID" prop="id">
-        <el-input v-model="searchForm.id" />
+        <el-input v-model="searchForm.id" placeholder="请输入" />
       </el-form-item>
       <el-form-item label="试题名称" prop="testName">
-        <el-input v-model="searchForm.testName" />
+        <el-input v-model="searchForm.testName" placeholder="请输入" />
       </el-form-item>
       <el-form-item label="试题类型" prop="type">
         <el-select v-model="searchForm.type" placeholder="请选择">
@@ -15,31 +15,27 @@
       </el-form-item>
       <el-form-item label="学校" prop="university">
         <el-select v-model="searchForm.university" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="selectSchool">
-          <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.id" />
+          <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityName" />
         </el-select>
       </el-form-item>
       <el-form-item label="学院" prop="college">
-        <el-select v-model="searchForm.college" placeholder="请选择">
-          <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.id" />
+        <el-select v-model="searchForm.college" placeholder="请选择" @change="selectCollege">
+          <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.collegeName" />
         </el-select>
       </el-form-item>
       <el-form-item label="专业" prop="major">
         <el-select v-model="searchForm.major" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
+          <el-option v-for="(item,index) in searchOptions.majorOptions" :key="item+index" :label="item.majorName" :value="item.majorName" />
         </el-select>
       </el-form-item>
       <el-form-item label="科目" prop="subject">
-        <el-select v-model="searchForm.subject" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
-        </el-select>
+        <el-input v-model="searchForm.subject" placeholder="请输入" />
       </el-form-item>
       <el-form-item label="年份" prop="year">
         <el-date-picker
           v-model="searchForm.year"
           type="year"
-          placeholder="选择年"
+          placeholder="选择年份"
         />
       </el-form-item>
       <el-form-item label="上传时间" prop="uploadTime">
@@ -58,7 +54,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <search-form-btn />
+        <search-form-btn @click="searchTestList" />
         <add-method-btn name="试题" @click="addDocument" />
       </el-form-item>
     </el-form>
@@ -66,8 +62,9 @@
       :table-data="tableData"
       :th-data="thData"
       :total="total"
-      @click="operationCell"
+      @handleClick="operationCell"
       @cell-click="editDocument"
+      @pagination="changePage"
     />
     <el-dialog :title="modalTitle" :visible.sync="dialogVisible" width="508px" class="add-document-modal" :close-on-click-modal="false">
       <el-form ref="modalForm" :model="modalForm" :rules="ruleForm">
@@ -82,56 +79,54 @@
         <el-form-item label="试题描述" prop="describe">
           <el-input v-model="modalForm.describe" type="textarea" autocomplete="off" rows="5" />
         </el-form-item>
-        <el-form-item label="学校" prop="school">
-          <el-select v-model="modalForm.university" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="modalSelectSchool">
+        <el-form-item label="学校" prop="university">
+          <el-select v-model="modalForm.university" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="selectSchool">
             <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="学院" prop="college">
-          <el-select v-model="modalForm.college" placeholder="请选择">
+          <el-select v-model="modalForm.college" placeholder="请选择" @change="selectCollege">
             <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="专业" prop="major">
-          <el-select v-model="modalForm.major" placeholder="请选择" class="modal-select">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
+          <el-select v-model="modalForm.major" placeholder="请选择">
+            <el-option v-for="(item,index) in searchOptions.majorOptions" :key="item+index" :label="item.majorName" :value="item.majorId" />
           </el-select>
         </el-form-item>
         <el-form-item label="科目" prop="subject">
-          <el-select v-model="modalForm.subject" placeholder="请选择" class="modal-select">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
-          </el-select>
+          <el-input v-model="modalForm.subject" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="年份" prop="year">
           <el-date-picker
             v-model="modalForm.year"
             type="year"
             placeholder="选择年"
+            value-format="yyyy"
           />
         </el-form-item>
-        <el-form-item label="上传试题" prop="doc">
-          <el-input v-model="modalForm.answerName" placeholder="支持扩展名pdf,jpg">
-            <template slot="append">
-              <upload-pic-btn btn-name="上传" @click="uploadDocument" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="上传答案" prop="answerId">
+        <el-form-item label="上传试题" prop="questionName">
           <el-input v-model="modalForm.questionName" placeholder="支持扩展名pdf,jpg">
             <template slot="append">
-              <upload-pic-btn btn-name="上传" @getUrlSuccess="uploadDocumentAnswer" />
+              <upload-pic-btn btn-name="上传" :upload-type="uploadType" @getUrlSuccess.native="uploadDocument" />
             </template>
           </el-input>
         </el-form-item>
+        <el-form-item label="上传答案" prop="answerName">
+          <el-input v-model="modalForm.answerName" placeholder="支持扩展名pdf,jpg">
+            <template slot="append">
+              <upload-pic-btn btn-name="上传" :upload-type="uploadType" @getUrlSuccess.native="uploadDocumentAnswer" />
+            </template>
+          </el-input>
+        </el-form-item>
+
       </el-form>
       <span slot="footer" class="dialog-footer">
         <div v-if="status==='add'">
-          <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm')">
+          <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm','save')">
             保存
           </el-button>
-          <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm')">
+          <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm','publish')">
             <span class="iconfont iconfabu">&nbsp;发布</span>
           </el-button>
         </div>
@@ -139,10 +134,10 @@
           <el-button class="del-document" @click="delDocument('modalForm')">
             删除
           </el-button>
-          <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm')">
+          <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm','update')">
             更新
           </el-button>
-          <el-button type="primary" class="submit-data-btn" @click="submitForm('modalForm')">
+          <el-button type="primary" class="submit-data-btn" @click="outSell('modalForm')">
             <span class="iconfont iconxiajia">&nbsp;下架</span>
           </el-button>
 
@@ -156,8 +151,9 @@ import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 import UploadPicBtn from '@/components/UploadPictureBtn'
-import { addTest, delTest, testDetail, editTest, publishTest, testList, outsellTest, testStatus, testType } from '@/api/index'
-import { schoolList, collegeSearch } from '@/api/secIndex'
+import { addTest, delTest, testDetail, editTest, publishTest, testList, outsellTest, testStatus, testType, uploadDown } from '@/api/index'
+import { schoolList, collegeSearch, majorList } from '@/api/secIndex'
+import { AlertBox, dateTimeStr } from '../../utils/util'
 export default {
   components: {
     tableComponents,
@@ -190,15 +186,15 @@ export default {
         modalUniverity: [],
         modalcolleges: [],
         statusOptions: [],
-        typeOptions: []
-      },
+        typeOptions: [], // 类型
+        majorOptions: [] // 专业
+      }, // 走接口的select框值
       uploadTime: '', // 处理查询上传时间格式
       modalForm: {
         major: '',
         questionHash: '',
         college: '',
         describe: '',
-        questionId: '',
         subject: '',
         testName: '',
         type: '',
@@ -208,8 +204,8 @@ export default {
         answerHash: '',
         answerName: '',
         questionId: '',
-        questionHash: '',
-        questionName: ''
+        questionName: '',
+        id: ''
       },
       ruleForm: {
         testName: [
@@ -217,9 +213,6 @@ export default {
         ],
         university: [
           { required: true, message: '请选择学校', trigger: 'change' }
-        ],
-        describe: [
-          { required: true, message: '请输入试题描述', trigger: 'blur' }
         ],
         college: [
           { required: true, message: '请选择学院', trigger: 'change' }
@@ -239,20 +232,25 @@ export default {
         type: [
           { required: true, message: '请选择试题类型', trigger: 'change' }
         ]
-      },
+
+      }, // 判断新增修改的表单是否通过验证
       thData: [
         { name: '试题ID', indexs: 'id' },
-        { name: '试题名称', indexs: 'title' },
-        { name: '学校', indexs: 'pone' },
-        { name: '学院', indexs: 'pone' },
-        { name: '专业', indexs: 'pone' },
-        { name: '科目', indexs: 'email' },
-        { name: '年份', indexs: 'publish' },
-        { name: '上传时间', indexs: 'undercarriage' },
-        { name: '操作', indexs: 'publishOrUndercarriage' }
+        { name: '试题名称', indexs: 'testName' },
+        { name: '学校', indexs: 'university' },
+        { name: '学院', indexs: 'college' },
+        { name: '专业', indexs: 'major' },
+        { name: '科目', indexs: 'subject' },
+        { name: '年份', indexs: 'year' },
+        { name: '上传时间', indexs: 'uploadTime' },
+        { name: '状态', indexs: 'status' },
+        { name: '操作', indexs: 'operation' }
       ],
       tableData: [],
-      total: 0
+      total: 0,
+      universityId: '', // 记录选中的学校id
+      collegeId: '', // 记录选中的学院id
+      uploadType: 'PRIVATE' // 判断文件上传类型
     }
   },
   mounted() {
@@ -262,23 +260,53 @@ export default {
   },
   methods: {
     selectSchool(data) {
+      this.universityId = data
       collegeSearch({ universityId: data }).then(res => {
         this.searchOptions.colleges = res.data
       })
     },
-    modalSelectSchool(id) {
-      collegeSearch({ universityId: id }).then(res => {
-        this.searchOptions.modalcolleges = res.data
+    selectCollege(data) {
+      majorList({ collegeId: data, universityId: this.universityId }).then(res => {
+        this.searchOptions.majorOptions = res.data
       })
+    },
+    changePage(pageData) {
+      this.searchForm.page = pageData.page
+      this.searchForm.pageSize = pageData.limit
+      this.getTestList()
+    },
+    searchTestList() {
+      this.searchForm.page = 1
+      this.searchForm.pageSize = 20
     },
     selectStatus(val) {
       this.searchForm.status = val
     },
-    remoteMethodSchool() {},
-    submitForm(formName) {
+    remoteMethodSchool(data) {
+      console.log(data)
+    },
+    submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-
+          if (type === 'save') {
+            addTest(this.modalForm).then(res => {
+              this.dialogVisible = false
+              AlertBox('success', '保存成功')
+              this.getTestList()
+            })
+          } else if (type === 'publish') {
+            publishTest(this.modalForm).then(res => {
+              this.dialogVisible = false
+              AlertBox('success', '发布成功')
+              this.getTestList()
+            })
+          } else if (type === 'update') {
+            editTest(this.modalForm).then(res => {
+              this.dialogVisible = false
+              AlertBox('success', '发布成功')
+              this.getTestList()
+            })
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -291,9 +319,10 @@ export default {
       this.modalTitle = '新建试题'
     },
     delDocument() {
-      this.$message({
-        message: '删除成功',
-        type: 'success'
+      delTest({ id: this.modalForm.id }).then(res => {
+        this.dialogVisible = false
+        AlertBox('success', '删除成功')
+        this.getTestList()
       })
     },
     getSearchOption() {
@@ -305,45 +334,106 @@ export default {
       })
     },
     uploadDocumentAnswer(file) {
-      this.modalForm.questionId = file.data.id
-      this.modalForm.questionHash = file.data.path
-      this.modalForm.questionName = file.data.name
-    },
-    uploadDocument(file) {
+      console.log(file)
       this.modalForm.answerId = file.data.id
       this.modalForm.answerHash = file.data.path
       this.modalForm.answerName = file.data.name
     },
+    uploadDocument(file) {
+      this.modalForm.questionId = file.data.id
+      this.modalForm.questionHash = file.data.path
+      this.modalForm.questionName = file.data.name
+    },
     operationCell(type, data) {
-      if (type.name === '下载') {
-        console.log('xaiza')
-      } else if (type.name === '答案') {
-        console.log('答案')
-      } else if (type.name === '下架') {
-        console.log('下加')
-      } else {
-        console.log('fabu')
-      }
       console.log(data)
+      if (type === 'download') {
+        uploadDown({ id: data.questionId, hash: data.questionHash })
+      } else if (type === 'answer') {
+        uploadDown({ id: data.answerId, hash: data.answerHash })
+      } else if (type === 'publish') {
+        publishTest({ id: data.id }).then(res => {
+          AlertBox('success', '发布成功')
+          this.getTestList()
+        })
+      } else {
+        this.outSell('', data.id)
+      }
     },
     editDocument(row, colum) {
       if (colum.label === '试题ID') {
         this.dialogVisible = true
         this.status = 'edit'
         this.modalTitle = '编辑试题'
+        testDetail({ id: row.id }).then(res => {
+          this.universityId = Number(res.data.university)
+          this.modalForm = {
+            major: Number(res.data.major),
+            questionHash: res.data.questionHash,
+            college: Number(res.data.college),
+            describe: '',
+            subject: res.data.subject,
+            testName: res.data.testName,
+            type: res.data.type.key,
+            university: Number(res.data.university),
+            year: res.data.year,
+            answerId: res.data.answerId,
+            answerHash: res.data.answerHash,
+            answerName: res.data.answerName,
+            questionId: res.data.questionId,
+            questionName: res.data.questionName,
+            id: row.id
+          }
+          this.selectSchool(Number(res.data.university))
+          this.selectCollege(Number(res.data.college))
+        })
       }
     },
     getTestList() {
       this.searchForm.uploadTime = this.uploadTime ? this.uploadTime[0] + '~' + this.uploadTime[1] : ''
       testList(this.searchForm).then(res => {
+        res.data.forEach(list => {
+          list.uploadTime = dateTimeStr(list.uploadTime)
+          list.status = list.status.value
+          list.operation = [{ name: '下载', clickEvent: 'download' }, { name: '答案', clickEvent: 'answer' }]
+          switch (list.status) {
+            case '新增':
+            case '下架':
+              list.operation.push({ name: '发布', clickEvent: 'publish' })
+              break
+            case '发布':
+              list.operation.push({ name: '下架', clickEvent: 'outsell' })
+              break
+          }
+        })
         this.tableData = res.data
         this.total = res.total
+        if (this.$refs['modalForm']) {
+          this.$refs['modalForm'].resetFields()
+        }
       })
     },
     getSchoolList() {
       schoolList({ page: 1, pageSize: 20 }).then(res => {
         this.searchOptions.university = res.data
       })
+    },
+    outSell(formName, id) {
+      if (this.modalForm.id !== '') {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            outsellTest({ id: this.modalForm.id }).then(res => {
+              AlertBox('success', '下架成功')
+              this.getTestList()
+              this.dialogVisible = false
+            })
+          }
+        })
+      } else {
+        outsellTest({ id: id }).then(res => {
+          AlertBox('success', '下架成功')
+          this.getTestList()
+        })
+      }
     }
 
   }

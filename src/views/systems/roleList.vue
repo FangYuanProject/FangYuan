@@ -46,7 +46,7 @@ export default {
       },
       vaildFormContent: {
         roleName: [
-          { requied: true, message: '请输入角色名称', trigger: 'blur' }
+          { required: true, message: '请输入角色名称', trigger: 'blur' }
           // { validator: this.validLength(16), trigger: 'blur' }
         ]
       },
@@ -123,7 +123,7 @@ export default {
     getRoleList() {
       roleList().then(res => {
         res.data.forEach(list => {
-          list.operation = [{name: '权限', clickEvent: 'limit'}, {name: '删除', clickEvent: 'deleteRole'}]
+          list.operation = [{ name: '权限', clickEvent: 'limit' }, { name: '删除', clickEvent: 'deleteRole' }]
         })
         this.tableData = res.data
       })
@@ -144,12 +144,6 @@ export default {
             this.getRoleList()
           })
         })
-      }
-    },
-    validLength(rule, value, callback) {
-      debugger
-      if (true) {
-
       }
     }
   }
