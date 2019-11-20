@@ -171,7 +171,7 @@
       <el-form>
         <el-form-item label="校徽">
           <span v-if="schoolLogoInfo" class="school-head">
-            <img :src="schoolLogoInfo" />
+            <img :src="schoolLogoInfo">
           </span>
           <div style="display: inline-block; width: calc(100% - 90px); margin-top: 10px; vertical-align: top;">
             <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @getUrlSuccess="getUrlSuccess" />
@@ -582,6 +582,15 @@ export default {
   display: inline-block;
   float: left;
   width: 50%;
+}
+</style>
+<style lang="scss">
+
+.h700 {
+  .el-dialog__body {
+    height: 600px;
+    overflow-y: scroll;
+  }
 }
 </style>
 
