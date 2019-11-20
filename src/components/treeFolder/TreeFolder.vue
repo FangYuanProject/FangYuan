@@ -7,11 +7,10 @@
           {{ child.name }}
         </a>
         <span class="dib fr pr100">
-          <!-- <a v-if="child.level === 1" href="javascript:;" class="list-btn ml20" @click="adds('year', child.id)">新增年份</a> -->
-          <a v-if="child.level === 2" href="javascript:;" class="list-btn ml20" @click="adds('major', child.id)">新增专业</a>
-          <a v-if="child.level === 3" href="javascript:;" class="list-btn ml20" @click="adds('direction', child.id)">新增方向</a>
-          <a href="javascript:;" class="list-btn ml20" @click="editor(child.level, child.id)">编辑</a>
-          <a href="javascript:;" class="list-btn ml20" @click="delList(child.level, child.id)">删除</a>
+          <a v-if="child.level === 1" href="javascript:;" class="list-btn ml20" @click="adds('major', child)">新增专业</a>
+          <a v-if="child.level === 3" href="javascript:;" class="list-btn ml20" @click="adds('direction', child)">新增方向</a>
+          <a href="javascript:;" v-if="child.level !==2" class="list-btn ml20" @click="editor(child)">编辑</a>
+          <a href="javascript:;" class="list-btn ml20" @click="delList(child)">删除</a>
         </span>
       </span>
     </li>
@@ -39,22 +38,20 @@ export default {
     init() {
 
     },
-    adds(type, id) {
+    adds(type, data) {
       let methods = ''
-      if (type === 'year') { // 新增年份
-        methods = 'newYear'
-      } else if (type === 'direction') { // 新增方向
+      if (type === 'direction') { // 新增方向
         methods = 'newDirection'
       } else { // 新增专业
         methods = 'newMajor'
       }
-      Bus.$emit(methods, id)
+      Bus.$emit(methods, data)
     },
-    editor(level, id) { // 编辑
-      console.log('editorlevelid', level, id)
+    editor(data) { // 编辑
+      console.log('editorlevelid', data)
     },
-    delList(level, id) { // 删除
-      console.log('dellevelid', level, id)
+    delList(data) { // 删除
+      console.log('dellevelid', data)
     }
   }
 }

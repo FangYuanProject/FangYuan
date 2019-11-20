@@ -91,7 +91,7 @@ export default {
         children: 'children',
         label: 'label'
       },
-      thData: [{ name: '角色', indexs: 'value' }, { name: '操作', indexs: 'operation' }],
+      thData: [{ name: '角色', indexs: 'roleName' }, { name: '操作', indexs: 'operation' }],
       tableData: []
     }
   },
@@ -114,7 +114,7 @@ export default {
       this.dialogVisible = true
     },
     editRole(data) {
-      this.modal.roleName = data.value
+      this.modal.roleName = data.roleName
       this.dialogVisible = true
     },
     changeRoleVisible() {

@@ -54,24 +54,12 @@
     </div>
     <el-dialog title="新增方向" :visible.sync="changeDirectionVisible" width="508px" class="change-user-role">
       <el-form ref="formDirection" :model="formDirection" :rules="ruleDirection">
-        <el-form-item label="方向名称">
+        <el-form-item label="方向名称" prop="name">
           <el-input v-model="formDirection.name" autocomplete="off" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" class="submit-data-btn" @click="submitDirection">确 定</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog title="新增年份" :visible.sync="changeYearVisible" width="508px" class="change-user-role">
-      <el-form ref="formYear" :model="formYear" :rules="ruleYear">
-        <el-form-item label="年份">
-          <el-select v-model="formYear.year" placeholder="请选择年份" class="user-role">
-            <el-option v-for="y in formYear.years" :key="y" :label="y" :value="y" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="submit-data-btn" @click="submitYear">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="新增学院" :visible.sync="changeAcademicVisible" width="508px" class="change-user-role">
@@ -87,7 +75,7 @@
         <el-button type="primary" class="submit-data-btn" @click="submitAcademic">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="新增专业" :visible.sync="changeMajorVisible" width="508px" class="change-user-role">
+    <el-dialog title="新增专业" :visible.sync="changeMajorVisible" width="508px" class="change-user-role h700" :close-on-click-modal="false">
       <el-form ref="formMajor" :model="formMajor" :rules="ruleMajor">
         <el-form-item label="专业代码" prop="code">
           <el-input v-model="formMajor.code" autocomplete="off" />
@@ -110,7 +98,7 @@
         <el-form-item label="学习年限" prop="learnYear">
           <el-input v-model="formMajor.learnYear" autocomplete="off" />
         </el-form-item>
-        <div v-for="(p, index) in formMajor.publicCourse" :key="index" class="w oh">
+        <div v-for="(p, index) in formMajor.publicCourse" :key="index + '20'" class="w oh">
           <el-form-item class="ww50 fl" label="公共课" prop="publicCourse">
             <el-input v-model="p.courseName" autocomplete="off" />
           </el-form-item>
@@ -118,7 +106,7 @@
             <el-input v-model="p.courseScore" autocomplete="off" />
           </el-form-item>
         </div>
-        <div v-for="(p, index) in formMajor.professionalCourse" :key="index" class="w oh">
+        <div v-for="(p, index) in formMajor.professionalCourse" :key="index + '200'" class="w oh">
           <el-form-item class="ww50 fl" label="业务课" prop="professionalCourse">
             <el-input v-model="p.proCourseName" autocomplete="off" />
           </el-form-item>
@@ -141,30 +129,38 @@
         <el-form-item label="复试内容">
           <el-input v-model="formMajor.proCourseMark" autocomplete="off" />
         </el-form-item>
-        <div class="col-xs-6">
-          <el-form-item label="笔试">
-            <el-raido-group :model="formMajor.writtenExam">
-              <el-radio name="writtenExam" size="small" :label="1">
-                是
-              </el-radio>
-              <el-radio name="writtenExam" size="small" :label="0">
-                否
-              </el-radio>
-            </el-raido-group>
-          </el-form-item>
+        <div class="radio-half w oh">
+          <div class="col-xs-6">
+            <el-form-item label="笔试">
+              <el-radio-group v-model="formMajor.writtenExam">
+                <el-radio name="writtenExam" size="small" :label="1">
+                  是
+                </el-radio>
+                <el-radio name="writtenExam" size="small" :label="0">
+                  否
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </div>
+          <div class="col-xs-6">
+            <el-form-item label="机试">
+              <el-radio-group v-model="formMajor.operatingExam">
+                <el-radio name="operatingExam" size="small" :label="1">
+                  是
+                </el-radio>
+                <el-radio name="operatingExam" size="small" :label="0">
+                  否
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </div>
         </div>
-        <div class="col-xs-6">
-          <el-form-item label="机试">
-            <el-raido-group :model="formMajor.operatingExam">
-              <el-radio name="operatingExam" size="small" :label="1">
-                是
-              </el-radio>
-              <el-radio name="operatingExam" size="small" :label="0">
-                否
-              </el-radio>
-            </el-raido-group>
-          </el-form-item>
-        </div>
+        <el-form-item label="复试参考书目">
+          <el-input v-model="formMajor.secondaryReference" type="textarea" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="复试其他要求">
+          <el-input v-model="formMajor.secondaryRequire" type="textarea" autocomplete="off" />
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" class="submit-data-btn" @click="submitMajor">确 定</el-button>
@@ -210,7 +206,6 @@ export default {
       dialogVisible: false, // 弹窗显示--编辑学校
       changeDirectionVisible: false, // 弹窗显示--新增方向
       changeMajorVisible: false, // 弹窗显示--新增专业
-      changeYearVisible: false, // 弹窗显示--新增年份
       changeAcademicVisible: false, // 弹窗显示--新增学院
       dialogVisibleLogo: false, // 弹窗显示--更换校徽
       schoolLogoInfo: '', // 校徽地址
@@ -242,11 +237,9 @@ export default {
         proCourseMark: '', // 专业课备注
         consultBooks: '', // 参考书目
         operatingExam: 1, // 机试
-        writtenExam: 1 // 笔试
-      },
-      formYear: {
-        year: '', // 所选年份
-        years: [] // 年份选项
+        writtenExam: 1, // 笔试
+        secondaryReference: '', // 复试参考书目
+        secondaryRequire: '' // 复试其他要求
       },
       formAcademic: {
         code: '', // 学院代码
@@ -255,9 +248,6 @@ export default {
       ruleAcademic: {
         code: [{ required: true, trigger: 'blur', message: '请输入学院代码' }],
         name: [{ required: true, trigger: 'blur', message: '请输入学院名称' }]
-      },
-      ruleYear: {
-        year: [{ required: true, trigger: 'change', message: '请选择年份' }]
       },
       ruleDirection: {
         name: [{ required: true, trigger: 'blur', message: '请输入方向名称' }]
@@ -275,114 +265,13 @@ export default {
         scoreLine: [{ required: true, trigger: 'blur', message: '请输入录取线' }],
         firstProCourse: [{ required: true, trigger: 'blur', message: '请输入初试专业课' }]
       },
-      tableData: [
-        {
-          name: '计算机学院',
-          id: 124,
-          level: 1,
-          children: [
-            {
-              name: 2019,
-              id: 20191,
-              level: 2,
-              children: [
-                {
-                  name: '(01020)计算机系统机构专业',
-                  id: 201934,
-                  level: 3,
-                  children: [
-                    {
-                      name: '计算机方向',
-                      id: 1212312,
-                      level: 4
-                    }
-                  ]
-                },
-                {
-                  name: '(01050)计算机管理专业',
-                  id: 201935,
-                  level: 3
-                }
-              ]
-            },
-            {
-              name: 2018,
-              id: 20181,
-              level: 2,
-              children: [
-                {
-                  name: '(01020)计算机系统',
-                  id: 201834,
-                  level: 3
-                },
-                {
-                  name: '(01050)计算机管理',
-                  id: 201835,
-                  level: 3
-                }
-              ]
-            }
-          ]
-        },
-        {
-          name: '软件学院',
-          id: 123,
-          level: 1,
-          children: [
-            {
-              name: 2019,
-              id: 2019,
-              level: 2,
-              children: [
-                {
-                  name: '(02120)软件专业',
-                  id: 201944,
-                  level: 3
-                },
-                {
-                  name: '(02150)软件管理专业',
-                  id: 201945,
-                  level: 3,
-                  children: [
-                    {
-                      name: '软件管理方向',
-                      id: 1212312,
-                      level: 4
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              name: 2018,
-              id: 2018,
-              level: 2,
-              children: [
-                {
-                  name: '(02120)软件系统',
-                  id: 201844,
-                  level: 3
-                },
-                {
-                  name: '(02150)软件管理',
-                  id: 201845,
-                  level: 3
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      tableData: []
     }
   },
   created() {
     this.init()
   },
   mounted() {
-    Bus.$on('newYear', (data) => {
-      console.log('新增年份', data)
-      this.showYear()
-    })
     Bus.$on('newDirection', (data) => {
       console.log('新增方向', data)
       this.showDirection()
@@ -395,7 +284,6 @@ export default {
   destroyed() {
     Bus.$off('newDirection')
     Bus.$off('newMajor')
-    Bus.$off('newYear')
   },
   methods: {
     closeModal() {
@@ -449,15 +337,21 @@ export default {
     },
     showDirection() {
       this.changeDirectionVisible = true
-    },
-    showYear() {
-      this.changeYearVisible = true
+      this.$nextTick(() => {
+        this.$refs['formDirection'].resetFields()
+      })
     },
     showMajor() {
       this.changeMajorVisible = true
+      this.$nextTick(() => {
+        this.$refs['formMajor'].resetFields()
+      })
     },
     showAcademic() {
       this.changeAcademicVisible = true
+      this.$nextTick(() => {
+        this.$refs['formAcademic'].resetFields()
+      })
     },
     // 新增方向
     submitDirection() {
@@ -475,17 +369,6 @@ export default {
       this.$refs.formMajor.validate((valid) => {
         if (valid) {
           this.changeMajorVisible = false
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    // 新增年份
-    submitYear() {
-      this.$refs.formYear.validate((valid) => {
-        if (valid) {
-          this.changeYearVisible = false
         } else {
           console.log('error submit!!')
           return false
@@ -574,6 +457,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.h700 {
+  .el-dialog {
+    .el-dialog__body {
+      height: 50vh;
+      overflow: auto;
+    }
+  }
+}
+
 .title {
   height: 84px;
   padding-left: 30px;
@@ -684,6 +576,12 @@ export default {
     padding: 0;
     margin: 0;
   }
+}
+
+.radio-half .col-xs-6 {
+  display: inline-block;
+  float: left;
+  width: 50%;
 }
 </style>
 
