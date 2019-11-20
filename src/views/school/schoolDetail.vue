@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="school-detail-css">
     <h2 class="title">学校主页</h2>
     <div class="school-content">
       <div class="school">
@@ -52,7 +52,7 @@
         </li>
       </ul>
     </div>
-    <el-dialog title="新增方向" :visible.sync="changeDirectionVisible" width="508px" class="change-user-role">
+    <el-dialog title="新增方向" :visible.sync="changeDirectionVisible" width="508px" class="change-user-role" :close-on-click-modal="false">
       <el-form ref="formDirection" :model="formDirection" :rules="ruleDirection">
         <el-form-item label="方向名称" prop="name">
           <el-input v-model="formDirection.name" autocomplete="off" />
@@ -62,7 +62,7 @@
         <el-button type="primary" class="submit-data-btn" @click="submitDirection">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="新增学院" :visible.sync="changeAcademicVisible" width="508px" class="change-user-role">
+    <el-dialog title="新增学院" :visible.sync="changeAcademicVisible" width="508px" class="change-user-role" :close-on-click-modal="false">
       <el-form ref="formAcademic" :model="formAcademic" :rules="ruleAcademic">
         <el-form-item label="学院代码" prop="code">
           <el-input v-model="formAcademic.code" autocomplete="off" />
@@ -77,57 +77,87 @@
     </el-dialog>
     <el-dialog title="新增专业" :visible.sync="changeMajorVisible" width="508px" class="change-user-role h700" :close-on-click-modal="false">
       <el-form ref="formMajor" :model="formMajor" :rules="ruleMajor">
-        <el-form-item label="专业代码" prop="code">
-          <el-input v-model="formMajor.code" autocomplete="off" />
+        <el-form-item label="年份" prop="year">
+          <el-select v-model="formMajor.year" placeholder="请选择">
+            <el-option v-for="(reg, index1) in years" :key="index1 + 'year'" :label="reg" :value="reg" />
+          </el-select>
         </el-form-item>
-        <el-form-item label="专业名称" prop="name">
-          <el-input v-model="formMajor.name" autocomplete="off" />
+        <el-form-item label="专业代码" prop="majorCode">
+          <el-input v-model="formMajor.majorCode" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="专业名称" prop="majorName">
+          <el-input v-model="formMajor.majorName" autocomplete="off" />
         </el-form-item>
         <el-form-item label="招生类型" prop="enrollmentType">
           <el-input v-model="formMajor.enrollmentType" autocomplete="off" />
         </el-form-item>
         <el-form-item label="拟招生人数">
-          <el-input v-model="formMajor.studentRecruitment" autocomplete="off" />
+          <el-input v-model="formMajor.planNumber" autocomplete="off" />
         </el-form-item>
         <el-form-item label="推免生人数">
-          <el-input v-model="formMajor.studentFree" autocomplete="off" />
+          <el-input v-model="formMajor.recommendNumber" autocomplete="off" />
         </el-form-item>
         <el-form-item label="学习方式" prop="learnWay">
           <el-input v-model="formMajor.learnWay" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="学习年限" prop="learnYear">
+        <el-form-item label="学习年限">
           <el-input v-model="formMajor.learnYear" autocomplete="off" />
         </el-form-item>
-        <div v-for="(p, index) in formMajor.publicCourse" :key="index + '20'" class="w oh">
-          <el-form-item class="ww50 fl" label="公共课" prop="publicCourse">
-            <el-input v-model="p.courseName" autocomplete="off" />
+        <div class="w oh">
+          <el-form-item class="ww50 fl" label="政治">
+            <el-input v-model="formMajor.coursePolitics" autocomplete="off" />
           </el-form-item>
-          <el-form-item class="ww50 fl" label="录取分数线" prop="publicCourseScore">
-            <el-input v-model="p.courseScore" autocomplete="off" />
-          </el-form-item>
-        </div>
-        <div v-for="(p, index) in formMajor.professionalCourse" :key="index + '200'" class="w oh">
-          <el-form-item class="ww50 fl" label="业务课" prop="professionalCourse">
-            <el-input v-model="p.proCourseName" autocomplete="off" />
-          </el-form-item>
-          <el-form-item class="ww50 fl" label="录取分数线" prop="professionalCourseScore">
-            <el-input v-model="p.proCourseScore" autocomplete="off" />
+          <el-form-item class="ww50 fl" label="复试分数线">
+            <el-input v-model="formMajor.scorePolitics" autocomplete="off" />
           </el-form-item>
         </div>
-        <el-form-item label="录取线" prop="scoreLine">
-          <el-input v-model="formMajor.scoreLine" autocomplete="off" />
+        <div class="w oh">
+          <el-form-item class="ww50 fl" label="外语">
+            <el-input v-model="formMajor.courseForeign" autocomplete="off" />
+          </el-form-item>
+          <el-form-item class="ww50 fl" label="复试分数线">
+            <el-input v-model="formMajor.scoreForeign" autocomplete="off" />
+          </el-form-item>
+        </div>
+        <div class="w oh">
+          <el-form-item class="ww50 fl" label="数学">
+            <el-input v-model="formMajor.courseMath" autocomplete="off" />
+          </el-form-item>
+          <el-form-item class="ww50 fl" label="复试分数线">
+            <el-input v-model="formMajor.scoreMath" autocomplete="off" />
+          </el-form-item>
+        </div>
+        <div class="w oh">
+          <el-form-item class="ww50 fl" label="专业课">
+            <el-input v-model="formMajor.courseProfession" autocomplete="off" />
+          </el-form-item>
+          <el-form-item class="ww50 fl" label="复试分数线">
+            <el-input v-model="formMajor.scoreProfession" autocomplete="off" />
+          </el-form-item>
+        </div>
+        <el-form-item label="专业课数目">
+          <el-input v-model="formMajor.professionNumber" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="初试专业课" prop="firstProCourse">
-          <el-input v-model="formMajor.firstProCourse" autocomplete="off" />
+        <el-form-item label="总分">
+          <el-input v-model="formMajor.scoreTotal" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="复试线">
+          <el-input v-model="formMajor.secondaryScore" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="录取线">
+          <el-input v-model="formMajor.enrollmentScore" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="初试专业课">
+          <el-input v-model="formMajor.preliminaryExam" autocomplete="off" />
         </el-form-item>
         <el-form-item label="专业课备注">
-          <el-input v-model="formMajor.proCourseMark" autocomplete="off" />
+          <el-input v-model="formMajor.preliminaryRemark" autocomplete="off" />
         </el-form-item>
         <el-form-item label="参考书目">
-          <el-input v-model="formMajor.consultBooks" type="textarea" autocomplete="off" />
+          <el-input v-model="formMajor.preliminaryReference" type="textarea" autocomplete="off" />
         </el-form-item>
         <el-form-item label="复试内容">
-          <el-input v-model="formMajor.proCourseMark" autocomplete="off" />
+          <el-input v-model="formMajor.secondaryRemark" autocomplete="off" />
         </el-form-item>
         <div class="radio-half w oh">
           <div class="col-xs-6">
@@ -213,31 +243,31 @@ export default {
         name: ''
       },
       formMajor: {
-        code: '', // 专业代码
-        name: '', // 专业名称
+        collegeId: '', // 学院id
+        majorCode: '', // 专业代码
+        majorName: '', // 专业名称
         enrollmentType: '', // 招生类型
-        studentRecruitment: '', // 拟招生人数
-        studentFree: '', // 推免生人数
+        planNumber: '', // 拟招生人数
+        recommendNumber: '', // 推免生人数
         learnWay: '', // 学习方式
         learnYear: '', // 学习年限
-        publicCourse: [
-          {
-            courseName: '',
-            courseScore: ''
-          }
-        ], // 公共课程
-        professionalCourse: [
-          {
-            proCourseName: '',
-            proCourseScore: ''
-          }
-        ], // 业务课
-        scoreLine: '', // 录取线
-        firstProCourse: '', // 初试专业课
-        proCourseMark: '', // 专业课备注
-        consultBooks: '', // 参考书目
-        operatingExam: 1, // 机试
-        writtenExam: 1, // 笔试
+        coursePolitics: '', // 政治
+        scorePolitics: '', // 政治复试分数
+        courseForeign: '', // 外语
+        courseMath: '', // 数学
+        courseProfession: '', // 专业课
+        scoreForeign: '', // 外语复试分数
+        scoreMath: '', // 数学复试分数
+        scoreProfession: '', // 专业课复试分数
+        scoreTotal: '', // 总分
+        enrollmentScore: '', // 录取线
+        secondaryScore: '', // 复试线
+        preliminaryExam: '', // 初试专业课
+        preliminaryRemark: '', // 专业课备注
+        preliminaryReference: '', // 参考书目
+        professionNumber: '', // 专业课数目
+        operatingExam: '', // 机试
+        writtenExam: '', // 笔试
         secondaryReference: '', // 复试参考书目
         secondaryRequire: '' // 复试其他要求
       },
@@ -253,17 +283,22 @@ export default {
         name: [{ required: true, trigger: 'blur', message: '请输入方向名称' }]
       },
       ruleMajor: {
-        code: [{ required: true, trigger: 'blur', message: '请输入专业代码' }],
-        name: [{ required: true, trigger: 'blur', message: '请输入专业名称' }],
+        year: [{ required: true, trigger: 'change', message: '请选择年份' }],
+        majorCode: [{ required: true, trigger: 'blur', message: '请输入专业代码' }],
+        majorName: [{ required: true, trigger: 'blur', message: '请输入专业名称' }],
         enrollmentType: [{ required: true, trigger: 'blur', message: '请输入招生类型' }],
-        learnWay: [{ required: true, trigger: 'change', message: '请选择学习方式' }],
-        learnYear: [{ required: true, trigger: 'change', message: '请输入学习年限' }],
-        publicCourse: [{ required: true, trigger: 'blur', message: '请输入公共课' }],
-        publicCourseScore: [{ required: true, trigger: 'blur', message: '请输入录取分数线' }],
-        professionalCourse: [{ required: true, trigger: 'blur', message: '请输入业务课' }],
-        professionalCourseScore: [{ required: true, trigger: 'blur', message: '请输入录取分数线' }],
-        scoreLine: [{ required: true, trigger: 'blur', message: '请输入录取线' }],
-        firstProCourse: [{ required: true, trigger: 'blur', message: '请输入初试专业课' }]
+        learnWay: [{ required: true, trigger: 'change', message: '请选择学习方式' }]
+        // learnYear: [{ required: true, trigger: 'change', message: '请输入学习年限' }],
+        // coursePolitics: [{ required: true, trigger: 'blur', message: '请输入政治课名' }],
+        // scorePolitics: [{ required: true, trigger: 'blur', message: '请输入复试分数线' }],
+        // courseForeign: [{ required: true, trigger: 'blur', message: '请输入外语课名' }],
+        // scoreForeign: [{ required: true, trigger: 'blur', message: '请输入复试分数线' }],
+        // courseMath: [{ required: true, trigger: 'blur', message: '请输入外语课名' }],
+        // scoreMath: [{ required: true, trigger: 'blur', message: '请输入复试分数线' }],
+        // courseProfession: [{ required: true, trigger: 'blur', message: '请输入外语课名' }],
+        // scoreProfession: [{ required: true, trigger: 'blur', message: '请输入复试分数线' }],
+        // secondaryScore: [{ required: true, trigger: 'blur', message: '请输入复试线' }],
+        // preliminaryExam: [{ required: true, trigger: 'blur', message: '请输入初试专业课' }]
       },
       tableData: []
     }
@@ -457,15 +492,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.h700 {
-  .el-dialog {
-    .el-dialog__body {
-      height: 50vh;
-      overflow: auto;
-    }
-  }
-}
-
 .title {
   height: 84px;
   padding-left: 30px;
@@ -585,12 +611,30 @@ export default {
 }
 </style>
 <style lang="scss">
+.school-detail-css {
+  .h700 {
+    .el-dialog__body {
+      height: 50vh;
+      overflow-y: scroll;
+    }
+  }
 
-.h700 {
-  .el-dialog__body {
-    height: 600px;
-    overflow-y: scroll;
+  .el-dialog__body .el-form-item__label {
+    width: 100px;
+  }
+
+  .el-textarea,
+  .el-input {
+    width: calc(100% - 100px);
+  }
+
+  .el-select {
+    width: calc(100% - 110px);
+
+    .el-input {
+      width: 350px;
+    }
   }
 }
-</style>
 
+</style>
