@@ -58,7 +58,7 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import { schoolList, schoolAdd, schoolDel, schoolRelease, schoolUnshelve, regionList, propertyList, status } from '@/api/secIndex'
+import { schoolList, schoolAdd, schoolRelease, schoolUnshelve, regionList, propertyList, status } from '@/api/secIndex'
 import { dateTimeStr, AlertBox } from '@/utils/util'
 import SchoolInfo from './components/schoolInfo'
 export default {
@@ -177,11 +177,11 @@ export default {
         schoolRelease(data)
           .then(response => {
             AlertBox('success', '发布成功！')
+            this.ruleForm.page = 1
+            this.getList()
             setTimeout(() => {
               this.dialogVisible = false
-              this.ruleForm.page = 1
-              this.getList()
-            }, 1000)
+            }, 500)
           })
           .catch(err => {
             console.log(err)
@@ -190,11 +190,11 @@ export default {
         schoolAdd(data)
           .then(response => {
             AlertBox('success', '保存成功！')
+            this.ruleForm.page = 1
+            this.getList()
             setTimeout(() => {
               this.dialogVisible = false
-              this.ruleForm.page = 1
-              this.getList()
-            }, 1000)
+            }, 500)
           })
           .catch(error => {
             console.log('error', error)

@@ -125,6 +125,24 @@ export async function majorAdd(data) {
   })
 }
 
+// 编辑专业
+export async function majorEdit(data) {
+  return request({
+    url: '/major/edit',
+    method: 'post',
+    data: clearNullValue(data)
+  })
+}
+
+// 专业详情
+export async function majorDetail(data) {
+  return request({
+    url: '/major/detail',
+    method: 'post',
+    data: clearNullValue(data)
+  })
+}
+
 // 删除专业
 export async function majorDel(data) {
   return request({
@@ -140,6 +158,33 @@ export async function majorList(data) {
     url: '/major/search',
     method: 'post',
     data: clearNullValue(data)
+  })
+}
+
+// 新建方向
+export async function researchAdd(data) {
+  return request({
+    url: '/research/add',
+    method: 'post',
+    data: clearNullValue(data)
+  })
+}
+
+// 编辑方向
+export async function researchEdit(data) {
+  return request({
+    url: '/research/edit',
+    method: 'post',
+    data: clearNullValue(data)
+  })
+}
+
+// 删除方向
+export async function researchDel(data) {
+  return request({
+    url: '/research/delete',
+    method: 'post',
+    data: data
   })
 }
 

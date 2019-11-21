@@ -35,7 +35,7 @@ export function AlertBox(type, message) {
    */
 export function clearNullValue(param) {
   for (const i in param) {
-    if (param[i] === '') {
+    if (param[i] === '' || param[i] === null) {
       delete param[i]
     }
   }

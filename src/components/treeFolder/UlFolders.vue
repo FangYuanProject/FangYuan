@@ -7,8 +7,8 @@
       <span class="dib fr pr100">
         <a v-if="folder.level === 1" href="javascript:;" class="list-btn ml20" @click="adds('major', folder)">新增专业</a>
         <a v-if="folder.level === 3" href="javascript:;" class="list-btn ml20" @click="adds('direction', folder)">新增方向</a>
-        <a href="javascript:;" v-if="folder.level !==2" class="list-btn ml20" @click="editor(folder)">编辑</a>
-        <a href="javascript:;" class="list-btn ml20" @click="delList(folder)">删除</a>
+        <a v-if="folder.level !==2" href="javascript:;" class="list-btn ml20" @click="editor(folder)">编辑</a>
+        <a v-if="folder.level !==2" href="javascript:;" class="list-btn ml20" @click="delList(folder)">删除</a>
       </span>
     </span>
     <tree-folder :ref="folder.id" :children="folder.children" :class="{'mh0': !ulShow, 'mh2000': ulShow}" />
@@ -47,10 +47,10 @@ export default {
       Bus.$emit(methods, data)
     },
     editor(data) { // 编辑
-      console.log('editorlevelid', data)
+      Bus.$emit('editorLevel', data)
     },
     delList(data) { // 删除
-      console.log('dellevelid', data)
+      Bus.$emit('delLevel', data)
     }
   }
 }

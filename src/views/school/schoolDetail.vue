@@ -52,17 +52,17 @@
         </li>
       </ul>
     </div>
-    <el-dialog title="新增方向" :visible.sync="changeDirectionVisible" width="508px" class="change-user-role" :close-on-click-modal="false">
+    <el-dialog :title="titleDirection" :visible.sync="changeDirectionVisible" width="508px" class="change-user-role" :close-on-click-modal="false">
       <el-form ref="formDirection" :model="formDirection" :rules="ruleDirection">
-        <el-form-item label="方向名称" prop="name">
-          <el-input v-model="formDirection.name" autocomplete="off" />
+        <el-form-item label="方向名称" prop="research">
+          <el-input v-model="formDirection.research" autocomplete="off" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" class="submit-data-btn" @click="submitDirection">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="新增学院" :visible.sync="changeAcademicVisible" width="508px" class="change-user-role" :close-on-click-modal="false">
+    <el-dialog :title="titleAcademic" :visible.sync="changeAcademicVisible" width="508px" class="change-user-role" :close-on-click-modal="false">
       <el-form ref="formAcademic" :model="formAcademic" :rules="ruleAcademic">
         <el-form-item label="学院代码" prop="code">
           <el-input v-model="formAcademic.code" autocomplete="off" />
@@ -75,7 +75,7 @@
         <el-button type="primary" class="submit-data-btn" @click="submitAcademic">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="新增专业" :visible.sync="changeMajorVisible" width="508px" class="change-user-role h700" :close-on-click-modal="false">
+    <el-dialog :title="titleMajor" :visible.sync="changeMajorVisible" width="508px" class="change-user-role h700" :close-on-click-modal="false">
       <el-form ref="formMajor" :model="formMajor" :rules="ruleMajor">
         <el-form-item label="年份" prop="year">
           <el-select v-model="formMajor.year" placeholder="请选择">
@@ -83,113 +83,116 @@
           </el-select>
         </el-form-item>
         <el-form-item label="专业代码" prop="majorCode">
-          <el-input v-model="formMajor.majorCode" autocomplete="off" />
+          <el-input v-model="formMajor.majorCode" placeholder="请输入" autocomplete="off" />
         </el-form-item>
         <el-form-item label="专业名称" prop="majorName">
-          <el-input v-model="formMajor.majorName" autocomplete="off" />
+          <el-input v-model="formMajor.majorName" placeholder="请输入" autocomplete="off" />
         </el-form-item>
         <el-form-item label="招生类型" prop="enrollmentType">
-          <el-input v-model="formMajor.enrollmentType" autocomplete="off" />
+          <el-select v-model="formMajor.enrollmentType" placeholder="请选择">
+            <el-option label="学术硕士" value="学术硕士" />
+            <el-option label="专业硕士" value="专业硕士" />
+          </el-select>
         </el-form-item>
-        <el-form-item label="拟招生人数">
-          <el-input v-model="formMajor.planNumber" autocomplete="off" />
+        <el-form-item label="拟招生人数" prop="planNumber">
+          <el-input v-model="formMajor.planNumber" placeholder="请输入" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="推免生人数">
-          <el-input v-model="formMajor.recommendNumber" autocomplete="off" />
+        <el-form-item label="推免生人数" prop="recommendNumber">
+          <el-input v-model="formMajor.recommendNumber" placeholder="请输入" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="学习方式" prop="learnWay">
-          <el-input v-model="formMajor.learnWay" autocomplete="off" />
+        <el-form-item label="学习方式" prop="studyType">
+          <el-select v-model="formMajor.studyType" placeholder="请选择">
+            <el-option label="全日制" value="全日制" />
+            <el-option label="非全日制" value="非全日制" />
+          </el-select>
         </el-form-item>
-        <el-form-item label="学习年限">
-          <el-input v-model="formMajor.learnYear" autocomplete="off" />
+        <el-form-item label="学习年限" prop="studyYear">
+          <el-input v-model="formMajor.studyYear" placeholder="请输入" autocomplete="off" />
         </el-form-item>
         <div class="w oh">
-          <el-form-item class="ww50 fl" label="政治">
-            <el-input v-model="formMajor.coursePolitics" autocomplete="off" />
+          <el-form-item class="ww50 fl" label="政治" prop="coursePolitics">
+            <el-input v-model="formMajor.coursePolitics" placeholder="请输入" autocomplete="off" />
           </el-form-item>
-          <el-form-item class="ww50 fl" label="复试分数线">
-            <el-input v-model="formMajor.scorePolitics" autocomplete="off" />
+          <el-form-item class="ww50 fl" label="复试分数线" prop="scorePolitics">
+            <el-input v-model="formMajor.scorePolitics" placeholder="请输入" autocomplete="off" />
           </el-form-item>
         </div>
         <div class="w oh">
-          <el-form-item class="ww50 fl" label="外语">
-            <el-input v-model="formMajor.courseForeign" autocomplete="off" />
+          <el-form-item class="ww50 fl" label="外语" prop="courseForeign">
+            <el-input v-model="formMajor.courseForeign" placeholder="请输入" autocomplete="off" />
           </el-form-item>
-          <el-form-item class="ww50 fl" label="复试分数线">
-            <el-input v-model="formMajor.scoreForeign" autocomplete="off" />
-          </el-form-item>
-        </div>
-        <div class="w oh">
-          <el-form-item class="ww50 fl" label="数学">
-            <el-input v-model="formMajor.courseMath" autocomplete="off" />
-          </el-form-item>
-          <el-form-item class="ww50 fl" label="复试分数线">
-            <el-input v-model="formMajor.scoreMath" autocomplete="off" />
+          <el-form-item class="ww50 fl" label="复试分数线" prop="scoreForeign">
+            <el-input v-model="formMajor.scoreForeign" placeholder="请输入" autocomplete="off" />
           </el-form-item>
         </div>
         <div class="w oh">
-          <el-form-item class="ww50 fl" label="专业课">
-            <el-input v-model="formMajor.courseProfession" autocomplete="off" />
+          <el-form-item class="ww50 fl" label="数学" prop="courseMath">
+            <el-input v-model="formMajor.courseMath" placeholder="请输入" autocomplete="off" />
           </el-form-item>
-          <el-form-item class="ww50 fl" label="复试分数线">
-            <el-input v-model="formMajor.scoreProfession" autocomplete="off" />
+          <el-form-item class="ww50 fl" label="复试分数线" prop="scoreMath">
+            <el-input v-model="formMajor.scoreMath" placeholder="请输入" autocomplete="off" />
           </el-form-item>
         </div>
-        <el-form-item label="专业课数目">
-          <el-input v-model="formMajor.professionNumber" autocomplete="off" />
+        <div class="w oh">
+          <el-form-item class="ww50 fl" label="专业课" prop="courseProfession">
+            <el-input v-model="formMajor.courseProfession" placeholder="请输入" autocomplete="off" />
+          </el-form-item>
+          <el-form-item class="ww50 fl" label="复试分数线" prop="scoreProfession">
+            <el-input v-model="formMajor.scoreProfession" placeholder="请输入" autocomplete="off" />
+          </el-form-item>
+        </div>
+        <el-form-item label="专业课数目" prop="professionNumber">
+          <el-input v-model="formMajor.professionNumber" placeholder="请输入" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="总分">
-          <el-input v-model="formMajor.scoreTotal" autocomplete="off" />
+        <el-form-item label="复试线" prop="scoreTotal">
+          <el-input v-model="formMajor.scoreTotal" placeholder="请输入" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="复试线">
-          <el-input v-model="formMajor.secondaryScore" autocomplete="off" />
+        <el-form-item label="录取线" prop="enrollmentScore">
+          <el-input v-model="formMajor.enrollmentScore" placeholder="请输入" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="录取线">
-          <el-input v-model="formMajor.enrollmentScore" autocomplete="off" />
+        <el-form-item label="初试专业课" prop="preliminaryExam">
+          <el-input v-model="formMajor.preliminaryExam" placeholder="请输入" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="初试专业课">
-          <el-input v-model="formMajor.preliminaryExam" autocomplete="off" />
+        <el-form-item label="专业课备注" prop="preliminaryRemark">
+          <el-input v-model="formMajor.preliminaryRemark" placeholder="请输入" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="专业课备注">
-          <el-input v-model="formMajor.preliminaryRemark" autocomplete="off" />
+        <el-form-item label="参考书目" prop="preliminaryReference">
+          <el-input v-model="formMajor.preliminaryReference" placeholder="请输入" type="textarea" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="参考书目">
-          <el-input v-model="formMajor.preliminaryReference" type="textarea" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="复试内容">
-          <el-input v-model="formMajor.secondaryRemark" autocomplete="off" />
+        <el-form-item label="复试内容" prop="secondaryRemark">
+          <el-input v-model="formMajor.secondaryRemark" placeholder="请输入" autocomplete="off" />
         </el-form-item>
         <div class="radio-half w oh">
           <div class="col-xs-6">
-            <el-form-item label="笔试">
+            <el-form-item label="笔试" prop="writtenExam">
               <el-radio-group v-model="formMajor.writtenExam">
-                <el-radio name="writtenExam" size="small" :label="1">
+                <el-radio name="writtenExam" size="small" label="是">
                   是
                 </el-radio>
-                <el-radio name="writtenExam" size="small" :label="0">
+                <el-radio name="writtenExam" size="small" label="否">
                   否
                 </el-radio>
               </el-radio-group>
             </el-form-item>
           </div>
           <div class="col-xs-6">
-            <el-form-item label="机试">
+            <el-form-item label="机试" prop="operatingExam">
               <el-radio-group v-model="formMajor.operatingExam">
-                <el-radio name="operatingExam" size="small" :label="1">
+                <el-radio name="operatingExam" size="small" label="是">
                   是
                 </el-radio>
-                <el-radio name="operatingExam" size="small" :label="0">
+                <el-radio name="operatingExam" size="small" label="否">
                   否
                 </el-radio>
               </el-radio-group>
             </el-form-item>
           </div>
         </div>
-        <el-form-item label="复试参考书目">
-          <el-input v-model="formMajor.secondaryReference" type="textarea" autocomplete="off" />
+        <el-form-item label="复试参考书目" prop="secondaryReference">
+          <el-input v-model="formMajor.secondaryReference" placeholder="请输入" type="textarea" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="复试其他要求">
-          <el-input v-model="formMajor.secondaryRequire" type="textarea" autocomplete="off" />
+        <el-form-item label="复试其他要求" prop="secondaryRequire">
+          <el-input v-model="formMajor.secondaryRequire" placeholder="请输入" type="textarea" autocomplete="off" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -219,7 +222,7 @@
 <script>
 import UlFolder from '@/components/treeFolder/UlFolders'
 import Bus from '@/assets/js/eventBus'
-import { schoolDetail, schoolEdit, collegeAdd, collegeDel } from '@/api/secIndex'
+import { schoolDetail, schoolEdit, collegeAdd, collegeEdit, collegeDel, majorAdd, majorDetail, majorEdit, researchAdd, researchEdit, researchDel, majorDel } from '@/api/secIndex'
 import SchoolInfo from './components/schoolInfo'
 import { AlertBox } from '@/utils/util'
 import UploadPicBtn from '@/components/UploadPictureBtn'
@@ -239,18 +242,29 @@ export default {
       changeAcademicVisible: false, // 弹窗显示--新增学院
       dialogVisibleLogo: false, // 弹窗显示--更换校徽
       schoolLogoInfo: '', // 校徽地址
+      titleAcademic: '', // 新增学院、编辑学院
+      titleMajor: '', // 新增专业、编辑专业
+      titleDirection: '', // 新增方向、编辑方向
       formDirection: {
-        name: ''
+        research: '', // 方向名字
+        collegeId: '',
+        collegeName: '',
+        majorName: '',
+        universityId: '',
+        universityName: '',
+        researchId: '' // 用于编辑方向存储方向id
       },
       formMajor: {
+        year: '', // 年份
+        universityId: '', // 学校id
         collegeId: '', // 学院id
         majorCode: '', // 专业代码
         majorName: '', // 专业名称
         enrollmentType: '', // 招生类型
         planNumber: '', // 拟招生人数
         recommendNumber: '', // 推免生人数
-        learnWay: '', // 学习方式
-        learnYear: '', // 学习年限
+        studyType: '', // 学习方式
+        studyYear: '', // 学习年限
         coursePolitics: '', // 政治
         scorePolitics: '', // 政治复试分数
         courseForeign: '', // 外语
@@ -259,9 +273,8 @@ export default {
         scoreForeign: '', // 外语复试分数
         scoreMath: '', // 数学复试分数
         scoreProfession: '', // 专业课复试分数
-        scoreTotal: '', // 总分
+        scoreTotal: '', // 总分===复试线
         enrollmentScore: '', // 录取线
-        secondaryScore: '', // 复试线
         preliminaryExam: '', // 初试专业课
         preliminaryRemark: '', // 专业课备注
         preliminaryReference: '', // 参考书目
@@ -269,26 +282,30 @@ export default {
         operatingExam: '', // 机试
         writtenExam: '', // 笔试
         secondaryReference: '', // 复试参考书目
-        secondaryRequire: '' // 复试其他要求
+        secondaryRequire: '', // 复试其他要求
+        id: '', // 用于编辑专业存储专业id
+        universityName: '', // 用于编辑专业存储学校名字
+        collegeName: '' // 用于编辑专业存储学院名字
       },
       formAcademic: {
         code: '', // 学院代码
-        name: '' // 学院名称
+        name: '', // 学院名称
+        collegeId: '' // 用于编辑学院存储学院id
       },
       ruleAcademic: {
         code: [{ required: true, trigger: 'blur', message: '请输入学院代码' }],
         name: [{ required: true, trigger: 'blur', message: '请输入学院名称' }]
       },
       ruleDirection: {
-        name: [{ required: true, trigger: 'blur', message: '请输入方向名称' }]
+        research: [{ required: true, trigger: 'blur', message: '请输入方向名称' }]
       },
       ruleMajor: {
         year: [{ required: true, trigger: 'change', message: '请选择年份' }],
         majorCode: [{ required: true, trigger: 'blur', message: '请输入专业代码' }],
         majorName: [{ required: true, trigger: 'blur', message: '请输入专业名称' }],
-        enrollmentType: [{ required: true, trigger: 'blur', message: '请输入招生类型' }],
-        learnWay: [{ required: true, trigger: 'change', message: '请选择学习方式' }]
-        // learnYear: [{ required: true, trigger: 'change', message: '请输入学习年限' }],
+        enrollmentType: [{ required: true, trigger: 'change', message: '请选择招生类型' }],
+        studyType: [{ required: true, trigger: 'change', message: '请选择学习方式' }]
+        // studyYear: [{ required: true, trigger: 'change', message: '请输入学习年限' }],
         // coursePolitics: [{ required: true, trigger: 'blur', message: '请输入政治课名' }],
         // scorePolitics: [{ required: true, trigger: 'blur', message: '请输入复试分数线' }],
         // courseForeign: [{ required: true, trigger: 'blur', message: '请输入外语课名' }],
@@ -297,10 +314,10 @@ export default {
         // scoreMath: [{ required: true, trigger: 'blur', message: '请输入复试分数线' }],
         // courseProfession: [{ required: true, trigger: 'blur', message: '请输入外语课名' }],
         // scoreProfession: [{ required: true, trigger: 'blur', message: '请输入复试分数线' }],
-        // secondaryScore: [{ required: true, trigger: 'blur', message: '请输入复试线' }],
         // preliminaryExam: [{ required: true, trigger: 'blur', message: '请输入初试专业课' }]
       },
-      tableData: []
+      tableData: [],
+      years: []
     }
   },
   created() {
@@ -309,16 +326,60 @@ export default {
   mounted() {
     Bus.$on('newDirection', (data) => {
       console.log('新增方向', data)
-      this.showDirection()
+      this.titleDirection = '新增方向'
+      this.showDirection(data)
     })
     Bus.$on('newMajor', (data) => {
       console.log('新增专业', data)
-      this.showMajor()
+      this.titleMajor = '新增专业'
+      this.showMajor(data)
+    })
+    Bus.$on('delLevel', (data) => {
+      console.log('准备删除', data)
+      const that = this
+      switch (data.level) {
+        case 1:
+          that.delCollege(data)
+          break
+        case 2:
+          // that.delYear(data)
+          break
+        case 3:
+          that.delMajor(data)
+          break
+        case 4:
+          that.delDirection(data)
+          break
+        default:
+          that.init()
+      }
+    })
+    Bus.$on('editorLevel', (data) => {
+      console.log('准备编辑', data)
+      const that = this
+      switch (data.level) {
+        case 1:
+          that.editCollege(data)
+          break
+        case 2:
+          // that.delYear(data)
+          break
+        case 3:
+          that.editMajor(data)
+          break
+        case 4:
+          that.editDirection(data)
+          break
+        default:
+          that.init()
+      }
     })
   },
   destroyed() {
     Bus.$off('newDirection')
     Bus.$off('newMajor')
+    Bus.$off('delLevel')
+    Bus.$off('editorLevel')
   },
   methods: {
     closeModal() {
@@ -326,6 +387,10 @@ export default {
     },
     init() {
       this.getSchoolDetail()
+      const setYear = new Date().getFullYear()
+      for (let i = setYear; i > setYear - 10; i--) {
+        this.years.push(i + '')
+      }
     },
     getSchoolDetail() {
       schoolDetail({ id: this.$route.query.id }).then(res => {
@@ -339,6 +404,8 @@ export default {
           list.detailMajorRespList.forEach(li => {
             const theYear = li.year
             li.level = 3
+            li.parentId = list.collegeId
+            li.parentName = list.collegeName
             li.researchResps.forEach(levelFour => {
               levelFour.level = 4
               levelFour.name = levelFour.research
@@ -367,63 +434,169 @@ export default {
         })
         this.school = res.data
         this.tableData = tData
-        console.log(tData)
       })
     },
-    showDirection() {
+    // 新增方向弹窗打开
+    showDirection(data) {
+      this.titleDirection = '新增方向'
       this.changeDirectionVisible = true
       this.$nextTick(() => {
         this.$refs['formDirection'].resetFields()
+        this.formDirection.majorId = data.majorId
+        this.formDirection.majorName = data.majorName
+        this.formDirection.collegeId = data.parentId
+        this.formDirection.collegeName = data.parentName
+        this.formDirection.universityId = this.school.universityId
+        this.formDirection.universityName = this.school.universityName
       })
     },
-    showMajor() {
+    // 编辑方向弹窗打开
+    editDirection(data) {
+      this.titleDirection = '编辑方向'
+      this.changeDirectionVisible = true
+      this.$nextTick(() => {
+        this.$refs['formDirection'].resetFields()
+        this.formDirection.research = data.research
+        this.formDirection.researchId = data.researchId
+      })
+    },
+    // 新增专业弹窗打开
+    showMajor(data) {
+      this.titleMajor = '新增专业'
       this.changeMajorVisible = true
       this.$nextTick(() => {
         this.$refs['formMajor'].resetFields()
+        this.formMajor.collegeId = data.collegeId
       })
     },
+    // 编辑专业弹窗打开
+    editMajor(data) {
+      this.titleMajor = '编辑专业'
+      // 获取专业详情
+      majorDetail({ id: data.majorId }).then(res => {
+        this.changeMajorVisible = true
+        this.$nextTick(() => {
+          this.$refs['formMajor'].resetFields()
+          this.formMajor = { ...this.formMajor, ...res.data }
+          this.formMajor.id = data.majorId
+          this.formMajor.collegeId = data.parentId
+          this.formMajor.collegeName = data.parentName
+          this.formMajor.universityName = this.school.universityName
+          console.log(this.formMajor)
+        })
+      }).catch(err => {
+        console.log(err)
+        AlertBox('warning', '获取详情失败')
+      })
+    },
+    // 新增学院弹窗打开
     showAcademic() {
+      this.titleAcademic = '新增学院'
       this.changeAcademicVisible = true
       this.$nextTick(() => {
         this.$refs['formAcademic'].resetFields()
       })
     },
-    // 新增方向
+    // 编辑学院弹窗打开
+    editCollege(data) {
+      this.titleAcademic = '编辑学院'
+      this.changeAcademicVisible = true
+      this.$nextTick(() => {
+        this.$refs['formAcademic'].resetFields()
+        this.formAcademic.code = data.collegeCode
+        this.formAcademic.name = data.collegeName
+        this.formAcademic.collegeId = data.collegeId
+      })
+    },
+    // 新增或者编辑方向提交
     submitDirection() {
       this.$refs.formDirection.validate((valid) => {
         if (valid) {
-          this.changeDirectionVisible = false
+          if (this.titleDirection === '新增方向') {
+            researchAdd(this.formDirection).then(res => {
+              AlertBox('success', '新增成功！')
+              this.init()
+              setTimeout(() => {
+                this.changeDirectionVisible = false
+              }, 500)
+            })
+          } else {
+            researchEdit(this.formDirection).then(res => {
+              AlertBox('success', '编辑成功！')
+              this.init()
+              setTimeout(() => {
+                this.changeDirectionVisible = false
+              }, 500)
+            })
+          }
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    // 新增专业
+    // 新增或者编辑专业提交
     submitMajor() {
       this.$refs.formMajor.validate((valid) => {
         if (valid) {
-          this.changeMajorVisible = false
+          this.formMajor.universityId = this.school.universityId
+          this.formMajor.enrollmentScore = parseInt(this.formMajor.enrollmentScore)
+          this.formMajor.professionNumber = parseInt(this.formMajor.professionNumber)
+          this.formMajor.scoreForeign = parseInt(this.formMajor.scoreForeign)
+          this.formMajor.scoreMath = parseInt(this.formMajor.scoreMath)
+          this.formMajor.scorePolitics = parseInt(this.formMajor.scorePolitics)
+          this.formMajor.scoreProfession = parseInt(this.formMajor.scoreProfession)
+          this.formMajor.scoreTotal = parseInt(this.formMajor.scoreTotal)
+          if (this.titleMajor === '新增专业') {
+            majorAdd(this.formMajor).then(res => {
+              AlertBox('success', '新增成功！')
+              this.init()
+              setTimeout(() => {
+                this.changeMajorVisible = false
+              }, 500)
+            })
+          } else {
+            majorEdit(this.formMajor).then(res => {
+              AlertBox('success', '编辑成功！')
+              this.init()
+              setTimeout(() => {
+                this.changeMajorVisible = false
+              }, 500)
+            })
+          }
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    // 新增学院
+    // 新增或者编辑学院提交
     submitAcademic() {
       this.$refs.formAcademic.validate((valid) => {
         if (valid) {
-          const data = {
-            collegeCode: this.formAcademic.code,
-            collegeName: this.formAcademic.name,
-            universityId: this.school.universityId
+          if (this.titleAcademic === '新增学院') {
+            const dataNew = {
+              collegeCode: this.formAcademic.code,
+              collegeName: this.formAcademic.name,
+              universityId: this.school.universityId
+            }
+            collegeAdd(dataNew).then(res => {
+              AlertBox('success', '新增成功！')
+              this.changeAcademicVisible = false
+              this.init()
+            })
+          } else {
+            const dataEdit = {
+              collegeCode: this.formAcademic.code,
+              collegeName: this.formAcademic.name,
+              id: this.formAcademic.collegeId
+            }
+            collegeEdit(dataEdit).then(res => {
+              AlertBox('success', '编辑成功！')
+              this.changeAcademicVisible = false
+              this.init()
+            })
           }
-          collegeAdd(data).then(res => {
-            AlertBox('success', '新增成功！')
-            this.changeAcademicVisible = false
-            this.init()
-          })
         } else {
           console.log('error submit!!')
           return false
@@ -443,7 +616,7 @@ export default {
         setTimeout(() => {
           this.dialogVisible = false
           this.init()
-        }, 1000)
+        }, 500)
       })
     },
     // 删除学院
@@ -459,10 +632,48 @@ export default {
         }
         collegeDel(data).then(res => {
           AlertBox('success', '删除成功！')
-          setTimeout(() => {
-            this.init()
-          }, 1000)
+          this.init()
         })
+      }).catch(err => {
+        console.log('取消', err)
+      })
+    },
+    // 删除方向
+    delDirection(data) {
+      this.$confirm('是否确定删除该研究方向？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        const research = {
+          researchId: data.researchId
+        }
+        researchDel(research).then(res => {
+          AlertBox('success', '删除成功！')
+          this.init()
+        })
+      }).catch(err => {
+        console.log('取消', err)
+      })
+    },
+    // 删除专业
+    delMajor(data) {
+      this.$confirm('是否确定删除该专业？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        const majorId = {
+          id: data.majorId
+        }
+        majorDel(majorId).then(res => {
+          AlertBox('success', '删除成功！')
+          this.init()
+        })
+      }).catch(err => {
+        console.log('取消', err)
       })
     },
     getUrlSuccess(file) {

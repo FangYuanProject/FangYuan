@@ -9,8 +9,8 @@
         <span class="dib fr pr100">
           <a v-if="child.level === 1" href="javascript:;" class="list-btn ml20" @click="adds('major', child)">新增专业</a>
           <a v-if="child.level === 3" href="javascript:;" class="list-btn ml20" @click="adds('direction', child)">新增方向</a>
-          <a href="javascript:;" v-if="child.level !==2" class="list-btn ml20" @click="editor(child)">编辑</a>
-          <a href="javascript:;" class="list-btn ml20" @click="delList(child)">删除</a>
+          <a v-if="child.level !==2" href="javascript:;" class="list-btn ml20" @click="editor(child)">编辑</a>
+          <a v-if="child.level !==2" href="javascript:;" class="list-btn ml20" @click="delList(child)">删除</a>
         </span>
       </span>
     </li>
@@ -48,10 +48,10 @@ export default {
       Bus.$emit(methods, data)
     },
     editor(data) { // 编辑
-      console.log('editorlevelid', data)
+      Bus.$emit('editorLevel', data)
     },
     delList(data) { // 删除
-      console.log('dellevelid', data)
+      Bus.$emit('delLevel', data)
     }
   }
 }
