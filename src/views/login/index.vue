@@ -83,6 +83,7 @@ export default {
     handleLogin() {
       const data = this.loginForm
       login(data).then(res => {
+        localStorage.setItem('userName', res.data.username)
         this.$router.push({ path: '/' })
       })
     }

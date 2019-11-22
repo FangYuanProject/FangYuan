@@ -34,7 +34,7 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import { AlertBox } from '@/utils/util'
-import { addRole, delRole, editRole, roleList } from '@/api/index'
+import { addRole, delRole, editRole, roleList, menuList } from '@/api/index'
 export default {
   components: {
     tableComponents,
@@ -52,44 +52,10 @@ export default {
         ]
       },
       dialogVisible: false,
-      data: [{
-        id: 1,
-        label: '一级 1',
-        children: [{
-          id: 4,
-          label: '二级 1-1',
-          children: [{
-            id: 9,
-            label: '三级 1-1-1'
-          }, {
-            id: 10,
-            label: '三级 1-1-2'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }],
+      data: [],
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'menuName'
       },
       thData: [{ name: '角色', indexs: 'roleName' }, { name: '操作', indexs: 'operation' }],
       tableData: []
@@ -110,12 +76,37 @@ export default {
       })
     },
     AddRole() {
+      this.getMenuTree()
       this.modal.roleName = ''
       this.dialogVisible = true
     },
     editRole(data) {
+      this.getMenuTree()
       this.modal.roleName = data.roleName
       this.dialogVisible = true
+    },
+    getMenuTree() {
+      menuList().then(res => {
+        // 递归组成数组
+        this.data = this.getMenuArr(res.data, null)
+        console.log(this.data)
+      })
+    },
+    getMenuArr(menuList, parentId) {
+      let that = this
+      let arr = []
+      let temp
+      menuList.forEach(list => {
+        let obj = list
+        if (list.superiorId === parentId) { // 第二级别（最高级）
+          temp = that.getMenuArr(menuList, list.id)
+          if (temp.length > 0) {
+            obj.children = temp
+          }
+          arr.push(obj)
+        }
+      })
+      return arr
     },
     changeRoleVisible() {
 
@@ -123,7 +114,7 @@ export default {
     getRoleList() {
       roleList().then(res => {
         res.data.forEach(list => {
-          list.operation = [{ name: '权限', clickEvent: 'limit' }, { name: '删除', clickEvent: 'deleteRole' }]
+          list.operation = [{ name: '编辑', clickEvent: 'limit' }, { name: '删除', clickEvent: 'deleteRole' }]
         })
         this.tableData = res.data
       })

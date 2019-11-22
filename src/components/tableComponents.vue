@@ -6,7 +6,7 @@
           <span v-if="item.indexs==='operation'">
             <a v-for="(tab,num) in scope.row['operation']" :key="num+10" class="tab-margin" @click="chooseTab(tab.clickEvent,scope.row)">{{ tab.name }}</a>
           </span>
-          <span v-else>{{ scope.row[item.indexs] }}</span>
+          <span v-else v-html="scope.row[item.indexs]"></span>
         </template>
       </el-table-column>
     </el-table>

@@ -691,7 +691,7 @@ export default {
         }
         schoolEdit(data).then(res => {
           this.dialogVisibleLogo = false
-          AlertBox('success', '跟换成功！')
+          AlertBox('success', '更换成功！')
           this.init()
         })
       } else {

@@ -8,7 +8,7 @@
       <!-- <el-dropdown class="avatar-container" trigger="click"> -->
       <div class="avatar-wrapper">
         <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
-        <span class="user-name">张一凡</span> &nbsp;| &nbsp;<span class="log-out" @click="logout">退出系统</span>
+        <span class="user-name">{{ userName }}</span> &nbsp;| &nbsp;<span class="log-out" @click="logout">退出系统</span>
         <!-- <i class="el-icon-caret-bottom" /> -->
       </div>
     </div>
@@ -21,6 +21,11 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
+  data() {
+    return {
+      userName: localStorage.getItem('userName') || ''
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger
@@ -36,6 +41,7 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
+      localStorage.setItem('userName', '')
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
