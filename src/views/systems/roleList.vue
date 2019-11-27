@@ -58,7 +58,8 @@ export default {
         label: 'menuName'
       },
       thData: [{ name: '角色', indexs: 'roleName' }, { name: '操作', indexs: 'operation' }],
-      tableData: []
+      tableData: [],
+      newOrEdit: 1 // 1新增 0修改
     }
   },
   mounted() {
@@ -68,7 +69,28 @@ export default {
     submitForm(data) {
       this.$refs[data].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          const idsArr = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
+          if (idsArr.length === 0) {
+            AlertBox('warning', '请选择菜单权限')
+          } else {
+            const subData = {
+              roleName: this.modal.roleName,
+              id: idsArr
+            }
+            if (this.newOrEdit === 1) { // 新增
+              addRole(subData).then(res => {
+                AlertBox('success', '新增成功！')
+                this.dialogVisible = false
+                this.getRoleList()
+              })
+            } else { // 编辑
+              editRole(subData).then(res => {
+                AlertBox('success', '编辑成功！')
+                this.dialogVisible = false
+                this.getRoleList()
+              })
+            }
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -76,28 +98,44 @@ export default {
       })
     },
     AddRole() {
+      this.newOrEdit = 1
       this.getMenuTree()
       this.modal.roleName = ''
       this.dialogVisible = true
     },
+    setCheckedNodes(data) {
+      this.$refs.tree.setCheckedNodes(data)
+    },
+    // 编辑
     editRole(data) {
-      this.getMenuTree()
+      this.newOrEdit = 0
+      this.getMenuTree(1, data)
       this.modal.roleName = data.roleName
       this.dialogVisible = true
     },
-    getMenuTree() {
+    getMenuTree(setDefault, editData) {
       menuList().then(res => {
         // 递归组成数组
         this.data = this.getMenuArr(res.data, null)
-        console.log(this.data)
+        if (setDefault) {
+          const defaultArr = []
+          editData.ids.forEach(edit => {
+            res.data.forEach(list => {
+              if (edit === list.id) {
+                defaultArr.push(list)
+              }
+            })
+          })
+          this.setCheckedNodes(defaultArr)
+        }
       })
     },
     getMenuArr(menuList, parentId) {
-      let that = this
-      let arr = []
+      const that = this
+      const arr = []
       let temp
       menuList.forEach(list => {
-        let obj = list
+        const obj = list
         if (list.superiorId === parentId) { // 第二级别（最高级）
           temp = that.getMenuArr(menuList, list.id)
           if (temp.length > 0) {
