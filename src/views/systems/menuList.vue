@@ -95,7 +95,6 @@ export default {
         if (valid) {
           if (this.titleMenu === '新增菜单') {
             console.log(this.form)
-            debugger
             addMenu(this.form).then(res => {
               if (res.code === 0) {
                 this.dialogVisible = false

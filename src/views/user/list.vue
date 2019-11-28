@@ -21,6 +21,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <el-button type="primary" class="search-btn" @click="searchUserList('ruleForm')">查询</el-button>
         <el-button type="primary" class="add-user" @click="addUser">+&nbsp;新建用户</el-button>
       </el-form-item>
@@ -169,7 +170,7 @@ export default {
     },
     toUserDetail(row, column, cell, event) {
       console.log(row)
-      if (column.label === '用户名') {
+      if (column.label === '用户ID') {
         this.$router.push({ path: '/user/home', query: { id: row.id }})
       }
     },
@@ -185,6 +186,9 @@ export default {
       this.page = pageData.page
       this.pageSize = pageData.limit
       this.getUserList(this.ruleForm)
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
     }
   }
 }
@@ -280,7 +284,7 @@ export default {
   }
 }
 
-.user-list .el-table__body tr td:nth-of-type(2) {
+.user-list .el-table__body tr td:nth-of-type(1) {
   color: #0266d6;
 }
 </style>

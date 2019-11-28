@@ -39,6 +39,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <search-form-btn @click="searchList" />
         <add-method-btn name="学校" class="mb0" @click="addSchool" />
       </el-form-item>
@@ -157,8 +158,8 @@ export default {
           list.createTimeStr = dateTimeStr(list.createTime)
           list.statusStr = list.status.value
           list.propertyStr = list.property.value
-          operateName = (list.status.value === '下架' || list.status.value === '新增') ? '发布' : '下架'
-          clickEvent = (list.status.value === '下架' || list.status.value === '新增') ? 'release' : 'unShelve'
+          operateName = (list.status.value === '未发布' || list.status.value === '已下架') ? '发布' : '下架'
+          clickEvent = (list.status.value === '未发布' || list.status.value === '已下架') ? 'release' : 'unShelve'
           list.operation = [{ name: operateName, clickEvent }]
         })
         this.total = res.total || 0
@@ -202,7 +203,7 @@ export default {
       }
     },
     resetForm(formName) {
-      // this.$refs[formName].resetFields()
+      this.$refs[formName].resetFields()
     },
     addSchool() {
       this.dialogVisible = true

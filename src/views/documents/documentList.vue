@@ -54,6 +54,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <search-form-btn @click="searchTestList" />
         <add-method-btn name="试题" @click="addDocument" />
       </el-form-item>
@@ -278,12 +279,16 @@ export default {
     searchTestList() {
       this.searchForm.page = 1
       this.searchForm.pageSize = 20
+      this.getTestList()
     },
     selectStatus(val) {
       this.searchForm.status = val
     },
     remoteMethodSchool(data) {
       console.log(data)
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
     },
     submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {

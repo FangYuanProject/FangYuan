@@ -3,10 +3,11 @@ import { AlertBox } from '@/utils/util.js'
 import router from '@/router'
 // import store from '@/store'
 // import { getToken } from '@/utils/auth'
+const baseURL = window.APP_CONFIG.BASE_URL || process.env.VUE_APP_BASE_API
 
 // create an axios instance
 const service = axios.create({
-  baseURL: 'http://localhost:8080/web/', // url = base url + request url
+  baseURL: baseURL, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -57,6 +58,6 @@ service.interceptors.response.use(
   }
 )
 
-export const baseURLFileUpload = process.env.VUE_APP_BASE_API
+export const baseURLFileUpload = baseURL
 
 export default service

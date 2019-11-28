@@ -32,6 +32,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <search-form-btn @click="searchFormEvent" />
         <add-method-btn name="帖子" @click="addForum" />
       </el-form-item>
@@ -167,6 +168,9 @@ export default {
     this.getForumType()
   },
   methods: {
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
+    },
     submitForm(formName, type) {
       vaildForm(this.$refs[formName]).then(res => {
         if (res) {
