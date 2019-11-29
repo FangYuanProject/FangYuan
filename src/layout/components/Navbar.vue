@@ -19,16 +19,17 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { loginOut } from '@/api'
 
 export default {
+  components: {
+    Breadcrumb,
+    Hamburger
+  },
   data() {
     return {
       userName: localStorage.getItem('userName') || ''
     }
-  },
-  components: {
-    Breadcrumb,
-    Hamburger
   },
   computed: {
     ...mapGetters([
@@ -40,10 +41,12 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      localStorage.setItem('userName', '')
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    logout() {
+      loginOut().then(res => {
+        localStorage.setItem('userName', '')
+        localStorage.setItem('_menu', '[]')
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      })
     }
   }
 }

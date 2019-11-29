@@ -39,6 +39,7 @@ export default {
   computed: {
     ...mapGetters(['sidebar']),
     routes() {
+      debugger
       return this.$router.options.routes
     },
     activeMenu() {
@@ -59,6 +60,11 @@ export default {
     isCollapse() {
       return !this.sidebar.opened
     }
+  },
+  mounted() {
+    let menuList = window.localStorage.getItem('_menu') || '[]'
+    menuList = JSON.parse(menuList)
+    console.log(menuList)
   }
 }
 </script>

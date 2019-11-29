@@ -41,7 +41,7 @@
 
 <script>
 import { validEmail } from '@/utils/validate'
-import { login } from '@/api/index'
+import { login, userMenu } from '@/api/index'
 //  validPhone, validEmail,
 // import SocialSign from './components/SocialSignin'
 
@@ -84,7 +84,14 @@ export default {
       const data = this.loginForm
       login(data).then(res => {
         localStorage.setItem('userName', res.data.username)
-        this.$router.push({ path: '/' })
+        userMenu({ roleCode: res.data.roleCode }).then(resList => {
+          if (resList.data && resList.data.menuList) {
+            localStorage.setItem('_menu', JSON.stringify(resList.data.menuList))
+            this.$router.push({ path: '/' })
+          } else {
+            // 没菜单权限退出登录
+          }
+        })
       })
     }
   }

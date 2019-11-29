@@ -3,6 +3,8 @@ import { clearNullValue } from '@/utils/util.js'
 
 // 登录
 export const login = data => axios.post('/login', data)
+// 登录获取用户菜单权限
+export const userMenu = data => axios.post('/menu/search', data)
 // 退出登录
 export const loginOut = data => axios.post('/logout', data)
 /*
@@ -17,7 +19,7 @@ export const userDetail = data => axios.post('/auth/detail', clearNullValue(data
 // 用户新闻收藏列表
 export const collectNews = data => axios.post('/collection/news/list', clearNullValue(data))
 // 用户学校收藏列表
-export const collectSchool = data => axios.post('/collection/school', clearNullValue(data))
+export const collectSchool = data => axios.post('/collection/school/list', clearNullValue(data))
 // 用户真题收藏列表
 export const collectExamList = data => axios.post('/collection/exam/list', clearNullValue(data))
 // 用户帖子收藏列表

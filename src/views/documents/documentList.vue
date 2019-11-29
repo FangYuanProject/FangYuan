@@ -13,18 +13,18 @@
           <el-option v-for="(item,index) in searchOptions.typeOptions" :key="item+index" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
-      <el-form-item label="学校" prop="university">
-        <el-select v-model="searchForm.university" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="selectSchool">
+      <el-form-item label="学校" prop="universityName">
+        <el-select v-model="searchForm.universityName" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="selectSchool">
           <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityName" />
         </el-select>
       </el-form-item>
-      <el-form-item label="学院" prop="college">
-        <el-select v-model="searchForm.college" placeholder="请选择" @change="selectCollege">
+      <el-form-item label="学院" prop="collegeName">
+        <el-select v-model="searchForm.collegeName" placeholder="请选择" @change="selectCollege">
           <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.collegeName" />
         </el-select>
       </el-form-item>
-      <el-form-item label="专业" prop="major">
-        <el-select v-model="searchForm.major" placeholder="请选择">
+      <el-form-item label="专业" prop="majorName">
+        <el-select v-model="searchForm.majorName" placeholder="请选择">
           <el-option v-for="(item,index) in searchOptions.majorOptions" :key="item+index" :label="item.majorName" :value="item.majorName" />
         </el-select>
       </el-form-item>
@@ -40,7 +40,7 @@
       </el-form-item>
       <el-form-item label="上传时间" prop="uploadTime">
         <el-date-picker
-          v-model="uploadTime"
+          v-model="searchForm.uploadTime"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
@@ -82,7 +82,7 @@
         </el-form-item>
         <el-form-item label="学校" prop="university">
           <el-select v-model="modalForm.university" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="selectSchool">
-            <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.id" />
+            <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityCode" />
           </el-select>
         </el-form-item>
         <el-form-item label="学院" prop="college">
@@ -169,14 +169,14 @@ export default {
       status: 'add',
       searchForm: {
         id: '',
-        college: '',
-        major: '',
+        collegeName: '',
+        majorName: '',
         page: 1,
         pageSize: 20,
         testName: '',
         subject: '',
         type: '',
-        university: '',
+        universityName: '',
         uploadTime: '',
         year: ''
       },
