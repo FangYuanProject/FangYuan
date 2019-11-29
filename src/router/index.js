@@ -105,7 +105,7 @@ export const constantRoutes = [
         path: '/course',
         component: () => import('@/views/courses/courseList'),
         name: 'course-list',
-        meta: { title: '课程管理', icon: 'kecheng', affix: true }
+        meta: { title: '商品管理', icon: 'kecheng', affix: true }
       }
     ]
   },

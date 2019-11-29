@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="news-content">
-      <el-form ref="newsContent" label-width="100px" :rules="newsContent">
+      <el-form ref="newsContent" label-width="100px">
         <el-form-item label="新闻标题" prop="title">
           <el-input v-model="params.title" autocomplete="off" placeholder="请输入" />
         </el-form-item>
@@ -64,13 +64,6 @@ export default {
         title: '',
         type: '',
         id: this.$route.query.id ? this.$route.query.id : ''
-      },
-      newsContent: {
-        content: [{ require: true, message: '请输入新闻内容', trigger: 'blur', max: '256' }],
-        correlation: [{ require: true, message: '请选择相关学校', trigger: 'change' }],
-        summary: [{ require: true, message: '请输入摘要', trigger: 'blur', max: '128' }],
-        title: [{ require: true, message: '请输入新闻标题', trigger: 'blur', max: '32' }],
-        type: [{ require: true, message: '请选择新闻类型', trigger: 'change' }]
       },
       newsTypeOptions: [], // 新闻类型
       schoolOptions: [], // 相关学校
