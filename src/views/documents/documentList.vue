@@ -291,6 +291,7 @@ export default {
       this.searchForm.status = val
     },
     remoteMethodSchool(data) {
+      this.getTestList()
       console.log(data)
     },
     resetForm(formName) {
@@ -427,7 +428,7 @@ export default {
       })
     },
     getSchoolList() {
-      schoolCorrelation({ page: 1, pageSize: 20 }).then(res => {
+      schoolCorrelation({ page: 1, pageSize: 20,universityName:'' }).then(res => {
         this.searchOptions.university = res.data
       })
     },

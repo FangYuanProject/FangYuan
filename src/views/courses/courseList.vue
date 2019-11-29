@@ -152,7 +152,7 @@ export default {
   },
   methods: {
     searchGoodsList() {
-      // this.()
+       this.getCourseList()
     },
     AddCourse() {
       this.dialogVisible = true
@@ -165,14 +165,14 @@ export default {
         this.total = res.total
         res.data.forEach(list => {
           list.createTime = dateTimeStr(list.createTime)
-          list.status = list.status.value
           list.type = list.type.value
           list.operation = []
-          if (list.status === '下架' || list.status === '新增') {
+          if (list.status.key === 2001 || list.status === 2003) {
             list.operation.push({ name: '发布', clickEvent: 'publish' })
           } else {
             list.operation.push({ name: '下架', clickEvent: 'outSell' })
           }
+          list.status = list.status.value
         })
         this.tableData = res.data
       })
