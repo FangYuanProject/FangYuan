@@ -139,12 +139,12 @@ export default {
     delOffNews(type) {
       if (type === 'del') {
         deleteNews({ id: this.params.id }).then(res => {
-          AlertBox('删除成功')
+          AlertBox('success', '删除成功')
           this.$router.push({ name: 'new-list' })
         })
       } else {
         unshelveNews({ id: this.params.id }).then(res => {
-          AlertBox('下架成功')
+          AlertBox('success', '下架成功')
           this.$router.push({ name: 'new-list' })
         })
       }

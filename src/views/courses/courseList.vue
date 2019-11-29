@@ -155,6 +155,7 @@ export default {
     },
     AddCourse() {
       this.dialogVisible = true
+      this.$refs['courseModal'].resetFields()
     },
     // 课程列表
     getCourseList() {
