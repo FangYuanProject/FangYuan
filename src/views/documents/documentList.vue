@@ -80,19 +80,19 @@
         <el-form-item label="试题描述" prop="describe">
           <el-input v-model="modalForm.describe" type="textarea" autocomplete="off" rows="5" />
         </el-form-item>
-        <el-form-item label="学校" prop="university">
+        <el-form-item label="学校" prop="universityName">
           <el-select v-model="modalForm.university" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="selectSchool">
-            <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityCode" />
+            <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityName" />
           </el-select>
         </el-form-item>
-        <el-form-item label="学院" prop="college">
+        <el-form-item label="学院" prop="collegeName">
           <el-select v-model="modalForm.college" placeholder="请选择" @change="selectCollege">
-            <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.id" />
+            <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.collegeName" />
           </el-select>
         </el-form-item>
-        <el-form-item label="专业" prop="major">
+        <el-form-item label="专业" prop="majorName">
           <el-select v-model="modalForm.major" placeholder="请选择">
-            <el-option v-for="(item,index) in searchOptions.majorOptions" :key="item+index" :label="item.majorName" :value="item.majorId" />
+            <el-option v-for="(item,index) in searchOptions.majorOptions" :key="item+index" :label="item.majorName" :value="item.majorName" />
           </el-select>
         </el-form-item>
         <el-form-item label="科目" prop="subject">
@@ -152,8 +152,7 @@ import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 import UploadPicBtn from '@/components/UploadPictureBtn'
-import { addTest, delTest, testDetail, editTest, publishTest, testList, outsellTest, testStatus, testType, uploadDown } from '@/api/index'
-import { schoolList, collegeSearch, majorList } from '@/api/secIndex'
+import { addTest, delTest, testDetail, editTest, publishTest, testList, outsellTest, testStatus, testType, uploadDown, schoolCorrelation, majorList, collegeList } from '@/api/index'
 import { AlertBox, dateTimeStr } from '../../utils/util'
 export default {
   components: {
@@ -192,14 +191,14 @@ export default {
       }, // 走接口的select框值
       uploadTime: '', // 处理查询上传时间格式
       modalForm: {
-        major: '',
+        majorName: '',
         questionHash: '',
-        college: '',
+        collegeName: '',
         describe: '',
         subject: '',
         testName: '',
         type: '',
-        university: '',
+        universityName: '',
         year: '',
         answerId: '',
         answerHash: '',
@@ -212,13 +211,13 @@ export default {
         testName: [
           { required: true, message: '请输入试题名称', trigger: 'blur' }
         ],
-        university: [
+        universityName: [
           { required: true, message: '请选择学校', trigger: 'change' }
         ],
-        college: [
+        collegeName: [
           { required: true, message: '请选择学院', trigger: 'change' }
         ],
-        major: [
+        majorName: [
           { required: true, message: '请选择专业', trigger: 'change' }
         ],
         subject: [
@@ -251,25 +250,32 @@ export default {
       total: 0,
       universityId: '', // 记录选中的学校id
       collegeId: '', // 记录选中的学院id
-      uploadType: 'PRIVATE' // 判断文件上传类型
+      uploadType: 'PRIVATE', // 判断文件上传类型
+      findSchoolItem: {}, // 通过学校编号查找学校信息
+      findCollegeItem: {} // 通过id查找学院信息
     }
   },
   mounted() {
     this.getTestList()
-    this.getSchoolList()
+    // this.getSchoolList()
     this.getSearchOption()
   },
   methods: {
     selectSchool(data) {
-      this.universityId = data
-      collegeSearch({ universityId: data }).then(res => {
-        this.searchOptions.colleges = res.data
-      })
+      this.findSchool(data)
+      setTimeout(() => {
+        collegeList({ universityCode: this.findSchoolItem.universityCode }).then(res => {
+          this.searchOptions.colleges = res.data
+        })
+      }, 50)
     },
     selectCollege(data) {
-      majorList({ collegeId: data, universityId: this.universityId }).then(res => {
-        this.searchOptions.majorOptions = res.data
-      })
+      this.findCollege(data)
+      setTimeout(() => {
+        majorList({ collegeId: this.findCollegeItem.collegeId, universityId: this.findSchoolItem.universityCode }).then(res => {
+          this.searchOptions.majorOptions = res.data
+        })
+      }, 50)
     },
     changePage(pageData) {
       this.searchForm.page = pageData.page
@@ -322,6 +328,9 @@ export default {
       this.dialogVisible = true
       this.status = 'add'
       this.modalTitle = '新建试题'
+      setTimeout(() => {
+        this.$refs['modalForm'].resetFields()
+      }, 10)
     },
     delDocument() {
       delTest({ id: this.modalForm.id }).then(res => {
@@ -418,7 +427,7 @@ export default {
       })
     },
     getSchoolList() {
-      schoolList({ page: 1, pageSize: 20 }).then(res => {
+      schoolCorrelation({ page: 1, pageSize: 20 }).then(res => {
         this.searchOptions.university = res.data
       })
     },
@@ -439,6 +448,17 @@ export default {
           this.getTestList()
         })
       }
+    },
+    // 根据名字查询当前选择的学校信息
+    findSchool(data) {
+      this.findSchoolItem = this.searchOptions.university.filter((item) => {
+        return item.universityName === data
+      })
+    },
+    findCollege(data) {
+      this.findCollegeItem = this.searchOptions.colleges.filter((item) => {
+        return item.collegeName === data
+      })
     }
 
   }

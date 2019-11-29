@@ -122,6 +122,10 @@ export const outsellTest = data => axios.post('/test/unshelve', clearNullValue(d
 export const testStatus = data => axios.post('/test/status', clearNullValue(data))
 // 试题类型
 export const testType = data => axios.post('/test/type', clearNullValue(data))
+// 学院
+export const collegeList = data => axios.post('/college/list', clearNullValue(data))
+// 专业
+export const majorlList = data => axios.post('/major/list', clearNullValue(data))
 
 /*
     **** 论坛管理 *****
