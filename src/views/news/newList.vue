@@ -10,7 +10,7 @@
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="ruleForm.status" placeholder="请选择">
-          <el-option v-for="(item,index) in newsStatusOptions" :key="index" :label="item.value" :value="item.key" />
+          <el-option v-for="(item,index) in newsStatusOptions" :key="index + '110'" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
       <el-form-item label="类型" prop="type">

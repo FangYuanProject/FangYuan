@@ -15,7 +15,7 @@
         <el-input v-model="ruleForm.email" />
       </el-form-item>
       <el-form-item label="角色" prop="roleCode">
-        <el-select v-model="ruleForm.roleCode" placeholder="请选择">
+        <el-select v-model="ruleForm.roleCode" placeholder="请选择角色">
           <el-option v-for="(r, ind) in roleListData" :key="ind + 'search'" :label="r.roleName" :value="r.roleCode" />
         </el-select>
       </el-form-item>
@@ -57,7 +57,7 @@
           <el-input v-model="form.phoneNumber" autocomplete="off" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="角色" prop="roleCode">
-          <el-select v-model="ruleForm.roleCode" placeholder="请选择">
+          <el-select v-model="ruleForm.roleCode" placeholder="请选择角色">
             <el-option v-for="(r, ind) in roleListData" :key="ind + 'new'" :label="r.roleName" :value="r.roleCode" />
           </el-select>
         </el-form-item>
@@ -128,7 +128,7 @@ export default {
       userForm: {
         password: [{ required: true, min: 8, message: '请输入至少8位数的密码', trigger: 'blur' }],
         email: [{ type: 'email', required: true, message: '请输入正确格式的密码', trigger: 'blur' }],
-        roleCode: [{ required: true, message: '请输入用户角色', trigger: 'blur' }]
+        roleCode: [{ required: true, message: '请选择用户角色', trigger: 'change' }]
       },
       thData: [
         { name: '用户ID', indexs: 'id' },
@@ -149,6 +149,7 @@ export default {
     submitAddForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.form.userLogoInfo = this.userLogoInfo || ''
           addUser(this.form).then(res => {
             AlertBox('success', res.message)
             this.dialogVisible = false

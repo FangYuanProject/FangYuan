@@ -22,12 +22,12 @@
         </el-form-item>
         <el-form-item label="新闻类型" class="news-type" prop="type">
           <el-select v-model="params.type" placeholder="请选择">
-            <el-option v-for="(item,index) in newsTypeOptions" :key="index+10" :label="item.value" :value="item.key" />
+            <el-option v-for="(item, index) in newsTypeOptions" :key="index+10" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item label="相关学校" class="relate-school" prop="correlation">
           <el-select v-model="params.correlation" filterable remote :remote-method="getSchoolList" placeholder="请选择">
-            <el-option v-for="(item,index) in schoolOptions" :key="item" :label="item" :value="item" />
+            <el-option v-for="(item, index) in schoolOptions" :key="index + 'schools'" :label="item.universityName" :value="item.universityName" />
           </el-select>
         </el-form-item>
         <el-form-item label="新闻摘要" prop="summary">
