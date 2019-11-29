@@ -44,7 +44,7 @@ export const editNews = data => axios.post('/news/edit', clearNullValue(data))
 // 新闻类型
 export const newsType = data => axios.post('/news/type', clearNullValue(data))
 // 相关学校
-export const schoolCorrelation = data => axios.post('/school/correlation', data)
+export const schoolCorrelation = data => axios.post('/school/list', data)
 // 状态
 export const newsStatus = data => axios.post('/news/status', data)
 /*

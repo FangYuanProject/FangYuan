@@ -1,26 +1,26 @@
 <template>
-    <el-button type="primary" class="add-btn" @click="addClickBtn">+&nbsp;新增{{name}}</el-button>
+  <el-button type="primary" class="add-btn" @click="addClickBtn">+&nbsp;新增{{ name }}</el-button>
 </template>
 <script>
 export default {
-    data(){
-        return{
-
-        }
-    },
-    props:{
-        name: {
-            type: String,
-            default: () => {
-                return []
-            }
-        }
-    },
-    methods:{
-        addClickBtn(){
-            this.$emit('click')
-        }
+  props: {
+    name: {
+      type: String,
+      default: () => {
+        return []
+      }
     }
+  },
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+    addClickBtn() {
+      this.$emit('click')
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

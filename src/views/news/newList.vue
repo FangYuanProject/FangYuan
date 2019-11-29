@@ -50,7 +50,7 @@
       </el-form-item>
       <el-form-item>
         <search-form-btn @click="searchNewsList" />
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
+        <el-button @click="resetForm">重置</el-button>
         <add-method-btn name="新闻" @click="addNews" />
       </el-form-item>
     </el-form>
@@ -109,8 +109,8 @@ export default {
     this.getNewsOptions()
   },
   methods: {
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
+    resetForm() {
+      this.$refs['ruleForm'].resetFields()
     },
     addNews() {
       this.$router.push({ path: '/news-detail' })
