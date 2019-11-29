@@ -7,7 +7,7 @@ import { clearNullValue } from '@/utils/util'
 // 学校列表
 export async function schoolList(data) {
   return request({
-    url: '/school/list',
+    url: '/school/search',
     method: 'post',
     data: clearNullValue(data)
   })
@@ -74,7 +74,7 @@ export async function schoolUnshelve(data) {
 // 获取学校的所有学院
 export async function collegeSearch(data) {
   return request({
-    url: '/college/list',
+    url: '/college/search',
     method: 'post',
     data: data
   })

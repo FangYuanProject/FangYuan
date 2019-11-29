@@ -91,7 +91,7 @@ export default {
         { name: '创建时间', indexs: 'createTime' },
         { name: '发布时间', indexs: 'releaseTime' },
         { name: '下架时间', indexs: 'unshelveTime' },
-        { name: '状态', indexs: 'status' },
+        { name: '状态', indexs: 'statusStr' },
         { name: '操作', indexs: 'operation' }
 
       ],
@@ -142,10 +142,10 @@ export default {
           list.createTime = dateTimeStr(list.createTime)
           list.releaseTime = dateTimeStr(list.releaseTime)
           list.unshelveTime = dateTimeStr(list.unshelveTime)
-          list.status = list.status.value
+          list.statusStr = list.status.value
           list.type = list.type.value
           list.operation = []
-          if (list.status === '下架' || list.status === '新增') {
+          if (list.statusStr === '未发布' || list.statusStr === '已下架') {
             list.operation.push({ name: '发布', clickEvent: 'publish' })
           } else {
             list.operation.push({ name: '下架', clickEvent: 'outSell' })
