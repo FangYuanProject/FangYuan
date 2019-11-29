@@ -50,6 +50,7 @@
       </el-form-item>
       <el-form-item>
         <search-form-btn @click="searchNewsList" />
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <add-method-btn name="新闻" @click="addNews" />
       </el-form-item>
     </el-form>

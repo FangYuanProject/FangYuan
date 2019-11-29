@@ -39,7 +39,6 @@ export default {
   computed: {
     ...mapGetters(['sidebar']),
     routes() {
-      debugger
       return this.$router.options.routes
     },
     activeMenu() {

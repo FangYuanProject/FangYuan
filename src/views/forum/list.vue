@@ -32,8 +32,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <search-form-btn @click="searchFormEvent" />
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <add-method-btn name="帖子" @click="addForum" />
       </el-form-item>
     </el-form>

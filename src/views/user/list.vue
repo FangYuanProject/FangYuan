@@ -16,13 +16,12 @@
       </el-form-item>
       <el-form-item label="角色" prop="roleCode">
         <el-select v-model="ruleForm.roleCode" placeholder="请选择">
-          <el-option label="普通角色1" value="shanghai" />
-          <el-option label="普通角色2" value="beijing" />
+          <el-option v-for="(r, ind) in roleListData" :key="ind + 'search'" :label="r.roleName" :value="r.roleCode" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <el-button type="primary" class="search-btn" @click="searchUserList('ruleForm')">查询</el-button>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <el-button type="primary" class="add-user" @click="addUser">+&nbsp;新建用户</el-button>
       </el-form-item>
     </el-form>
@@ -37,12 +36,13 @@
     />
     <el-dialog title="新增用户" :visible.sync="dialogVisible" width="508px" class="add-user-modal">
       <el-form ref="addUserModal" :model="form" :rules="userForm">
-        <el-form-item label="头像" class="user-info">
-          <span class="user-head">
-            <img src="@/assets/user.png" alt>
+        <el-form-item label="头像">
+          <span v-if="userLogoInfo" class="school-head">
+            <img :src="userLogoInfo">
           </span>
-          <el-button type="primary" class="upload-head" @click="dialogVisible = false">上传头像</el-button>
-          <span class="tips">大小不得大于5M</span>
+          <div style="display: inline-block; width: calc(100% - 90px); margin-top: 10px; vertical-align: top;">
+            <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传头像" @getUrlSuccess="getUrlSuccess" />
+          </div>
         </el-form-item>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username" autocomplete="off" placeholder="请输入" />
@@ -57,7 +57,9 @@
           <el-input v-model="form.phoneNumber" autocomplete="off" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="角色" prop="roleCode">
-          <el-input v-model="form.roleCode" autocomplete="off" placeholder="请输入" />
+          <el-select v-model="ruleForm.roleCode" placeholder="请选择">
+            <el-option v-for="(r, ind) in roleListData" :key="ind + 'new'" :label="r.roleName" :value="r.roleCode" />
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -75,12 +77,11 @@
           <el-input v-model="form.id" autocomplete="off" />
         </el-form-item>
         <el-form-item label="用户名">
-          <el-input v-model="form.name" autocomplete="off" />
+          <el-input v-model="form.username" autocomplete="off" />
         </el-form-item>
         <el-form-item label="角色">
-          <el-select v-model="ruleForm.region" placeholder="请选择角色" class="user-role">
-            <el-option label="普通角色1" value="shanghai" />
-            <el-option label="普通角色2" value="beijing" />
+          <el-select v-model="ruleForm.roleCode" placeholder="请选择角色" class="user-role">
+            <el-option v-for="(r, ind) in roleListData" :key="ind + 'edit'" :label="r.roleName" :value="r.roleCode" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -92,11 +93,13 @@
 </template>
 <script>
 import tableComponents from '@/components/tableComponents'
-import { userList, addUser } from '@/api/index'
+import UploadPicBtn from '@/components/UploadPictureBtn'
+import { userList, addUser, roleList } from '@/api/index'
 import { AlertBox } from '@/utils/util.js'
 export default {
   components: {
-    tableComponents
+    tableComponents,
+    UploadPicBtn
   },
   data() {
     return {
@@ -106,6 +109,7 @@ export default {
       page: 1,
       pageSize: 20,
       totalNumber: 0,
+      userLogoInfo: '', // 用户头像
       ruleForm: {
         id: '',
         email: '',
@@ -120,6 +124,7 @@ export default {
         roleCode: '',
         username: ''
       },
+      roleListData: [], // 角色列表
       userForm: {
         password: [{ required: true, min: 8, message: '请输入至少8位数的密码', trigger: 'blur' }],
         email: [{ type: 'email', required: true, message: '请输入正确格式的密码', trigger: 'blur' }],
@@ -138,6 +143,7 @@ export default {
   },
   mounted() {
     this.getUserList()
+    this.getRoleList()
   },
   methods: {
     submitAddForm(formName) {
@@ -169,7 +175,6 @@ export default {
       this.changeRoleVisible = false
     },
     toUserDetail(row, column, cell, event) {
-      console.log(row)
       if (column.label === '用户ID') {
         this.$router.push({ path: '/user/home', query: { id: row.id }})
       }
@@ -182,10 +187,18 @@ export default {
         this.totalNumber = res.total
       })
     },
+    getRoleList() {
+      roleList().then(res => {
+        this.roleListData = res.data
+      })
+    },
     changePage(pageData) {
       this.page = pageData.page
       this.pageSize = pageData.limit
       this.getUserList(this.ruleForm)
+    },
+    getUrlSuccess(file) {
+      this.userLogoInfo = file.data.path
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()

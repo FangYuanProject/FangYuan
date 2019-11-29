@@ -39,8 +39,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <search-form-btn @click="searchList" />
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <add-method-btn name="学校" class="mb0" @click="addSchool" />
       </el-form-item>
     </el-form>
