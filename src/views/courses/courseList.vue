@@ -30,6 +30,7 @@
       </el-form-item>
       <el-form-item>
         <search-form-btn @click="searchGoodsList" />
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
         <add-method-btn name="商品" @click="AddCourse" />
       </el-form-item>
     </el-form>
@@ -284,6 +285,9 @@ export default {
       } else {
         this.unsellGoods(data.id)
       }
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
     }
   }
 }
