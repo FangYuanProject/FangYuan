@@ -27,7 +27,7 @@
         </el-form-item>
         <el-form-item label="相关学校" class="relate-school" prop="correlation">
           <el-select v-model="params.correlation" filterable remote :remote-method="getSchoolList" placeholder="请选择">
-            <el-option v-for="(item,index) in schoolOptions" :key="item+index" :label="item" :value="item" />
+            <el-option v-for="(item,index) in schoolOptions" :key="item+index" :label="item.universityName" :value="item.universityName" />
           </el-select>
         </el-form-item>
         <el-form-item label="新闻摘要" prop="summary">
@@ -66,11 +66,11 @@ export default {
         id: this.$route.query.id ? this.$route.query.id : ''
       },
       newsContent: {
-        content: [{ require: true, message: '请输入新闻内容', trigger: 'blur', max: '256' }],
-        correlation: [{ require: true, message: '请选择相关学校', trigger: 'change' }],
-        summary: [{ require: true, message: '请输入摘要', trigger: 'blur', max: '128' }],
-        title: [{ require: true, message: '请输入新闻标题', trigger: 'blur', max: '32' }],
-        type: [{ require: true, message: '请选择新闻类型', trigger: 'change' }]
+        content: [{ required: true, message: '请输入新闻内容', trigger: 'blur', max: '256' }],
+        correlation: [{ required: true, message: '请选择相关学校', trigger: 'change' }],
+        summary: [{ required: true, message: '请输入摘要', trigger: 'blur', max: '128' }],
+        title: [{ required: true, message: '请输入新闻标题', trigger: 'blur', max: '32' }],
+        type: [{ required: true, message: '请选择新闻类型', trigger: 'change' }]
       },
       newsTypeOptions: [], // 新闻类型
       schoolOptions: [], // 相关学校
