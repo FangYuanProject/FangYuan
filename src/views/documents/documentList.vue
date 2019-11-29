@@ -257,7 +257,7 @@ export default {
   },
   mounted() {
     this.getTestList()
-    // this.getSchoolList()
+    this.getSchoolList()
     this.getSearchOption()
   },
   methods: {
