@@ -152,7 +152,7 @@ export default {
   },
   methods: {
     searchGoodsList() {
-       this.getCourseList()
+      this.getCourseList()
     },
     AddCourse() {
       this.dialogVisible = true

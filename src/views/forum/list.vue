@@ -312,8 +312,8 @@ export default {
             case 2003:
               list.operation.push({ name: '查看', clickEvent: 'check' })
               break
-              case 2005:
-                list.operation.push({name:'取消置顶',clickEvent:'cancelTop'})
+            case 2005:
+              list.operation.push({ name: '取消置顶', clickEvent: 'cancelTop' })
           }
           list.status = list.status.value
           list.type = list.type.value

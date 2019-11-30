@@ -48,7 +48,6 @@ export default {
       vaildFormContent: {
         roleName: [
           { required: true, message: '请输入角色名称', trigger: 'blur' },
-          { validator: this.validLength, trigger: 'blur' }
         ]
       },
       dialogVisible: false,
