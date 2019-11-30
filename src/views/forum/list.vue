@@ -63,9 +63,13 @@
         <el-button type="primary" class="edit-data-btn" @click="submitForm('publishForm','save')">
           保存
         </el-button>
-        <el-button type="primary" class="submit-data-btn" @click="submitForm('publishForm','publish')">
+        <el-button v-if="!isSetTop" type="primary" class="submit-data-btn" @click="submitForm('publishForm','publish')">
           <span class="iconfont iconfabu">&nbsp;发布</span>
         </el-button>
+        <el-button v-else type="primary" class="submit-data-btn" @click="cancelSetTop('publishForm')">
+          取消置顶
+        </el-button>
+        
       </span>
     </el-dialog>
     <el-dialog :title="outSellDialogTitle" :visible.sync="outSellDialogVisible" width="508px" class="out-sell-modal" :close-on-click-modal="false" @close="closeModal">
@@ -137,10 +141,10 @@ export default {
         id: ''
       },
       outSellForm: {
-        id: '',
-        type: '',
-        title: '',
-        reason: ''
+        id: '1',
+        type: '334',
+        title: '333',
+        reason: '3333'
       },
       outSellFormRules: {
         reason: [{ required: true, message: '请输入下架原因', trigger: 'blur' }]
@@ -156,12 +160,13 @@ export default {
         { name: '操作', indexs: 'operation' }
 
       ],
-      tableData: [],
+      tableData: [{id:'1',type:'333',title:'ceshi',url:'hrhhr',createTime:'199',createName:'1333',status:'置顶',operation:[{name:'下架',clickEvent:'setTop'}]}],
       total: 0,
       forumTypeOption: [],
       statusOptions: [],
-      isDisabled: false
-    }
+      isDisabled: false,
+      isSetTop:false //判断帖子是否置顶状态  
+      }
   },
   mounted() {
     this.getForumList()
@@ -195,8 +200,9 @@ export default {
       }
     },
     publishForum(id, type) {
-      const params = id === '' || this.publishForm.id ? this.publishForm : { id: this.outSellForm.id || id }
-      if (id==='' || this.publishForm.id!=='') {
+      //根据弹窗类型判断是否发布
+      const params =  this.publishForm.type ? this.publishForm : { id: this.outSellForm.id || id }
+      if (this.publishForm.type!=='') {
         vaildForm(this.$refs['publishForm']).then(res => {
           if (res) {
             publishForum(params).then(res => {
@@ -245,6 +251,9 @@ export default {
       this.publishDialogVisible = true
       this.publishDialogTitle = '发布帖子'
       this.status = 'add'
+      setTimeout(()=>{
+        this.resetForm('publishForm')
+      },10)
     },
     editForum(row, colum) {
       this.forumId = row.id
@@ -252,6 +261,7 @@ export default {
         this.publishDialogVisible = true
         this.publishDialogTitle = '编辑帖子'
         this.formumDetail(row.id, 'edit')
+        this.isSetTop = row.status === '置顶' ? true : false
       }
     },
     formumDetail(id, type) {
@@ -346,6 +356,16 @@ export default {
         this.isDisabled = true
         this.formumDetail(data.id)
       }
+    },
+    cancelSetTop(formName){
+      vaildForm(this.$refs[formName]).then((res)=>{
+        if(res){
+          setTopForum({ id: this.publishForm.id, operation: '2002' }).then(res => {
+          AlertBox('success', '取消成功')
+          this.getForumList()
+        })
+        }
+      })
     }
   }
 }

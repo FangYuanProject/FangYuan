@@ -167,7 +167,7 @@ export default {
           list.createTime = dateTimeStr(list.createTime)
           list.type = list.type.value
           list.operation = []
-          if (list.status.key === 2001 || list.status === 2003) {
+          if (list.status.key === 2001 || list.status.key === 2003) {
             list.operation.push({ name: '发布', clickEvent: 'publish' })
           } else {
             list.operation.push({ name: '下架', clickEvent: 'outSell' })
