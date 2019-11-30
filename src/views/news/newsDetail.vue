@@ -4,12 +4,15 @@
       <span v-if="params.id===''">新建新闻</span>
       <span v-else>编辑新闻</span>
       <div>
-        <div v-if="params.id!==''">
-          <button type="primary" class="del-news" @click="delOffNews('del')">删除</button>
+        <div v-if="params.id!==''&&params.status===2003">
+           <button type="primary" class="del-news" @click="delOffNews('del')">删除</button>
+           <button type="primary" class="publish-news" @click="saveNewsEvent('publish')"><span class="iconfont iconfabu" />&nbsp;发布</button>
+        </div>
+        <div v-else-if="params.id!==''&&params.status===2002">
           <button type="primary" class="save-news" @click="saveNewsEvent('edit')">更新</button>
           <button type="primary" class="off-sale" @click="delOffNews('off')"><span class="iconfont iconxiajia" />&nbsp;下架</button>
         </div>
-        <div v-else>
+        <div v-else-if="params.id===''">
           <button type="primary" class="save-news" @click="saveNewsEvent('save')">保存</button>
           <button type="primary" class="publish-news" @click="saveNewsEvent('publish')"><span class="iconfont iconfabu" />&nbsp;发布</button>
         </div>
@@ -63,7 +66,8 @@ export default {
         summary: '',
         title: '',
         type: '',
-        id: this.$route.query.id ? this.$route.query.id : ''
+        id: this.$route.query.id ? this.$route.query.id : '',
+        status:''
       },
       newsContent: {
         content: [{ required: true, message: '请输入新闻内容', trigger: 'blur', max: '256' }],
@@ -88,6 +92,7 @@ export default {
   },
   methods: {
     saveNewsEvent(type) {
+      delete this.params.status
       vaildForm(this.$refs['newsContent']).then(res => {
         if (res) {
           if (type === 'save') {
@@ -138,8 +143,9 @@ export default {
           correlation: res.data.correlation,
           summary: res.data.summary,
           title: res.data.title,
-          type: res.data.type,
-          id: res.data.id
+          type: res.data.type.key,
+          id: res.data.id,
+          status:res.data.status.key
         }
       })
     },

@@ -66,6 +66,14 @@
         <el-button type="primary" class="submit-data-btn" @click="submitForm('publishForm','publish')">
           <span class="iconfont iconfabu">&nbsp;发布</span>
         </el-button>
+        
+        <div v-if="status==='发布中'">
+          <el-button  type="primary" class="submit-data-btn" @click="submitForm('publishForm','publish')">
+          置顶
+        </el-button>
+         <el-button type="primary" class="submit-data-btn" @click="comfirmOutSell('outSellForm')">确认下架</el-button>
+        </div>
+        
       </span>
     </el-dialog>
     <el-dialog :title="outSellDialogTitle" :visible.sync="outSellDialogVisible" width="508px" class="out-sell-modal" :close-on-click-modal="false" @close="closeModal">
@@ -132,7 +140,7 @@ export default {
       uploadTime: '', // 处理查询的时间插件
       publishForm: {
         title: '',
-        type: '',
+        type:'',
         content: '',
         id: ''
       },
@@ -156,11 +164,12 @@ export default {
         { name: '操作', indexs: 'operation' }
 
       ],
-      tableData: [],
+      tableData: [{id:1,type:'已下架',title:'haha',url:'hehhe',createTime:'hxjhj',createName:'hah',status:'gabush',operation:[{name: '发布', clickEvent: 'publish'}]}],
       total: 0,
       forumTypeOption: [],
       statusOptions: [],
-      isDisabled: false
+      isDisabled: false,
+      status:'' //根据状态判断弹窗的操作按钮
     }
   },
   mounted() {
@@ -252,21 +261,20 @@ export default {
         this.publishDialogVisible = true
         this.publishDialogTitle = '编辑帖子'
         this.formumDetail(row.id, 'edit')
+        this.status = row.status
       }
     },
     formumDetail(id, type) {
-      forumDeatil({ id: id }).then(res => {
+      forumDeatil({ id: id }).then(res => { 
         if (type) {
-          this.publishForm = {
-            title: res.data.title,
-            type: res.data.type,
-            content: res.data.content,
-            id: id
-          }
+          this.publishForm.title = res.data.title
+          this.publishForm.type = res.data.type.key
+          this.publishForm.content = res.data.content
+          this.publishForm.id = res.data.id
         } else {
           this.outSellForm = {
             id: id,
-            type: res.data.type,
+            type: res.data.type.key,
             title: res.data.title,
             reason: res.data.reason
           }
