@@ -196,7 +196,7 @@ export default {
     },
     publishForum(id, type) {
       const params = id === '' || this.publishForm.id ? this.publishForm : { id: this.outSellForm.id || id }
-      if (id==='' || this.publishForm.id!=='') {
+      if (id === '' || this.publishForm.id !== '') {
         vaildForm(this.$refs['publishForm']).then(res => {
           if (res) {
             publishForum(params).then(res => {
@@ -302,8 +302,8 @@ export default {
             case 2003:
               list.operation.push({ name: '查看', clickEvent: 'check' })
               break
-              case 2005:
-                list.operation.push({name:'取消置顶',clickEvent:'cancelTop'})
+            case 2005:
+              list.operation.push({ name: '取消置顶', clickEvent: 'cancelTop' })
           }
           list.status = list.status.value
           list.type = list.type.value

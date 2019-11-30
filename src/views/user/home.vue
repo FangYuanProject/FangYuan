@@ -36,7 +36,7 @@
     <div class="float-right user-collect">
       <div class="tab">
         <ul>
-          <li v-for="(tab,key) in tabList" :key="key" :class="[tabIndex===key ? 'active' :'']" @click="changeTab(key,tab.index)"><span :class="['iconfont',tab.icon]" />&nbsp;{{ tab.name }}&nbsp;<em>{{ tabContentList[tabContentShow].length }}</em></li>
+          <li v-for="(tab,key) in tabList" :key="key" :class="[tabIndex===key ? 'active' :'']" class="cp" @click="changeTab(key,tab.index)"><span :class="['iconfont',tab.icon]" />&nbsp;{{ tab.name }}&nbsp;<em>{{ tabContentList[tabContentShow].length }}</em></li>
         </ul>
       </div>
       <div class="tab-content">

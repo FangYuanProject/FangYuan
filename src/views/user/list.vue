@@ -57,7 +57,7 @@
           <el-input v-model="form.phoneNumber" autocomplete="off" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="角色" prop="roleCode">
-          <el-select v-model="ruleForm.roleCode" placeholder="请选择角色">
+          <el-select v-model="form.roleCode" placeholder="请选择角色">
             <el-option v-for="(r, ind) in roleListData" :key="ind + 'new'" :label="r.roleName" :value="r.roleCode" />
           </el-select>
         </el-form-item>
@@ -136,7 +136,7 @@ export default {
         { name: '手机号', indexs: 'phoneNumber' },
         { name: '邮箱', indexs: 'email' },
         { name: '注册时间', indexs: 'createTime' },
-        { name: '角色', indexs: 'roleCode' }
+        { name: '角色', indexs: 'roleName' }
       ],
       tableData: []
     }

@@ -428,7 +428,7 @@ export default {
       })
     },
     getSchoolList() {
-      schoolCorrelation({ page: 1, pageSize: 20,universityName:'' }).then(res => {
+      schoolCorrelation({ page: 1, pageSize: 20, universityName: '' }).then(res => {
         this.searchOptions.university = res.data
       })
     },

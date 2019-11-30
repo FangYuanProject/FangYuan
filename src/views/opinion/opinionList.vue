@@ -62,8 +62,7 @@ export default {
       },
       formEmail: {
         id: '',
-        replyContent: '',
-        id: ''
+        replyContent: ''
       },
       ruleText: {
         content: [{ required: true, trigger: 'blur', message: '请输入回复内容' }]
