@@ -63,15 +63,21 @@
         <el-button type="primary" class="edit-data-btn" @click="submitForm('publishForm','save')">
           保存
         </el-button>
-        <el-button type="primary" class="submit-data-btn" @click="submitForm('publishForm','publish')">
+        <div v-if="btnStatus==='发布中'" style="display: inline-block;">
+           <el-button  type="primary" class="submit-data-btn" @click="cancelSetTop('publishForm',2005)">
+              置顶
+          </el-button>
+           <el-button type="primary" class="submit-data-btn" @click="comfirmOutSell('publishForm')">确认下架</el-button>
+        </div>
+        <div v-else-if="btnStatus==='置顶'"  style="display: inline-block;">
+            <el-button  type="primary" class="submit-data-btn" @click="cancelSetTop('publishForm',2002)">
+              取消置顶
+            </el-button>
+        </div>
+        <div v-else  style="display: inline-block;">
+        <el-button v-if="btnStatus===''" type="primary" class="submit-data-btn" @click="submitForm('publishForm','publish')">
           <span class="iconfont iconfabu">&nbsp;发布</span>
         </el-button>
-        
-        <div v-if="status==='发布中'">
-          <el-button  type="primary" class="submit-data-btn" @click="submitForm('publishForm','publish')">
-          置顶
-        </el-button>
-         <el-button type="primary" class="submit-data-btn" @click="comfirmOutSell('outSellForm')">确认下架</el-button>
         </div>
         
       </span>
@@ -145,10 +151,10 @@ export default {
         id: ''
       },
       outSellForm: {
-        id: '',
-        type: '',
-        title: '',
-        reason: ''
+        id: '1',
+        type: '334',
+        title: '333',
+        reason: '3333'
       },
       outSellFormRules: {
         reason: [{ required: true, message: '请输入下架原因', trigger: 'blur' }]
@@ -164,12 +170,12 @@ export default {
         { name: '操作', indexs: 'operation' }
 
       ],
-      tableData: [{id:1,type:'已下架',title:'haha',url:'hehhe',createTime:'hxjhj',createName:'hah',status:'gabush',operation:[{name: '发布', clickEvent: 'publish'}]}],
+      tableData: [],
       total: 0,
       forumTypeOption: [],
       statusOptions: [],
       isDisabled: false,
-      status:'' //根据状态判断弹窗的操作按钮
+      btnStatus:'' //根据状态判断弹窗的操作按钮
     }
   },
   mounted() {
@@ -204,8 +210,9 @@ export default {
       }
     },
     publishForum(id, type) {
-      const params = id === '' || this.publishForm.id ? this.publishForm : { id: this.outSellForm.id || id }
-      if (id === '' || this.publishForm.id !== '') {
+      //根据弹窗类型判断是否发布
+      const params =  this.publishForm.type ? this.publishForm : { id: this.outSellForm.id || id }
+      if (this.publishForm.type!=='') {
         vaildForm(this.$refs['publishForm']).then(res => {
           if (res) {
             publishForum(params).then(res => {
@@ -254,6 +261,10 @@ export default {
       this.publishDialogVisible = true
       this.publishDialogTitle = '发布帖子'
       this.status = 'add'
+      this.btnStatus = ''
+      setTimeout(()=>{
+        this.resetForm('publishForm')
+      },10)
     },
     editForum(row, colum) {
       this.forumId = row.id
@@ -261,20 +272,20 @@ export default {
         this.publishDialogVisible = true
         this.publishDialogTitle = '编辑帖子'
         this.formumDetail(row.id, 'edit')
-        this.status = row.status
+        this.btnStatus = row.status
       }
     },
     formumDetail(id, type) {
       forumDeatil({ id: id }).then(res => { 
         if (type) {
           this.publishForm.title = res.data.title
-          this.publishForm.type = res.data.type.key
+          this.publishForm.type = res.data.type
           this.publishForm.content = res.data.content
           this.publishForm.id = res.data.id
         } else {
           this.outSellForm = {
             id: id,
-            type: res.data.type.key,
+            type: res.data.type,
             title: res.data.title,
             reason: res.data.reason
           }
@@ -354,6 +365,16 @@ export default {
         this.isDisabled = true
         this.formumDetail(data.id)
       }
+    },
+    cancelSetTop(formName,operation){
+      vaildForm(this.$refs[formName]).then((res)=>{
+        if(res){
+          setTopForum({ id: this.publishForm.id, operation: operation }).then(res => {
+          AlertBox('success', '取消成功')
+          this.getForumList()
+        })
+        }
+      })
     }
   }
 }

@@ -57,25 +57,29 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <div v-if="dialogTitle==='新增商品'">
+        <div v-if="status==='已下架'">
+            <el-button class="del-document" @click="delDocument('courseModal')">
+            删除
+            </el-button>
+           <el-button type="primary" class="submit-data-btn" @click="publishGoods()">
+            <span class="iconfont iconfabu">&nbsp;发布</span>
+          </el-button>
+        </div>
+        <div v-else-if="status==='发布中'">
+          <el-button type="primary" class="edit-data-btn" @click="submitCourseData('courseModal')">
+            保存
+          </el-button>
+          <el-button type="primary" class="submit-data-btn" @click="unsellGoods()">
+            <span class="iconfont iconxiajia">&nbsp;下架</span>
+          </el-button>
+        </div>
+        <div v-else>
           <el-button type="primary" class="edit-data-btn" @click="submitCourseData('courseModal')">
             保存
           </el-button>
           <el-button type="primary" class="submit-data-btn" @click="publishGoods()">
             <span class="iconfont iconfabu">&nbsp;发布</span>
           </el-button>
-        </div>
-        <div v-else>
-          <el-button class="del-document" @click="delDocument('courseModal')">
-            删除
-          </el-button>
-          <el-button type="primary" class="edit-data-btn" @click="submitCourseData()">
-            更新
-          </el-button>
-          <el-button type="primary" class="submit-data-btn" @click="unsellGoods()">
-            <span class="iconfont iconxiajia">&nbsp;下架</span>
-          </el-button>
-
         </div>
       </span>
     </el-dialog>
@@ -143,7 +147,8 @@ export default {
       total: 0, // 列表总数
       goodsId: '',
       typeOptions: [], // 课程类型
-      statusOptions: []
+      statusOptions: [],
+      status:''//判断编辑弹窗操作按钮
     }
   },
   mounted() {
@@ -167,10 +172,14 @@ export default {
           list.createTime = dateTimeStr(list.createTime)
           list.type = list.type.value
           list.operation = []
-          if (list.status.key === 2001 || list.status === 2003) {
+          switch (list.status.key){
+            case 2001:
+            case 2003:
             list.operation.push({ name: '发布', clickEvent: 'publish' })
-          } else {
+            break;
+            case 2002:
             list.operation.push({ name: '下架', clickEvent: 'outSell' })
+            break
           }
           list.status = list.status.value
         })
@@ -249,6 +258,7 @@ export default {
         this.dialogVisible = true
         this.dialogTitle = '编辑商品'
         this.goodsId = row.id
+        this.status = row.status
         goodsDetail({ goodsId: row.id }).then(res => {
           this.editForm = {
             content: res.data.content,
@@ -256,7 +266,7 @@ export default {
             price: res.data.price,
             taobaoUrl: res.data.taobaoUrl,
             goodsId: res.data.id,
-            type: parseInt(res.data.type)
+            type: res.data.type.key
           }
         })
       }
