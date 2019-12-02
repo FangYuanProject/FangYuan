@@ -48,7 +48,7 @@ export default {
       },
       vaildFormContent: {
         roleName: [
-          { required: true, message: '请输入角色名称', trigger: 'blur' },
+          { required: true, message: '请输入角色名称', trigger: 'blur' }
         ]
       },
       dialogVisible: false,
