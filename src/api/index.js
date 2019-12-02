@@ -56,6 +56,8 @@ export const addRole = data => axios.post('/role/add', clearNullValue(data))
 export const delRole = data => axios.post('/role/delete', clearNullValue(data))
 // 编辑角色
 export const editRole = data => axios.post('/role/edit', clearNullValue(data))
+// 详情角色
+export const detailRole = data => axios.post('/role/detail', clearNullValue(data))
 // 角色列表
 export const roleList = () => axios.post('/role/list')
 /*

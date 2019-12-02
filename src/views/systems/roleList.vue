@@ -34,7 +34,7 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import { AlertBox } from '@/utils/util'
-import { addRole, delRole, editRole, roleList, menuList } from '@/api/index'
+import { addRole, delRole, editRole, detailRole, roleList, menuList } from '@/api/index'
 export default {
   components: {
     tableComponents,
@@ -43,7 +43,8 @@ export default {
   data() {
     return {
       modal: {
-        roleName: '' // 弹窗角色名称
+        roleName: '', // 弹窗角色名称
+        roleCode: '' // 编辑时需要角色的code
       },
       vaildFormContent: {
         roleName: [
@@ -74,7 +75,8 @@ export default {
           } else {
             const subData = {
               roleName: this.modal.roleName,
-              id: idsArr
+              roleCode: this.modal.roleCode,
+              menuId: idsArr
             }
             if (this.newOrEdit === 1) { // 新增
               addRole(subData).then(res => {
@@ -100,6 +102,7 @@ export default {
       this.newOrEdit = 1
       this.getMenuTree()
       this.modal.roleName = ''
+      this.modal.roleCode = ''
       this.dialogVisible = true
     },
     setCheckedNodes(data) {
@@ -108,24 +111,27 @@ export default {
     // 编辑
     editRole(data) {
       this.newOrEdit = 0
-      this.getMenuTree(1, data)
+      this.getMenuTree(1)
       this.modal.roleName = data.roleName
+      this.modal.roleCode = data.roleCode
       this.dialogVisible = true
     },
-    getMenuTree(setDefault, editData) {
+    getMenuTree(setDefault) {
       menuList().then(res => {
         // 递归组成数组
         this.data = this.getMenuArr(res.data, null)
         if (setDefault) {
-          const defaultArr = []
-          editData.ids.forEach(edit => {
-            res.data.forEach(list => {
-              if (edit === list.id) {
-                defaultArr.push(list)
-              }
+          detailRole({ roleCode: this.modal.roleCode }).then(resUser => {
+            const defaultArr = []
+            resUser.data.menuIds.forEach(edit => {
+              res.data.forEach(list => {
+                if (edit === list.id) {
+                  defaultArr.push(list)
+                }
+              })
             })
+            this.setCheckedNodes(defaultArr)
           })
-          this.setCheckedNodes(defaultArr)
         }
       })
     },
