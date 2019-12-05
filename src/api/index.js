@@ -127,7 +127,7 @@ export const testType = data => axios.post('/test/type', clearNullValue(data))
 // 学院
 export const collegeList = data => axios.post('/college/list', clearNullValue(data))
 // 专业
-export const majorlList = data => axios.post('/major/list', clearNullValue(data))
+export const majorList = data => axios.post('/major/list', clearNullValue(data))
 
 /*
     **** 论坛管理 *****
