@@ -10,21 +10,25 @@
       </el-form-item>
       <el-form-item label="试题类型" prop="type">
         <el-select v-model="searchForm.type" placeholder="请选择">
+          <el-option label="请选择" value="" />
           <el-option v-for="(item,index) in searchOptions.typeOptions" :key="item+index" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
       <el-form-item label="学校" prop="universityName">
         <el-select v-model="searchForm.universityName" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="selectSchool">
+          <el-option label="请选择" value="" />
           <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityName" />
         </el-select>
       </el-form-item>
       <el-form-item label="学院" prop="collegeId">
         <el-select v-model="searchForm.collegeId" placeholder="请选择" @change="selectCollege">
+          <el-option label="请选择" value="" />
           <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.collegeId" />
         </el-select>
       </el-form-item>
       <el-form-item label="专业" prop="majorId">
         <el-select v-model="searchForm.majorId" placeholder="请选择" @change="forceUpdateMajor">
+          <el-option label="请选择" value="" />
           <el-option v-for="(item,index) in searchOptions.majorOptions" :key="item+index" :label="item.majorName" :value="item.majorId" />
         </el-select>
       </el-form-item>
@@ -71,6 +75,7 @@
       <el-form ref="modalForm" :model="modalForm" :rules="ruleForm">
         <el-form-item label="试题类型" prop="type">
           <el-select v-model="modalForm.type" placeholder="请选择" class="modal-select">
+            <el-option label="请选择" value="" />
             <el-option v-for="(item,index) in searchOptions.typeOptions" :key="item+index+10" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
@@ -82,16 +87,19 @@
         </el-form-item>
         <el-form-item label="学校" prop="university">
           <el-select v-model="modalForm.university" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="selectSchoolModal">
+            <el-option label="请选择" value="" />
             <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityName" />
           </el-select>
         </el-form-item>
         <el-form-item label="学院" prop="collegeId">
           <el-select v-model="modalForm.collegeId" placeholder="请选择" @change="selectCollegeModal">
+            <el-option label="请选择" value="" />
             <el-option v-for="(item,index) in searchOptions.modalColleges" :key="item+index" :label="item.collegeName" :value="item.collegeId" />
           </el-select>
         </el-form-item>
         <el-form-item label="专业" prop="majorId">
           <el-select v-model="modalForm.majorId" placeholder="请选择" @change="forceUpdateMajorModal">
+            <el-option label="请选择" value="" />
             <el-option v-for="(item,index) in searchOptions.modalMajorOptions" :key="item+index" :label="item.majorName" :value="item.majorId" />
           </el-select>
         </el-form-item>

@@ -37,10 +37,10 @@
     <el-dialog title="新增用户" :visible.sync="dialogVisible" width="508px" class="add-user-modal" :close-on-click-modal="false">
       <el-form ref="addUserModal" :model="addUserForm" :rules="userForm">
         <el-form-item label="头像">
-          <span v-if="userLogoInfo" class="school-head">
-            <img :src="userLogoInfo">
+          <span class="school-head" style="display: inline-block; width: 64px; height: 64px;">
+            <img style="width: 100%; height: 100%;" :src="userLogoInfo? userLogoInfo : require('@/assets/user.png')">
           </span>
-          <div style="display: inline-block; width: calc(100% - 90px); margin-top: 10px; vertical-align: top;">
+          <div style="display: inline-block; margin-top: 10px; vertical-align: top;">
             <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传头像" @getUrlSuccess="getUrlSuccess" />
           </div>
         </el-form-item>
@@ -247,6 +247,8 @@ export default {
       this.getUserList(this.ruleForm)
     },
     getUrlSuccess(file) {
+      console.log(file)
+      console.log('123')
       this.userLogoInfo = file.data.path
     },
     resetForm(formName) {

@@ -10,11 +10,13 @@
       </el-form-item>
       <el-form-item label="商品类型" prop="type">
         <el-select v-model="ruleForm.type" placeholder="请选择">
+          <el-option label="请选择" value="" />
           <el-option v-for="(item,index) in typeOptions" :key="index" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
       <el-form-item label="商品状态" prop="status">
         <el-select v-model="ruleForm.status" placeholder="请选择">
+          <el-option label="请选择" value="" />
           <el-option v-for="(item,index) in statusOptions" :key="index+item" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
@@ -39,6 +41,7 @@
       <el-form ref="courseModal" :model="editForm" :rules="validForms">
         <el-form-item label="商品类型" prop="type">
           <el-select v-model="editForm.type" placeholder="请选择">
+            <el-option label="请选择" value="" />
             <el-option v-for="(item,index) in typeOptions" :key="index" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
@@ -58,10 +61,10 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <div v-if="status==='已下架'">
-            <el-button class="del-document" @click="delDocument('courseModal')">
+          <el-button class="del-document" @click="delDocument('courseModal')">
             删除
-            </el-button>
-           <el-button type="primary" class="submit-data-btn" @click="publishGoods()">
+          </el-button>
+          <el-button type="primary" class="submit-data-btn" @click="publishGoods()">
             <span class="iconfont iconfabu">&nbsp;发布</span>
           </el-button>
         </div>
@@ -148,7 +151,7 @@ export default {
       goodsId: '',
       typeOptions: [], // 课程类型
       statusOptions: [],
-      status:''//判断编辑弹窗操作按钮
+      status: ''// 判断编辑弹窗操作按钮
     }
   },
   mounted() {
@@ -172,14 +175,14 @@ export default {
           list.createTime = dateTimeStr(list.createTime)
           list.type = list.type.value
           list.operation = []
-          switch (list.status.key){
+          switch (list.status.key) {
             case 2001:
             case 2003:
-            list.operation.push({ name: '发布', clickEvent: 'publish' })
-            break;
+              list.operation.push({ name: '发布', clickEvent: 'publish' })
+              break
             case 2002:
-            list.operation.push({ name: '下架', clickEvent: 'outSell' })
-            break
+              list.operation.push({ name: '下架', clickEvent: 'outSell' })
+              break
           }
           list.status = list.status.value
         })
