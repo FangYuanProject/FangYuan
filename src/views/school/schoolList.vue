@@ -21,6 +21,14 @@
           <el-option v-for="(pro, index2) in properties" :key="index2 + '1000000'" :label="pro.value" :value="pro.key" />
         </el-select>
       </el-form-item>
+      <el-form-item label="热度">
+        <el-input v-model="ruleForm.visitor" />
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select v-model="ruleForm.status" placeholder="请选择">
+          <el-option v-for="(st, index) in statusData" :key="index + '10000000'" :label="st.value" :value="st.key" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="新建时间">
         <el-date-picker
           v-model="ruleForm.createTime"
@@ -29,14 +37,6 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
-      </el-form-item>
-      <el-form-item label="热度">
-        <el-input v-model="ruleForm.visitor" />
-      </el-form-item>
-      <el-form-item label="状态">
-        <el-select v-model="ruleForm.status" placeholder="请选择">
-          <el-option v-for="(st, index) in statusData" :key="index + '10000000'" :label="st.value" :value="st.key" />
-        </el-select>
       </el-form-item>
       <el-form-item>
         <search-form-btn @click="searchList" />

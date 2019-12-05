@@ -43,7 +43,7 @@ module.exports = {
       [process.env.VUE_APP_BASE_API]: {
         // target: `http://127.0.0.1:${port}/mock`,
         // target: 'http://140.143.235.123:8080',
-        target: 'http://localhost:8080/web/',
+        target: 'http://defunction.cn/web/',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''

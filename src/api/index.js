@@ -16,6 +16,8 @@ export const addUser = data => axios.post('/auth/add', clearNullValue(data))
 export const userList = data => axios.post('/auth/search', clearNullValue(data))
 // 用户详情
 export const userDetail = data => axios.post('/auth/detail', clearNullValue(data))
+// 更换角色
+export const changeUserRole = data => axios.post('/auth/change', clearNullValue(data))
 // 用户新闻收藏列表
 export const collectNews = data => axios.post('/collection/news/list', clearNullValue(data))
 // 用户学校收藏列表

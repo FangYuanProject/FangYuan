@@ -7,7 +7,7 @@
           <img src="@/assets/logo.png" alt="">
         </div>
       </div>
-      <el-form-item prop="username">
+      <el-form-item prop="email">
         <div class="sub-title-container">
           <p class="sub_title">登录</p>
           <span class="text_tip">使用邮箱登录</span>
@@ -53,7 +53,7 @@ export default {
       if (validEmail(value)) {
         callback()
       } else {
-        callback(new Error('请输入正确格式的邮箱'))
+        callback(new Error('请输入正确格式的邮箱,如：123@qq.com'))
       }
     }
     const validatePassword = (rule, value, callback) => {
@@ -82,16 +82,20 @@ export default {
   methods: {
     handleLogin() {
       const data = this.loginForm
-      login(data).then(res => {
-        localStorage.setItem('userName', res.data.username)
-        userMenu({ roleCode: res.data.roleCode }).then(resList => {
-          if (resList.data && resList.data.menuList) {
-            localStorage.setItem('_menu', JSON.stringify(resList.data.menuList))
-            this.$router.push({ path: '/' })
-          } else {
-            // 没菜单权限退出登录
-          }
-        })
+      this.$refs['loginForm'].validate((valid) => {
+        if (valid) {
+          login(data).then(res => {
+            localStorage.setItem('userName', res.data.username)
+            userMenu({ roleCode: res.data.roleCode }).then(resList => {
+              if (resList.data && resList.data.menuList) {
+                localStorage.setItem('_menu', JSON.stringify(resList.data.menuList))
+                this.$router.push({ path: '/' })
+              } else {
+                // 没菜单权限退出登录
+              }
+            })
+          })
+        }
       })
     }
   }
