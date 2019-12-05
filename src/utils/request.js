@@ -39,6 +39,5 @@ service.interceptors.response.use(
   }
 )
 
-export const baseURLFileUpload = 'http://defunction.cn/web'
-
+export const baseURLFileUpload = baseURL
 export default service

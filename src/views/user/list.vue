@@ -191,7 +191,7 @@ export default {
     submitAddForm(formName) {
       this.$refs['addUserModal'].validate((vaild) => {
         if (vaild) {
-          this.addUserForm.userLogoInfo = this.userLogoInfo || ''
+          this.addUserForm.headChat = this.userLogoInfo || ''
           addUser(this.addUserForm).then(res => {
             AlertBox('success', res.message)
             this.dialogVisible = false
