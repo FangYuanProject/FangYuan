@@ -3,7 +3,8 @@ import { AlertBox } from '@/utils/util.js'
 import router from '@/router'
 // import store from '@/store'
 // import { getToken } from '@/utils/auth'
-const baseURL = window.APP_CONFIG.BASE_URL || process.env.VUE_APP_BASE_API
+const baseURL = process.env.VUE_APP_BASE_API || window.APP_CONFIG.BASE_URL
+// const baseURL = process.env.VUE_APP_BASE_API
 
 // create an axios instance
 const service = axios.create({

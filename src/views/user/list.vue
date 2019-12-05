@@ -30,12 +30,12 @@
       :th-data="thData"
       :table-operation="tableOperation"
       :total="totalNumber"
-      @click="changeUserRole"
       @cell-click="toUserDetail"
       @pagination="changePage"
+      @handleClick="chooseOperation"
     />
-    <el-dialog title="新增用户" :visible.sync="dialogVisible" width="508px" class="add-user-modal">
-      <el-form ref="addUserModal" :model="form" :rules="userForm">
+    <el-dialog title="新增用户" :visible.sync="dialogVisible" width="508px" class="add-user-modal" :close-on-click-modal="false">
+      <el-form ref="addUserModal" :model="addUserForm" :rules="userForm">
         <el-form-item label="头像">
           <span v-if="userLogoInfo" class="school-head">
             <img :src="userLogoInfo">
@@ -45,25 +45,25 @@
           </div>
         </el-form-item>
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username" autocomplete="off" placeholder="请输入" />
+          <el-input v-model="addUserForm.username" autocomplete="off" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" autocomplete="off" placeholder="请输入" />
+          <el-input v-model="addUserForm.password" autocomplete="off" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="form.email" autocomplete="off" placeholder="请输入" />
+          <el-input v-model="addUserForm.email" autocomplete="off" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="手机号" prop="phoneNumber">
-          <el-input v-model="form.phoneNumber" autocomplete="off" placeholder="请输入" />
+          <el-input v-model="addUserForm.phoneNumber" type="tel" autocomplete="off" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="角色" prop="roleCode">
-          <el-select v-model="form.roleCode" placeholder="请选择角色">
+          <el-select v-model="addUserForm.roleCode" placeholder="请选择角色">
             <el-option v-for="(r, ind) in roleListData" :key="ind + 'new'" :label="r.roleName" :value="r.roleCode" />
           </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="submit-data-btn" @click="submitAddForm('addUserModal')">确 定</el-button>
+        <el-button type="primary" class="submit-data-btn" @click="submitAddForm">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -71,16 +71,17 @@
       :visible.sync="changeRoleVisible"
       width="508px"
       class="change-user-role"
+      :close-on-click-modal="false"
     >
-      <el-form :model="form">
+      <el-form :model="roleForm">
         <el-form-item label="用户ID">
-          <el-input v-model="form.id" autocomplete="off" />
+          <el-input v-model="roleForm.id" autocomplete="off" disabled />
         </el-form-item>
         <el-form-item label="用户名">
-          <el-input v-model="form.username" autocomplete="off" />
+          <el-input v-model="roleForm.username" autocomplete="off" disabled />
         </el-form-item>
         <el-form-item label="角色">
-          <el-select v-model="ruleForm.roleCode" placeholder="请选择角色" class="user-role">
+          <el-select v-model="roleForm.roleCode" placeholder="请选择角色" class="user-role">
             <el-option v-for="(r, ind) in roleListData" :key="ind + 'edit'" :label="r.roleName" :value="r.roleCode" />
           </el-select>
         </el-form-item>
@@ -94,14 +95,38 @@
 <script>
 import tableComponents from '@/components/tableComponents'
 import UploadPicBtn from '@/components/UploadPictureBtn'
-import { userList, addUser, roleList } from '@/api/index'
-import { AlertBox } from '@/utils/util.js'
+import { userList, addUser, roleList, changeUserRole } from '@/api/index'
+import { validUsername, validPhone } from '@/utils/validate.js'
+import { AlertBox, dateTimeStr } from '@/utils/util'
+// import { ElStep } from 'element-ui/types/step'
 export default {
   components: {
     tableComponents,
     UploadPicBtn
   },
   data() {
+    const vaildName = (rule, value, callback) => {
+      if (value !== '') {
+        if (validUsername(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确格式的用户名'))
+        }
+      } else {
+        callback()
+      }
+    }
+    const vaildPhone = (rule, value, callback) => {
+      if (value !== '') {
+        if (validPhone(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确格式的手机号码'))
+        }
+      } else {
+        callback()
+      }
+    }
     return {
       tableOperation: [{ name: '更换角色' }],
       dialogVisible: false,
@@ -117,7 +142,7 @@ export default {
         roleCode: '',
         username: ''
       },
-      form: {
+      addUserForm: {
         email: '',
         password: '',
         phoneNumber: '',
@@ -125,10 +150,17 @@ export default {
         username: ''
       },
       roleListData: [], // 角色列表
+      roleForm: {
+        id: '',
+        username: '',
+        roleCode: ''
+      }, // 更换角色
       userForm: {
         password: [{ required: true, min: 8, message: '请输入至少8位数的密码', trigger: 'blur' }],
-        email: [{ type: 'email', required: true, message: '请输入正确格式的密码', trigger: 'blur' }],
-        roleCode: [{ required: true, message: '请选择用户角色', trigger: 'change' }]
+        email: [{ type: 'email', required: true, message: '请输入正确格式的邮箱，如：xxx@qq.com', trigger: 'blur' }],
+        roleCode: [{ required: true, message: '请选择用户角色', trigger: 'change' }],
+        phoneNumber: [{ required: true, message: '请输入正确格式的手机号码', trigger: 'blur', validator: vaildPhone }],
+        username: [{ required: false, message: '用户名请输入汉字、字母、数字，下划线', trigger: 'blur', validator: vaildName }]
       },
       thData: [
         { name: '用户ID', indexs: 'id' },
@@ -136,7 +168,8 @@ export default {
         { name: '手机号', indexs: 'phoneNumber' },
         { name: '邮箱', indexs: 'email' },
         { name: '注册时间', indexs: 'createTime' },
-        { name: '角色', indexs: 'roleName' }
+        { name: '角色', indexs: 'roleName' },
+        { name: '操作', indexs: 'operation' }
       ],
       tableData: []
     }
@@ -146,17 +179,24 @@ export default {
     this.getRoleList()
   },
   methods: {
+    chooseOperation(type, data) {
+      this.changeRoleVisible = true
+      this.dialogVisible = false
+      this.roleForm = {
+        id: data.id,
+        username: data.username,
+        roleCode: data.roleCode.value
+      }
+    },
     submitAddForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.form.userLogoInfo = this.userLogoInfo || ''
-          addUser(this.form).then(res => {
+      this.$refs['addUserModal'].validate((vaild) => {
+        if (vaild) {
+          this.addUserForm.userLogoInfo = this.userLogoInfo || ''
+          addUser(this.addUserForm).then(res => {
             AlertBox('success', res.message)
             this.dialogVisible = false
             this.getUserList()
           })
-        } else {
-          return false
         }
       })
     },
@@ -167,13 +207,16 @@ export default {
     },
     addUser() {
       this.dialogVisible = true
-    },
-    changeUserRole(data) {
-      this.changeRoleVisible = true
-      this.dialogVisible = false
+      setTimeout(() => {
+        this.$refs['addUserModal'].resetFields()
+      }, 5)
     },
     submitChangeRoleInfo() {
       this.changeRoleVisible = false
+      changeUserRole({ id: this.roleForm.id, roleCode: this.roleForm.roleCode }).then(res => {
+        AlertBox('success', '更改成功')
+        this.getUserList()
+      })
     },
     toUserDetail(row, column, cell, event) {
       if (column.label === '用户ID') {
@@ -184,6 +227,11 @@ export default {
       this.ruleForm.page = this.page
       this.ruleForm.pageSize = this.pageSize
       userList(this.ruleForm).then(res => {
+        res.data.forEach(list => {
+          list.createTime = dateTimeStr(list.createTime)
+          list.roleName = list.roleCode.value
+          list.operation = [{ name: '更换角色', clickEvent: 'changeRole' }]
+        })
         this.tableData = res.data
         this.totalNumber = res.total
       })
