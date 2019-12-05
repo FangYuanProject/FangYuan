@@ -83,11 +83,10 @@
           <el-input v-model="modalForm.testName" autocomplete="off" />
         </el-form-item>
         <el-form-item label="试题描述" prop="describe">
-          <el-input v-model="modalForm.describe" type="textarea" autocomplete="off" rows="5" />
+          <el-input v-model="modalForm.describe" maxlength="120" type="textarea" autocomplete="off" rows="5" />
         </el-form-item>
         <el-form-item label="学校" prop="university">
-          <el-select v-model="modalForm.university" filterable placeholder="请选择" :remote-method="remoteMethodSchool" @change="selectSchoolModal">
-            <el-option label="请选择" value="" />
+          <el-select v-model="modalForm.university" filterable placeholder="请选择" @change="selectSchoolModal">
             <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityName" />
           </el-select>
         </el-form-item>
@@ -202,16 +201,16 @@ export default {
       }, // 走接口的select框值
       uploadTime: '', // 处理查询上传时间格式
       modalForm: {
-        majorName: '',
+        major: '',
         questionHash: '',
-        collegeName: '',
+        college: '',
         collegeId: '',
         majorId: '',
         describe: '',
         subject: '',
         testName: '',
         type: '',
-        universityName: '',
+        university: '',
         year: '',
         answerId: '',
         answerHash: '',
@@ -344,24 +343,35 @@ export default {
       this.findCollegeItem = []
       this.findSchoolItem = []
       this.findMajorItem = []
+      this.getTestList()
     },
     submitForm(formName, type) {
+      if (this.modalForm.collegeId) {
+        this.modalForm.college = this.findCollegeItemModal[0].collegeName
+      }
+      if (this.modalForm.majorId) {
+        this.modalForm.major = this.findMajorItemModal[0].majorName
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          // 处理数据格式
+          const modalData = { ...this.modalForm }
+          delete modalData.collegeId
+          delete modalData.majorId
           if (type === 'save') {
-            addTest(this.modalForm).then(res => {
+            addTest(modalData).then(res => {
               this.dialogVisible = false
               AlertBox('success', '保存成功')
               this.getTestList()
             })
           } else if (type === 'publish') {
-            publishTest(this.modalForm).then(res => {
+            publishTest(modalData).then(res => {
               this.dialogVisible = false
               AlertBox('success', '发布成功')
               this.getTestList()
             })
           } else if (type === 'update') {
-            editTest(this.modalForm).then(res => {
+            editTest(modalData).then(res => {
               this.dialogVisible = false
               AlertBox('success', '发布成功')
               this.getTestList()
@@ -379,6 +389,9 @@ export default {
       this.modalTitle = '新建试题'
       setTimeout(() => {
         this.$refs['modalForm'].resetFields()
+        this.findCollegeItemModal = []
+        this.findMajorItemModal = []
+        this.findSchoolItemModal = []
       }, 10)
     },
     delDocument() {
