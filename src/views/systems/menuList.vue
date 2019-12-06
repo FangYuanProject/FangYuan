@@ -17,6 +17,7 @@
         </el-form-item>
         <el-form-item label="上级菜单" class="active-origin" prop="superiorId">
           <el-select v-model="form.superiorId" placeholder="请选择" class="menu-sort" @change="changeSuperior">
+            <el-option label="请选择" value="" />
             <el-option v-for="(item,index) in formMenuList" :key="item+index" :label="item.menuName" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -134,13 +135,20 @@ export default {
       }
     },
     changeSuperior() {
-      this.tableData.forEach(list => {
-        if (this.form.superiorId === list.id) {
-          this.form.superiorName = list.menuName
-        }
-      })
+      if (this.form.superiorId === '') {
+        this.form.superiorName = ''
+      } else {
+        this.tableData.forEach(list => {
+          if (this.form.superiorId === list.id) {
+            this.form.superiorName = list.menuName
+          }
+        })
+      }
     },
     editRole(type, data) {
+      setTimeout(() => {
+        this.$refs['menuModal'].resetFields()
+      }, 1)
       if (type === 'delete') {
         this.deleteMenus(data)
       } else {

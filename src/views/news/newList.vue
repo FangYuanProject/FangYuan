@@ -127,9 +127,11 @@ export default {
     },
     getNewsOptions() {
       newsType().then(res => {
+        res.data.unshift({ value: '请选择', key: '' })
         this.newsTypeOptions = res.data
       })
       newsStatus().then(res => {
+        res.data.unshift({ value: '请选择', key: '' })
         this.newsStatusOptions = res.data
       })
     },

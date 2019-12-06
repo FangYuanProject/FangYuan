@@ -10,13 +10,11 @@
       </el-form-item>
       <el-form-item label="商品类型" prop="type">
         <el-select v-model="ruleForm.type" placeholder="请选择">
-          <el-option label="请选择" value="" />
           <el-option v-for="(item,index) in typeOptions" :key="index" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
       <el-form-item label="商品状态" prop="status">
         <el-select v-model="ruleForm.status" placeholder="请选择">
-          <el-option label="请选择" value="" />
           <el-option v-for="(item,index) in statusOptions" :key="index+item" :label="item.value" :value="item.key" />
         </el-select>
       </el-form-item>
@@ -41,7 +39,6 @@
       <el-form ref="courseModal" :model="editForm" :rules="validForms">
         <el-form-item label="商品类型" prop="type">
           <el-select v-model="editForm.type" placeholder="请选择">
-            <el-option label="请选择" value="" />
             <el-option v-for="(item,index) in typeOptions" :key="index" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
@@ -164,7 +161,11 @@ export default {
     },
     AddCourse() {
       this.dialogVisible = true
-      this.$refs['courseModal'].resetFields()
+      this.dialogTitle = '新增商品'
+      this.status = ''
+      setTimeout(() => {
+        this.$refs['courseModal'].resetFields()
+      }, 10)
     },
     // 课程列表
     getCourseList() {
@@ -238,10 +239,12 @@ export default {
       // 在弹窗中下架需验证参数
       if (this.goodsId) {
         vaildForm(this.$refs['courseModal']).then(res => {
-          unshelveGoods({ goodsId: id }).then(res => {
-            AlertBox('success', '下架成功')
-            this.getCourseList()
-          })
+          if (res) {
+            unshelveGoods({ goodsId: id }).then(res => {
+              AlertBox('success', '下架成功')
+              this.getCourseList()
+            })
+          }
         })
       } else {
         unshelveGoods({ goodsId: id }).then(res => {
@@ -262,6 +265,8 @@ export default {
         this.dialogTitle = '编辑商品'
         this.goodsId = row.id
         this.status = row.status
+        this.$refs['courseModal'].resetFields()
+
         goodsDetail({ goodsId: row.id }).then(res => {
           this.editForm = {
             content: res.data.content,
@@ -283,9 +288,11 @@ export default {
     },
     getCourseOptions() {
       goodsType().then(res => {
+        res.data.unshift({ value: '请选择', key: '' })
         this.typeOptions = res.data
       })
       goodsStatus().then(res => {
+        res.data.unshift({ value: '请选择', key: '' })
         this.statusOptions = res.data
       })
     },

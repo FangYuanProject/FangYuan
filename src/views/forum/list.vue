@@ -3,7 +3,7 @@
     <h2 class="title">论坛列表</h2>
     <el-form ref="ruleForm" :model="searchForm" label-width="70px" inline class="list-ruleForm">
       <el-form-item label="帖子ID" prop="id">
-        <el-input v-model="searchForm.id" />
+        <el-input v-model="searchForm.id" @input="change($event)" />
       </el-form-item>
       <el-form-item label="帖子类型" prop="type">
         <el-select v-model="searchForm.type" placeholder="请选择">
@@ -11,10 +11,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="帖子标题" prop="title">
-        <el-input v-model="searchForm.title" />
+        <el-input v-model="searchForm.title" @input="change($event)" />
       </el-form-item>
       <el-form-item label="创建人" prop="createName">
-        <el-input v-model="searchForm.createName" />
+        <el-input v-model="searchForm.createName" @input="change($event)" />
       </el-form-item>
       <el-form-item label="上传时间" prop="uploadTime">
         <el-date-picker
@@ -64,22 +64,22 @@
           保存
         </el-button>
         <div v-if="btnStatus==='发布中'" style="display: inline-block;">
-           <el-button  type="primary" class="submit-data-btn" @click="cancelSetTop('publishForm',2005)">
-              置顶
+          <el-button type="primary" class="submit-data-btn" @click="cancelSetTop('publishForm',2005)">
+            置顶
           </el-button>
-           <el-button type="primary" class="submit-data-btn" @click="comfirmOutSell('publishForm')">确认下架</el-button>
+          <el-button type="primary" class="submit-data-btn" @click="comfirmOutSell('publishForm')">确认下架</el-button>
         </div>
-        <div v-else-if="btnStatus==='置顶'"  style="display: inline-block;">
-            <el-button  type="primary" class="submit-data-btn" @click="cancelSetTop('publishForm',2002)">
-              取消置顶
-            </el-button>
+        <div v-else-if="btnStatus==='置顶'" style="display: inline-block;">
+          <el-button type="primary" class="submit-data-btn" @click="cancelSetTop('publishForm',2002)">
+            取消置顶
+          </el-button>
         </div>
-        <div v-else  style="display: inline-block;">
-        <el-button v-if="btnStatus===''" type="primary" class="submit-data-btn" @click="submitForm('publishForm','publish')">
-          <span class="iconfont iconfabu">&nbsp;发布</span>
-        </el-button>
+        <div v-else style="display: inline-block;">
+          <el-button v-if="btnStatus===''" type="primary" class="submit-data-btn" @click="submitForm('publishForm','publish')">
+            <span class="iconfont iconfabu">&nbsp;发布</span>
+          </el-button>
         </div>
-        
+
       </span>
     </el-dialog>
     <el-dialog :title="outSellDialogTitle" :visible.sync="outSellDialogVisible" width="508px" class="out-sell-modal" :close-on-click-modal="false" @close="closeModal">
@@ -146,7 +146,7 @@ export default {
       uploadTime: '', // 处理查询的时间插件
       publishForm: {
         title: '',
-        type:'',
+        type: '',
         content: '',
         id: ''
       },
@@ -175,7 +175,7 @@ export default {
       forumTypeOption: [],
       statusOptions: [],
       isDisabled: false,
-      btnStatus:'' //根据状态判断弹窗的操作按钮
+      btnStatus: '' // 根据状态判断弹窗的操作按钮
     }
   },
   mounted() {
@@ -185,6 +185,9 @@ export default {
   methods: {
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    change(event) {
+      this.$forceUpdate()
     },
     submitForm(formName, type) {
       vaildForm(this.$refs[formName]).then(res => {
@@ -210,9 +213,9 @@ export default {
       }
     },
     publishForum(id, type) {
-      //根据弹窗类型判断是否发布
-      const params =  this.publishForm.type ? this.publishForm : { id: this.outSellForm.id || id }
-      if (this.publishForm.type!=='') {
+      // 根据弹窗类型判断是否发布
+      const params = this.publishForm.type ? this.publishForm : { id: this.outSellForm.id || id }
+      if (this.publishForm.type !== '') {
         vaildForm(this.$refs['publishForm']).then(res => {
           if (res) {
             publishForum(params).then(res => {
@@ -262,9 +265,9 @@ export default {
       this.publishDialogTitle = '发布帖子'
       this.status = 'add'
       this.btnStatus = ''
-      setTimeout(()=>{
+      setTimeout(() => {
         this.resetForm('publishForm')
-      },10)
+      }, 10)
     },
     editForum(row, colum) {
       this.forumId = row.id
@@ -276,16 +279,16 @@ export default {
       }
     },
     formumDetail(id, type) {
-      forumDeatil({ id: id }).then(res => { 
+      forumDeatil({ id: id }).then(res => {
         if (type) {
           this.publishForm.title = res.data.title
-          this.publishForm.type = res.data.type
+          this.publishForm.type = res.data.type.key
           this.publishForm.content = res.data.content
           this.publishForm.id = res.data.id
         } else {
           this.outSellForm = {
             id: id,
-            type: res.data.type,
+            type: res.data.type.key,
             title: res.data.title,
             reason: res.data.reason
           }
@@ -336,9 +339,11 @@ export default {
     },
     getForumType() {
       forumType().then(res => {
+        res.data.unshift({ value: '请选择', key: '' })
         this.forumTypeOption = res.data
       })
       forumStatus().then(res => {
+        res.data.unshift({ value: '请选择', key: '' })
         this.statusOptions = res.data
       })
     },
@@ -366,13 +371,13 @@ export default {
         this.formumDetail(data.id)
       }
     },
-    cancelSetTop(formName,operation){
-      vaildForm(this.$refs[formName]).then((res)=>{
-        if(res){
+    cancelSetTop(formName, operation) {
+      vaildForm(this.$refs[formName]).then((res) => {
+        if (res) {
           setTopForum({ id: this.publishForm.id, operation: operation }).then(res => {
-          AlertBox('success', '取消成功')
-          this.getForumList()
-        })
+            AlertBox('success', '取消成功')
+            this.getForumList()
+          })
         }
       })
     }

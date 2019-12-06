@@ -100,7 +100,7 @@ export const messageFeedBack = data => axios.post('/feedback/message', clearNull
 // 菜单列表
 export const menuList = data => axios.post('/menu/list', clearNullValue(data))
 // 编辑菜单
-export const editMenu = data => axios.post('/menu/edit', clearNullValue(data))
+export const editMenu = data => axios.post('/menu/edit', data)
 // 新增菜单
 export const addMenu = data => axios.post('/menu/add', clearNullValue(data))
 // 删除菜单

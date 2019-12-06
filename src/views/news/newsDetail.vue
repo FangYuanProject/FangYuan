@@ -2,11 +2,11 @@
   <div class="news-detail">
     <div class="title">
       <span v-if="params.id===''">新建新闻</span>
-      <span v-else>编辑新闻</span>
+      <span v-else>编辑新闻{{ params.status }}</span>
       <div>
         <div v-if="params.id!==''&&params.status===2003">
-           <button type="primary" class="del-news" @click="delOffNews('del')">删除</button>
-           <button type="primary" class="publish-news" @click="saveNewsEvent('publish')"><span class="iconfont iconfabu" />&nbsp;发布</button>
+          <button type="primary" class="del-news" @click="delOffNews('del')">删除</button>
+          <button type="primary" class="publish-news" @click="saveNewsEvent('publish')"><span class="iconfont iconfabu" />&nbsp;发布</button>
         </div>
         <div v-else-if="params.id!==''&&params.status===2002">
           <button type="primary" class="save-news" @click="saveNewsEvent('edit')">更新</button>
@@ -67,7 +67,7 @@ export default {
         title: '',
         type: '',
         id: this.$route.query.id ? this.$route.query.id : '',
-        status:''
+        status: ''
       },
       newsContent: {
         content: [{ required: true, message: '请输入新闻内容', trigger: 'blur', max: '256' }],
@@ -92,9 +92,9 @@ export default {
   },
   methods: {
     saveNewsEvent(type) {
-      delete this.params.status
       vaildForm(this.$refs['newsContent']).then(res => {
         if (res) {
+          delete this.params.status
           if (type === 'save') {
             saveNews(this.params).then(res => {
               AlertBox('success', '保存成功')
@@ -122,17 +122,17 @@ export default {
         }
       })
     },
-    clickToolbar() {
-
-    },
     getNewsType() {
       newsType().then(res => {
+        res.data.unshift({ value: '请选择', key: '' })
         this.newsTypeOptions = res.data
       })
     },
+    clickToolbar() {},
     getSchoolList(query) {
       this.searchSchoolParam.universityName = query || ''
       schoolCorrelation(this.searchSchoolParam).then(res => {
+        res.data.unshift({ universityName: '请选择', universityId: '' })
         this.schoolOptions = res.data
       })
     },
@@ -145,7 +145,7 @@ export default {
           title: res.data.title,
           type: res.data.type.key,
           id: res.data.id,
-          status:res.data.status.key
+          status: res.data.status.key
         }
       })
     },
