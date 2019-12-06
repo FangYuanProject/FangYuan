@@ -18,12 +18,12 @@
           <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityName" />
         </el-select>
       </el-form-item>
-      <el-form-item label="学院" prop="collegeId">
+      <el-form-item label="学院">
         <el-select v-model="searchForm.collegeId" placeholder="请选择" @change="selectCollege">
           <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.collegeId" />
         </el-select>
       </el-form-item>
-      <el-form-item label="专业" prop="majorId">
+      <el-form-item label="专业">
         <el-select v-model="searchForm.majorId" placeholder="请选择" @change="forceUpdateMajor">
           <el-option v-for="(item,index) in searchOptions.majorOptions" :key="item+index" :label="item.majorName" :value="item.majorId" />
         </el-select>
@@ -71,7 +71,6 @@
       <el-form ref="modalForm" :model="modalForm" :rules="ruleForm">
         <el-form-item label="试题类型" prop="type">
           <el-select v-model="modalForm.type" placeholder="请选择" class="modal-select">
-            <el-option label="请选择" value="" />
             <el-option v-for="(item,index) in searchOptions.typeOptions" :key="item+index+10" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
@@ -81,20 +80,18 @@
         <el-form-item label="试题描述" prop="describe">
           <el-input v-model="modalForm.describe" maxlength="120" type="textarea" autocomplete="off" rows="5" />
         </el-form-item>
-        <el-form-item v-show="modalForm.type === 4001" label="学校" prop="university">
+        <el-form-item v-if="modalForm.type === 4001" label="学校" prop="university">
           <el-select v-model="modalForm.university" filterable placeholder="请选择" @change="selectSchoolModal">
             <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityName" />
           </el-select>
         </el-form-item>
-        <el-form-item v-show="modalForm.type === 4001" label="学院" prop="collegeId">
+        <el-form-item v-if="modalForm.type === 4001" label="学院" prop="collegeId">
           <el-select v-model="modalForm.collegeId" placeholder="请选择" @change="selectCollegeModal">
-            <el-option label="请选择" value="" />
             <el-option v-for="(item,index) in searchOptions.modalColleges" :key="item+index" :label="item.collegeName" :value="item.collegeId" />
           </el-select>
         </el-form-item>
-        <el-form-item v-show="modalForm.type === 4001" label="专业" prop="majorId">
+        <el-form-item v-if="modalForm.type === 4001" label="专业" prop="majorId">
           <el-select v-model="modalForm.majorId" placeholder="请选择" @change="forceUpdateMajorModal">
-            <el-option label="请选择" value="" />
             <el-option v-for="(item,index) in searchOptions.modalMajorOptions" :key="item+index" :label="item.majorName" :value="item.majorId" />
           </el-select>
         </el-form-item>
@@ -293,6 +290,7 @@ export default {
         collegeList({ universityCode: this.findSchoolItem[0].universityCode }).then(res => {
           res.data.unshift({ collegeName: '请选择', collegeId: '' })
           this.searchOptions.colleges = res.data
+          this.searchOptions.majorOptions = []
           this.searchForm.collegeId = ''
           this.searchForm.majorId = ''
           this.findCollegeItem = []
@@ -317,8 +315,8 @@ export default {
       this.findSchoolModal(data)
       setTimeout(() => {
         collegeList({ universityCode: this.findSchoolItemModal[0].universityCode }).then(res => {
-          res.data.unshift({ collegeName: '请选择', collegeId: '' })
           this.searchOptions.modalColleges = res.data
+          this.searchOptions.modalMajorOptions = []
           this.modalForm.collegeId = ''
           this.modalForm.majorId = ''
           this.findCollegeItemModal = []
@@ -331,7 +329,6 @@ export default {
       this.findCollegeModal(data)
       setTimeout(() => {
         majorList({ collegeId: this.findCollegeItemModal[0].collegeId, universityId: this.findSchoolItemModal[0].universityId }).then(res => {
-          res.data.unshift({ majorName: '请选择', majorId: '' })
           this.searchOptions.modalMajorOptions = res.data
           this.modalForm.majorId = ''
           this.findMajorItemModal = []
@@ -375,12 +372,18 @@ export default {
       } else {
         this.modalForm.major = ''
       }
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 处理数据格式
           const modalData = { ...this.modalForm }
           delete modalData.collegeId
           delete modalData.majorId
+          if (this.modalForm.type !== 4001) {
+            delete modalData.university
+            delete modalData.college
+            delete modalData.major
+          }
           if (type === 'save') {
             addTest(modalData).then(res => {
               this.dialogVisible = false
@@ -465,16 +468,16 @@ export default {
         this.status = 'edit'
         this.modalTitle = '编辑试题'
         testDetail({ id: row.id }).then(res => {
-          this.universityId = Number(res.data.university)
+          // this.universityId = res.data.university
           this.modalForm = {
-            major: Number(res.data.major),
+            major: res.data.majorName,
             questionHash: res.data.questionHash,
-            college: Number(res.data.college),
-            describe: '',
+            college: res.data.collegeName,
+            describe: res.data.describe,
             subject: res.data.subject,
             testName: res.data.testName,
             type: res.data.type.key,
-            university: Number(res.data.university),
+            university: res.data.universityName,
             year: res.data.year,
             answerId: res.data.answerId,
             answerHash: res.data.answerHash,
@@ -483,8 +486,11 @@ export default {
             questionName: res.data.questionName,
             id: row.id
           }
-          this.selectSchool(Number(res.data.university))
-          this.selectCollege(Number(res.data.college))
+          if (res.data.type.key === 4001) {
+            this.selectSchoolModal(res.data.universityName)
+            this.selectCollegeModal(res.data.collegeName)
+            // this.selectMajorModal(res.data.majorName)
+          }
         })
       }
     },
