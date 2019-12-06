@@ -1,6 +1,7 @@
 <template>
   <div class="upload-pic-btn">
     <el-upload
+      ref="upload"
       class="upload-demo"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
@@ -51,6 +52,7 @@ export default {
       console.log(file, fileList)
     },
     handleUploadSuccess(file) {
+      this.$refs.upload.clearFiles()
       this.$emit('getUrlSuccess', file)
     }
   }

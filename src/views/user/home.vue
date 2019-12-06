@@ -114,8 +114,10 @@ export default {
     }
   },
   mounted() {
-    this.getUserInfo()
-    this.getCollectNews()
+    if (this.$route.query.id) {
+      this.getUserInfo()
+      this.getCollectNews()
+    }
   },
   methods: {
     changeTab(index, tabName) {

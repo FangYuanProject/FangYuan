@@ -154,8 +154,8 @@ export default {
       this.$emit('handleClick', type, data)
     },
     calcWordLen(str) {
-      if (str.length > 10) {
-        return str.substring(0, 9) + '...'
+      if (str && str.length > 20) {
+        return str.substring(0, 19) + '...'
       } else {
         return str
       }
