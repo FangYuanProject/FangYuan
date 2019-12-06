@@ -6,7 +6,7 @@
           <span v-if="item.indexs==='operation'">
             <a v-for="(tab,num) in scope.row['operation']" :key="num+10" class="tab-margin" @click="chooseTab(tab.clickEvent,scope.row)">{{ tab.name }}</a>
           </span>
-          <span v-else v-html="scope.row[item.indexs]"></span>
+          <span v-else v-html="calcWordLen(scope.row[item.indexs])" />
         </template>
       </el-table-column>
     </el-table>
@@ -152,6 +152,13 @@ export default {
     },
     chooseTab(type, data) {
       this.$emit('handleClick', type, data)
+    },
+    calcWordLen(str) {
+      if (str.length > 10) {
+        return str.substring(0, 9) + '...'
+      } else {
+        return str
+      }
     }
   }
 }

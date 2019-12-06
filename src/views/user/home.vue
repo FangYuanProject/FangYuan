@@ -5,14 +5,13 @@
       <div class="top">
         <div class="change-user-head">
           <span class="user-head">
-            <img src="@/assets/user-head-default.png" alt="">
+            <img :src="headChat ? headChat : require('@/assets/user-head-default.png')" alt="">
           </span>
-          <el-button type="primary" class="change-user-photo">更换头像</el-button>
+          <upload-pic-btn btn-name="上传头像" @getUrlSuccess="getUrlSuccess" />
         </div>
         <div class="edit-user-info float-right">
           <p>
             <span class="user-name">{{ userName }}</span>
-            <span class="edit-user-btn" @click="editUserInfo">编辑资料</span>
           </p>
           <p v-for="(item,index) in textTab" :key="index">
             <span class="label-name">{{ userInfo[item][0].name }}</span>
@@ -33,6 +32,7 @@
         </div>
       </div>
     </div>
+    <!-- 收藏列表 -->
     <div class="float-right user-collect">
       <div class="tab">
         <ul>
@@ -70,8 +70,12 @@ import { userDetail, collectNews, collectSchool, collectExamList, collectPostLis
 import { AlertBox } from '@/utils/util'
 import Pagination from '@/components/Pagination'
 import Clipboard from 'clipboard'
+import UploadPicBtn from '@/components/UploadPictureBtn'
 export default {
-  components: { Pagination },
+  components: {
+    Pagination,
+    UploadPicBtn
+  },
   data() {
     return {
       userInfo: {
@@ -86,6 +90,7 @@ export default {
       isReadOnly: true,
       userName: '',
       point: 0,
+      headChat: '',
       referralCode: '',
       tabList: [
         { index: 'news', name: '新闻', icon: 'iconxinwen', collectNum: '2' },
@@ -136,6 +141,7 @@ export default {
         this.userName = res.data.username
         this.point = res.data.point
         this.referralCode = res.data.referralCode
+        this.headChat = res.data.chatHead
         for (const i in res.data) {
           if (this.userInfo[i]) {
             this.userInfo[i][0].text = res.data[i]
@@ -159,7 +165,7 @@ export default {
       })
     },
     editUserInfo() {
-      this.isReadOnly = false
+      this.dialogVisible = true
     },
     getCollectNews() {
       collectNews(this.tabListParams).then(res => {
@@ -184,6 +190,10 @@ export default {
     selectPage(pageData) {
       this.tabListParams.page = pageData.page
       this.tabListParams.pageSize = pageData.pageSize
+    },
+    getUrlSuccess(file) {
+      console.log(file)
+      this.headChat = file.data.path
     }
   }
 }
@@ -209,7 +219,7 @@ export default {
 }
 
 .top {
-  height: 315px;
+  height: 215px;
   border-bottom: 1px solid #ebeef5;
 }
 
@@ -256,6 +266,7 @@ export default {
       font-size: 14px;
       font-weight: 400;
       color: rgba(2, 102, 214, 1);
+      cursor: pointer;
     }
 
     .label-name {
@@ -398,25 +409,26 @@ export default {
 }
 </style>
 <style>
-.change-user-photo {
-  width: 87px;
-  height: 28px;
-  padding: 0;
-  line-height: 28px;
-  text-align: center;
-  background: rgba(69, 90, 100, 1);
-  border: 1px solid rgba(69, 90, 100, 1);
-  border-radius: 4px;
-}
+/* .change-user-photo {
+  width: 87px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  line-height: 28px !important;
+  text-align: center !important;
+  background: rgba(69, 90, 100, 1) !important;
+  border: 1px solid rgb(117, 186, 218) !important;
+  border-radius: 4px !important;
+} */
 
 .user-info .edit-user-info .el-input {
   width: 100px;
 }
 
-.user-home .el-input__inner {
+.top .user-home .el-input__inner {
   width: auto;
   background-color: transparent;
   border: none;
 }
+
 </style>
 
