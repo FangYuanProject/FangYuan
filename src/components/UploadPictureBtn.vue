@@ -2,6 +2,7 @@
   <div class="upload-pic-btn">
     <el-upload
       ref="upload"
+      :accept="accept"
       class="upload-demo"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
@@ -35,6 +36,10 @@ export default {
     uploadType: {
       type: String,
       default: 'PUBLIC'
+    },
+    accept: {
+      type: String,
+      default: 'image/png,image/jpg,image/jpeg'
     }
   },
   data() {

@@ -109,14 +109,14 @@
         <el-form-item label="上传试题" prop="questionName">
           <el-input v-model="modalForm.questionName" placeholder="支持扩展名pdf,jpg">
             <template slot="append">
-              <upload-pic-btn btn-name="上传" :upload-type="uploadType" @getUrlSuccess.native="uploadDocument" />
+              <upload-pic-btn btn-name="上传" :upload-type="uploadType" :accept="uploadAcceptType" @getUrlSuccess.native="uploadDocument" />
             </template>
           </el-input>
         </el-form-item>
         <el-form-item label="上传答案" prop="answerName">
           <el-input v-model="modalForm.answerName" placeholder="支持扩展名pdf,jpg">
             <template slot="append">
-              <upload-pic-btn btn-name="上传" :upload-type="uploadType" @getUrlSuccess.native="uploadDocumentAnswer" />
+              <upload-pic-btn btn-name="上传" :upload-type="uploadType" :accept="uploadAcceptType" @getUrlSuccess.native="uploadDocumentAnswer" />
             </template>
           </el-input>
         </el-form-item>
@@ -261,7 +261,8 @@ export default {
       findMajorItem: [], // 通过id传专业名字
       findSchoolItemModal: [], // modal通过学校编号查找学校信息
       findCollegeItemModal: [], // modal通过id查找学院信息
-      findMajorItemModal: [] // modal通过id传专业名字
+      findMajorItemModal: [], // modal通过id传专业名字
+      uploadAcceptType: 'file'
     }
   },
   mounted() {
