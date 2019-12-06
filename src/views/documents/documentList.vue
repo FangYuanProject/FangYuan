@@ -18,12 +18,12 @@
           <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityName" />
         </el-select>
       </el-form-item>
-      <el-form-item label="学院">
+      <el-form-item label="学院" prop="collegeId">
         <el-select v-model="searchForm.collegeId" placeholder="请选择" @change="selectCollege">
           <el-option v-for="(item,index) in searchOptions.colleges" :key="item+index" :label="item.collegeName" :value="item.collegeId" />
         </el-select>
       </el-form-item>
-      <el-form-item label="专业">
+      <el-form-item label="专业" prop="majorId">
         <el-select v-model="searchForm.majorId" placeholder="请选择" @change="forceUpdateMajor">
           <el-option v-for="(item,index) in searchOptions.majorOptions" :key="item+index" :label="item.majorName" :value="item.majorId" />
         </el-select>
@@ -326,14 +326,16 @@ export default {
     },
     selectCollegeModal(data) {
       this.$forceUpdate()
-      this.findCollegeModal(data)
-      setTimeout(() => {
-        majorList({ collegeId: this.findCollegeItemModal[0].collegeId, universityId: this.findSchoolItemModal[0].universityId }).then(res => {
-          this.searchOptions.modalMajorOptions = res.data
-          this.modalForm.majorId = ''
-          this.findMajorItemModal = []
-        })
-      }, 50)
+      if (this.searchOptions.modalColleges.length) {
+        this.findCollegeModal(data)
+        setTimeout(() => {
+          majorList({ collegeId: this.findCollegeItemModal[0].collegeId, universityId: this.findSchoolItemModal[0].universityId }).then(res => {
+            this.searchOptions.modalMajorOptions = res.data
+            this.modalForm.majorId = ''
+            this.findMajorItemModal = []
+          })
+        }, 50)
+      }
     },
     changePage(pageData) {
       this.searchForm.page = pageData.page
@@ -470,9 +472,9 @@ export default {
         testDetail({ id: row.id }).then(res => {
           // this.universityId = res.data.university
           this.modalForm = {
-            major: res.data.majorName,
+            // major: res.data.majorName,
             questionHash: res.data.questionHash,
-            college: res.data.collegeName,
+            // college: res.data.collegeName,
             describe: res.data.describe,
             subject: res.data.subject,
             testName: res.data.testName,
@@ -486,6 +488,12 @@ export default {
             questionName: res.data.questionName,
             id: row.id
           }
+          setTimeout(() => {
+            this.modalForm.college = res.data.collegeName
+          }, 50)
+          setTimeout(() => {
+            this.modalForm.major = res.data.majorName
+          }, 1050)
           if (res.data.type.key === 4001) {
             this.selectSchoolModal(res.data.universityName)
             this.selectCollegeModal(res.data.collegeName)
