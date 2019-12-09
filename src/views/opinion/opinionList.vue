@@ -27,15 +27,15 @@
 </template>
 <script>
 import tableComponents from '@/components/tableComponents'
-import AddMethodBtn from '@/components/AddMethodBtn'
-import SearchFormBtn from '@/components/SearchFormBtn'
-import { feedbackList, feedbackDetail, emailFeedback, messageFeedBack } from '@/api/index'
+// import AddMethodBtn from '@/components/AddMethodBtn'
+// import SearchFormBtn from '@/components/SearchFormBtn'
+import { feedbackList, emailFeedback, messageFeedBack } from '@/api/index' // feedbackDetail
 import { AlertBox, dateTimeStr } from '@/utils/util'
 export default {
   components: {
-    tableComponents,
-    AddMethodBtn,
-    SearchFormBtn
+    tableComponents
+    // AddMethodBtn,
+    // SearchFormBtn
   },
   data() {
     return {
@@ -44,7 +44,6 @@ export default {
         { name: '内容详情', indexs: 'content' },
         { name: '提交人', indexs: 'userName' },
         { name: '提交时间', indexs: 'createTimeStr' },
-        { name: '状态', indexs: 'statusStr' },
         { name: '操作', indexs: 'operation' }
       ],
       tableData: [],
@@ -136,7 +135,9 @@ export default {
               { name: '邮件回复', clickEvent: 'emailReply' }
             ]
           } else {
-            list.operation = []
+            list.operation = [
+              { name: '<span style="cursor:default;color:#606266;">已回复</span>', clickEvent: 'none' }
+            ]
           }
         })
         this.tableData = res.data

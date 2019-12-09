@@ -4,7 +4,7 @@
       <el-table-column v-for="(item,index) in thData" :key="index" :label="item.name" :prop="item.indexs" align="center">
         <template slot-scope="scope">
           <span v-if="item.indexs==='operation'">
-            <a v-for="(tab,num) in scope.row['operation']" :key="num+10" class="tab-margin" @click="chooseTab(tab.clickEvent,scope.row)">{{ tab.name }}</a>
+            <a v-for="(tab,num) in scope.row['operation']" :key="num+10" class="tab-margin" @click="chooseTab(tab.clickEvent,scope.row)" v-html="tab.name"></a>
           </span>
           <span v-else v-html="calcWordLen(scope.row[item.indexs])" />
         </template>

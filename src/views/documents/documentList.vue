@@ -82,17 +82,17 @@
         </el-form-item>
         <el-form-item v-if="modalForm.type === 4001" label="学校" prop="university">
           <el-select v-model="modalForm.university" filterable placeholder="请选择" @change="selectSchoolModal">
-            <el-option v-for="(item,index) in searchOptions.university" :key="item+index" :label="item.universityName" :value="item.universityName" />
+            <el-option v-for="(item,index) in searchOptions.modalUniversity" :key="item+index" :label="item.universityName" :value="item.universityName" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="modalForm.type === 4001" label="学院" prop="collegeId">
-          <el-select v-model="modalForm.collegeId" placeholder="请选择" @change="selectCollegeModal">
-            <el-option v-for="(item,index) in searchOptions.modalColleges" :key="item+index" :label="item.collegeName" :value="item.collegeId" />
+        <el-form-item v-if="modalForm.type === 4001" label="学院" prop="collegeName">
+          <el-select v-model="modalForm.collegeName" placeholder="请选择" @change="selectCollegeModal" ref="modalCollege">
+            <el-option v-for="(item,index) in searchOptions.modalColleges" :key="item+index" :label="item.collegeName" :value="item.collegeName" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="modalForm.type === 4001" label="专业" prop="majorId">
-          <el-select v-model="modalForm.majorId" placeholder="请选择" @change="forceUpdateMajorModal">
-            <el-option v-for="(item,index) in searchOptions.modalMajorOptions" :key="item+index" :label="item.majorName" :value="item.majorId" />
+        <el-form-item v-if="modalForm.type === 4001" label="专业" prop="majorName">
+          <el-select v-model="modalForm.majorName" placeholder="请选择" @change="forceUpdateMajorModal">
+            <el-option v-for="(item,index) in searchOptions.modalMajorOptions" :key="item+index" :label="item.majorName" :value="item.majorName" />
           </el-select>
         </el-form-item>
         <el-form-item label="科目" prop="subject">
@@ -185,7 +185,7 @@ export default {
         university: [],
         colleges: [],
         // 避免查询数据相互影响，增加mdoal学校，学院字段
-        modalUniverity: [],
+        modalUniversity: [],
         modalColleges: [],
         modalMajorOptions: [],
         statusOptions: [],
@@ -194,11 +194,9 @@ export default {
       }, // 走接口的select框值
       uploadTime: '', // 处理查询上传时间格式
       modalForm: {
-        major: '',
+        majorName: '',
         questionHash: '',
-        college: '',
-        collegeId: '',
-        majorId: '',
+        collegeName: '',
         describe: '',
         subject: '',
         testName: '',
@@ -219,10 +217,10 @@ export default {
         university: [
           { required: true, message: '请选择学校', trigger: 'change' }
         ],
-        collegeId: [
+        collegeName: [
           { required: true, message: '请选择学院', trigger: 'change' }
         ],
-        majorId: [
+        majorName: [
           { required: true, message: '请选择专业', trigger: 'change' }
         ],
         subject: [
@@ -311,29 +309,47 @@ export default {
         })
       }, 50)
     },
-    selectSchoolModal(data) {
+    selectSchoolModal(data, ifChange) {
       this.$forceUpdate()
       this.findSchoolModal(data)
       setTimeout(() => {
         collegeList({ universityCode: this.findSchoolItemModal[0].universityCode }).then(res => {
           this.searchOptions.modalColleges = res.data
           this.searchOptions.modalMajorOptions = []
-          this.modalForm.collegeId = ''
-          this.modalForm.majorId = ''
           this.findCollegeItemModal = []
           this.findMajorItemModal = []
+          // 一下为编辑时初始化显示数据
+          if (this.status === 'edit' && ifChange) {
+            // this.searchOptions.modalColleges.forEach(list => {
+            //   if (list.collegeName === this.modalForm.collegeName) {
+            //     this.modalForm.collegeName = list.collegeName
+            //   }
+            // })
+            this.selectCollegeModal(this.modalForm.collegeName, true)
+          } else {
+            this.modalForm.collegeName = ''
+            this.modalForm.majorName = ''
+          }
         })
       }, 50)
     },
-    selectCollegeModal(data) {
+    selectCollegeModal(data, ifChange) {
       this.$forceUpdate()
       if (this.searchOptions.modalColleges.length) {
         this.findCollegeModal(data)
         setTimeout(() => {
           majorList({ collegeId: this.findCollegeItemModal[0].collegeId, universityId: this.findSchoolItemModal[0].universityId }).then(res => {
             this.searchOptions.modalMajorOptions = res.data
-            this.modalForm.majorId = ''
             this.findMajorItemModal = []
+            if (this.status === 'edit' && ifChange) {
+              // this.searchOptions.modalMajorOptions.forEach(list => {
+              //   if (list.majorName === this.modalForm.majorName) {
+              //     this.modalForm.majorName = list.majorName
+              //   }
+              // })
+            } else {
+              this.modalForm.majorName = ''
+            }
           })
         }, 50)
       }
@@ -365,23 +381,12 @@ export default {
       this.getTestList()
     },
     submitForm(formName, type) {
-      if (this.modalForm.collegeId) {
-        this.modalForm.college = this.findCollegeItemModal[0].collegeName
-      } else {
-        this.modalForm.college = ''
-      }
-      if (this.modalForm.majorId) {
-        this.modalForm.major = this.findMajorItemModal[0].majorName
-      } else {
-        this.modalForm.major = ''
-      }
-
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 处理数据格式
           const modalData = { ...this.modalForm }
-          delete modalData.collegeId
-          delete modalData.majorId
+          modalData.college = this.modalForm.collegeName
+          modalData.major = this.modalForm.majorName
           if (this.modalForm.type !== 4001) {
             delete modalData.university
             delete modalData.college
@@ -421,6 +426,11 @@ export default {
         this.findCollegeItemModal = []
         this.findMajorItemModal = []
         this.findSchoolItemModal = []
+        this.modalForm.university = ''
+        this.modalForm.collegeName = ''
+        this.modalForm.majorName = ''
+        this.searchOptions.modalColleges = []
+        this.searchOptions.modalMajorOptions = []
       }, 10)
     },
     delDocument() {
@@ -467,6 +477,7 @@ export default {
     },
     editDocument(row, colum) {
       if (colum.label === '试题ID') {
+        // this.$refs['modalForm'].resetFields()
         this.dialogVisible = true
         this.status = 'edit'
         this.modalTitle = '编辑试题'
@@ -480,7 +491,7 @@ export default {
             subject: res.data.subject,
             testName: res.data.testName,
             type: res.data.type.key,
-            university: res.data.universityName,
+            // university: res.data.universityName,
             year: res.data.year,
             answerId: res.data.answerId,
             answerHash: res.data.answerHash,
@@ -489,16 +500,11 @@ export default {
             questionName: res.data.questionName,
             id: row.id
           }
-          setTimeout(() => {
-            this.modalForm.college = res.data.collegeName
-          }, 50)
-          setTimeout(() => {
-            this.modalForm.major = res.data.majorName
-          }, 1050)
+          this.$set(this.modalForm, 'university', res.data.universityName)
+          this.$set(this.modalForm, 'collegeName', res.data.collegeName)
+          this.$set(this.modalForm, 'majorName', res.data.majorName)
           if (res.data.type.key === 4001) {
-            this.selectSchoolModal(res.data.universityName)
-            this.selectCollegeModal(res.data.collegeName)
-            // this.selectMajorModal(res.data.majorName)
+            this.selectSchoolModal(res.data.universityName, true)
           }
         })
       }
@@ -538,9 +544,14 @@ export default {
       })
     },
     getSchoolList() {
-      schoolCorrelation({ page: 1, pageSize: 20, universityName: '' }).then(res => {
-        res.data.unshift({ universityName: '请选择', universityId: '' })
+      schoolCorrelation({ page: 1, pageSize: 200, universityName: '' }).then(res => {
+        const addData = []
+        res.data.forEach(list => {
+          addData.push(list)
+        })
+        this.searchOptions.modalUniversity = addData
         this.searchOptions.university = res.data
+        this.searchOptions.university.unshift({ universityName: '请选择', universityId: '' })
       })
     },
     outSell(formName, id) {
@@ -586,13 +597,13 @@ export default {
     },
     findCollegeModal(data) {
       this.findCollegeItemModal = this.searchOptions.modalColleges.filter((item) => {
-        return item.collegeId === data
+        return item.collegeName === data
       })
     },
     forceUpdateMajorModal(data) {
       this.$forceUpdate()
       this.findMajorItemModal = this.searchOptions.modalMajorOptions.filter((item) => {
-        return item.majorId === data
+        return item.majorName === data
       })
     }
   }
