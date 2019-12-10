@@ -162,5 +162,5 @@ export const status = () => axios.post('/status/list')
 // 文件上传
 export const uploadFile = () => axios.post('/file/upload?privilege=PUBLIC')
 // 文件下载
-export const uploadDown = () => axios.post('/file/download')
+export const uploadDown = data => axios.post('/file/download', data)
 

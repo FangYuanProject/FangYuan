@@ -246,7 +246,7 @@ export default {
         { name: '科目', indexs: 'subject' },
         { name: '年份', indexs: 'year' },
         { name: '上传时间', indexs: 'uploadTime' },
-        { name: '状态', indexs: 'status' },
+        { name: '状态', indexs: 'statusStr' },
         { name: '操作', indexs: 'operation' }
       ],
       tableData: [],
@@ -508,14 +508,20 @@ export default {
       testList(this.searchForm).then(res => {
         res.data.forEach(list => {
           list.uploadTime = dateTimeStr(list.uploadTime)
-          list.status = list.status.value
-          list.operation = [{ name: '下载', clickEvent: 'download' }, { name: '答案', clickEvent: 'answer' }]
-          switch (list.status) {
-            case '新增':
-            case '下架':
+          list.statusStr = list.status.value
+          list.operation = []
+          if (list.answerId) {
+            list.operation.push({ name: '答案', clickEvent: 'answer' })
+          }
+          if (list.questionId) {
+            list.operation.push({ name: '试题', clickEvent: 'download' })
+          }
+          switch (list.statusStr) {
+            case '未发布':
+            case '已下架':
               list.operation.push({ name: '发布', clickEvent: 'publish' })
               break
-            case '发布':
+            case '发布中':
               list.operation.push({ name: '下架', clickEvent: 'outsell' })
               break
           }
