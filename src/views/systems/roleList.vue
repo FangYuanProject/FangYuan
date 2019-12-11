@@ -173,7 +173,7 @@ export default {
           type: 'warning',
           center: true
         }).then(() => {
-          delRole({ id: data.key }).then(res => {
+          delRole({ roleCode: data.roleCode }).then(res => {
             AlertBox('success', '删除成功！')
             this.getRoleList()
           })

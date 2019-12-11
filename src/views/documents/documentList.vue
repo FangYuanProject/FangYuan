@@ -86,7 +86,7 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="modalForm.type === 4001" label="学院" prop="collegeName">
-          <el-select v-model="modalForm.collegeName" placeholder="请选择" @change="selectCollegeModal" ref="modalCollege">
+          <el-select ref="modalCollege" v-model="modalForm.collegeName" placeholder="请选择" @change="selectCollegeModal">
             <el-option v-for="(item,index) in searchOptions.modalColleges" :key="item+index" :label="item.collegeName" :value="item.collegeName" />
           </el-select>
         </el-form-item>
@@ -107,16 +107,40 @@
           />
         </el-form-item>
         <el-form-item label="上传试题" prop="questionName">
-          <el-input v-model="modalForm.questionName" placeholder="支持扩展名pdf,jpg">
+          <el-input v-model="modalForm.questionName" readonly="readonly" placeholder="支持扩展名jpg，jpeg，png，pdf">
             <template slot="append">
-              <upload-pic-btn btn-name="上传" :upload-type="uploadType" :accept="uploadAcceptType" @getUrlSuccess.native="uploadDocument" />
+              <!-- <upload-pic-btn btn-name="上传" :upload-type="uploadType" :accept="uploadAcceptType" @getUrlSuccess.native="uploadDocument" /> -->
+              <el-upload
+                ref="uploadQ"
+                accept=".jpg,.jpeg,.png,.pdf,.JPG,.JPEG,.GIF,.PDF"
+                class="upload-demo"
+                :on-remove="handleRemoveUploadDocument"
+                :on-success="uploadDocument"
+                :limit="1"
+                :action="baseURLFileUpload + '/file/upload?privilege=' + uploadType"
+              >
+                <el-button size="small" type="primary" class="upload-pic">上传</el-button>
+                <span slot="tip" class="el-upload__tip" :style="{'display':uploadTips===''?'none' :'inline'}">{{ uploadTips }}</span>
+              </el-upload>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item label="上传答案" prop="answerName">
-          <el-input v-model="modalForm.answerName" placeholder="支持扩展名pdf,jpg">
+          <el-input v-model="modalForm.answerName" readonly="readonly" placeholder="支持扩展名jpg，jpeg，png，pdf">
             <template slot="append">
-              <upload-pic-btn btn-name="上传" :upload-type="uploadType" :accept="uploadAcceptType" @getUrlSuccess.native="uploadDocumentAnswer" />
+              <!-- <upload-pic-btn btn-name="上传" :upload-type="uploadType" :accept="uploadAcceptType" @getUrlSuccess.native="uploadDocumentAnswer" /> -->
+              <el-upload
+                ref="uploadA"
+                accept=".jpg,.jpeg,.png,.pdf,.JPG,.JPEG,.GIF,.PDF"
+                class="upload-demo"
+                :on-remove="handleRemoveUploadDocumentAnswer"
+                :on-success="uploadDocumentAnswer"
+                :limit="1"
+                :action="baseURLFileUpload + '/file/upload?privilege=' + uploadType"
+              >
+                <el-button size="small" type="primary" class="upload-pic">上传</el-button>
+                <span slot="tip" class="el-upload__tip" :style="{'display':uploadTips===''?'none' :'inline'}">{{ uploadTips }}</span>
+              </el-upload>
             </template>
           </el-input>
         </el-form-item>
@@ -138,10 +162,12 @@
           <el-button type="primary" class="edit-data-btn" @click="submitForm('modalForm','update')">
             更新
           </el-button>
-          <el-button type="primary" class="submit-data-btn" @click="outSell('modalForm')">
+          <el-button v-show="modalForm.status && (modalForm.status.value === '未发布' || modalForm.status.value === '已下架')" type="primary" class="submit-data-btn" @click="submitForm('modalForm','publish')">
+            <span class="iconfont iconfabu">&nbsp;发布</span>
+          </el-button>
+          <el-button v-show="modalForm.status && modalForm.status.value === '发布中'" type="primary" class="submit-data-btn" @click="outSell('modalForm')">
             <span class="iconfont iconxiajia">&nbsp;下架</span>
           </el-button>
-
         </div>
       </span>
     </el-dialog>
@@ -151,18 +177,21 @@
 import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
-import UploadPicBtn from '@/components/UploadPictureBtn'
+// import UploadPicBtn from '@/components/UploadPictureBtn'
 import { addTest, delTest, testDetail, editTest, publishTest, testList, outsellTest, testStatus, testType, uploadDown, schoolCorrelation, majorList, collegeList } from '@/api/index'
 import { AlertBox, dateTimeStr } from '../../utils/util'
+import { baseURLFileUpload } from '@/utils/request'
 export default {
   components: {
     tableComponents,
     AddMethodBtn,
-    SearchFormBtn,
-    UploadPicBtn
+    SearchFormBtn
+    // UploadPicBtn
   },
   data() {
     return {
+      baseURLFileUpload,
+      uploadTips: '',
       dialogVisible: false,
       modalTitle: '新建试题',
       status: 'add',
@@ -194,19 +223,19 @@ export default {
       }, // 走接口的select框值
       uploadTime: '', // 处理查询上传时间格式
       modalForm: {
-        majorName: '',
-        questionHash: '',
+        universityName: '',
         collegeName: '',
+        majorName: '',
         describe: '',
         subject: '',
         testName: '',
         type: '',
-        universityName: '',
         year: '',
         answerId: '',
         answerHash: '',
         answerName: '',
         questionId: '',
+        questionHash: '',
         questionName: '',
         id: ''
       },
@@ -269,6 +298,18 @@ export default {
     this.getSearchOption()
   },
   methods: {
+    handleRemoveUploadDocument() {
+      this.modalForm.questionHash = ''
+      this.modalForm.questionId = ''
+      this.modalForm.questionName = ''
+      this.$refs.uploadQ.clearFiles()
+    },
+    handleRemoveUploadDocumentAnswer() {
+      this.modalForm.answerHash = ''
+      this.modalForm.answerId = ''
+      this.modalForm.answerName = ''
+      this.$refs.uploadA.clearFiles()
+    },
     forceUpdate() {
       this.$forceUpdate()
     },
@@ -439,13 +480,15 @@ export default {
       })
     },
     uploadDocumentAnswer(file) {
+      this.$refs.uploadA.clearFiles()
       this.modalForm.answerId = file.data.id
-      this.modalForm.answerHash = file.data.path
+      this.modalForm.answerHash = file.data.hash
       this.modalForm.answerName = file.data.name
     },
     uploadDocument(file) {
+      this.$refs.uploadQ.clearFiles()
       this.modalForm.questionId = file.data.id
-      this.modalForm.questionHash = file.data.path
+      this.modalForm.questionHash = file.data.hash
       this.modalForm.questionName = file.data.name
     },
     operationCell(type, data) {
@@ -482,6 +525,7 @@ export default {
             answerName: res.data.answerName,
             questionId: res.data.questionId,
             questionName: res.data.questionName,
+            status: res.data.status,
             id: row.id
           }
           this.$set(this.modalForm, 'universityName', res.data.universityName)
@@ -638,4 +682,7 @@ export default {
   border-radius: 4px;
 }
 
+.document-list .el-upload-list--text {
+  display: none;
+}
 </style>
