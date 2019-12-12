@@ -258,7 +258,7 @@ export default {
     },
     comfirmOutSell() {
       unsellForum({ id: this.outSellForm.id, reason: this.outSellForm.reason }).then(res => {
-        AlertBox('success', '发布成功')
+        AlertBox('success', '下架成功')
         this.outSellDialogVisible = false
         this.getForumList()
       })

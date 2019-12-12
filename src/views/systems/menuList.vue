@@ -22,7 +22,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="排序" prop="order">
-          <el-input v-model="form.order" autocomplete="off" />
+          <el-input v-model="form.order" maxlength="2" autocomplete="off" />
         </el-form-item>
         <el-form-item label="菜单url" prop="url">
           <el-input v-model="form.url" autocomplete="off" />
@@ -146,23 +146,23 @@ export default {
       }
     },
     editRole(type, data) {
-      setTimeout(() => {
-        this.$refs['menuModal'].resetFields()
-      }, 1)
       if (type === 'delete') {
         this.deleteMenus(data)
       } else {
         this.titleMenu = '修改菜单'
         this.dialogVisible = true
-        this.form = {
-          menuName: data.menuName,
-          order: data.sequence,
-          status: data.status,
-          superiorName: data.superiorName,
-          superiorId: data.superiorId,
-          url: data.url,
-          id: data.id
-        }
+        setTimeout(() => {
+          this.$refs['menuModal'].resetFields()
+          this.form = {
+            menuName: data.menuName,
+            order: data.sequence,
+            status: data.status,
+            superiorName: data.superiorName,
+            superiorId: data.superiorId,
+            url: data.url,
+            id: data.id
+          }
+        }, 10)
       }
     },
     deleteMenus(data) {
