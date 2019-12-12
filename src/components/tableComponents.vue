@@ -11,9 +11,10 @@
       </el-table-column>
     </el-table>
     <el-pagination
+      v-if="showPages"
       :background="background"
       :current-page.sync="currentPage"
-      :page-size.sync="pageSize"
+      :page-size="pageSize"
       :layout="layout"
       :page-sizes="pageSizes"
       :total="total"
@@ -29,6 +30,10 @@ export default {
   name: 'TableComponents',
   // components: { Pagination },
   props: {
+    showPages: {
+      tyep: Boolean,
+      default: true
+    },
     tableData: {
       type: Array,
       default: () => {

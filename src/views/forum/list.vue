@@ -41,6 +41,7 @@
       :table-data="tableData"
       :th-data="thData"
       :total="total"
+      :limit="searchForm.pageSize"
       @handleClick="chooseOperation"
       @cell-click="editForum"
       @pagination="changePage"
@@ -185,6 +186,8 @@ export default {
   methods: {
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.uploadTime = ''
+      this.getForumList()
     },
     change(event) {
       this.$forceUpdate()

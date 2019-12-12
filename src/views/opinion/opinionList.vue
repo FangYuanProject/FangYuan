@@ -5,6 +5,7 @@
       :table-data="tableData"
       :th-data="thData"
       :total="total"
+      :limit="params.pageSize"
       @handleClick="chooseOperation"
       @pagination="changePage"
     />

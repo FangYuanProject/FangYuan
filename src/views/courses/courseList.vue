@@ -34,7 +34,7 @@
         <add-method-btn name="商品" @click="AddCourse" />
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" :total="total" @cell-click="editGoods" @pagination="changePage" @handleClick="chooseOperation" />
+    <tableComponents :table-data="tableData" :th-data="thData" :total="total" :limit="ruleForm.pageSize" @cell-click="editGoods" @pagination="changePage" @handleClick="chooseOperation" />
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="508px" class="add-course-modal" :close-on-click-modal="false">
       <el-form ref="courseModal" :model="editForm" :rules="validForms">
         <el-form-item label="商品类型" prop="type">
@@ -157,6 +157,7 @@ export default {
   },
   methods: {
     searchGoodsList() {
+      this.ruleForm.page = 1
       this.getCourseList()
     },
     AddCourse() {
@@ -308,6 +309,7 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.getCourseList()
     }
   }
 }

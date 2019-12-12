@@ -63,6 +63,7 @@
       :table-data="tableData"
       :th-data="thData"
       :total="total"
+      :limit="searchForm.pageSize"
       @handleClick="operationCell"
       @cell-click="editDocument"
       @pagination="changePage"

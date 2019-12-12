@@ -7,6 +7,7 @@
       :table-data="tableData"
       :th-data="thData"
       :total="tableData.length"
+      :showPages="false"
       @handleClick="chooseOperation"
     />
     <el-dialog title="权限" :visible.sync="dialogVisible" width="508px" class="add-course-modal">

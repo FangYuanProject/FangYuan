@@ -54,7 +54,7 @@
         <add-method-btn name="新闻" @click="addNews" />
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" :total="total" @cell-click="editNews" @pagination="changePage" @handleClick="chooseOperation" />
+    <tableComponents :table-data="tableData" :th-data="thData" :total="total" :limit="pageSize" @cell-click="editNews" @pagination="changePage" @handleClick="chooseOperation" />
   </div>
 </template>
 <script>
@@ -111,6 +111,10 @@ export default {
   methods: {
     resetForm() {
       this.$refs['ruleForm'].resetFields()
+      this.releaseTime = ''
+      this.createTime = ''
+      this.unshelveTime = ''
+      this.getNewsList()
     },
     addNews() {
       this.$router.push({ path: '/news-detail' })

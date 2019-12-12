@@ -2,40 +2,41 @@
   <div class="school-list">
     <h2 class="title">学校列表</h2>
     <el-form ref="ruleForm" :model="ruleForm" label-width="70px" inline class="list-ruleForm">
-      <el-form-item label="学校ID">
+      <el-form-item label="学校ID" prop="id">
         <el-input v-model="ruleForm.id" />
       </el-form-item>
-      <el-form-item label="学校代码">
+      <el-form-item label="学校代码" prop="universityCode">
         <el-input v-model="ruleForm.universityCode" />
       </el-form-item>
-      <el-form-item label="学校名称">
+      <el-form-item label="学校名称" prop="universityName">
         <el-input v-model="ruleForm.universityName" />
       </el-form-item>
-      <el-form-item label="地区">
+      <el-form-item label="地区" prop="location">
         <el-select v-model="ruleForm.location" placeholder="请选择">
           <el-option v-for="(reg, index1) in regions" :key="index1 + '100000'" :label="reg" :value="reg" />
         </el-select>
       </el-form-item>
-      <el-form-item label="特性">
+      <el-form-item label="特性" prop="property">
         <el-select v-model="ruleForm.property" placeholder="请选择">
           <el-option v-for="(pro, index2) in properties" :key="index2 + '1000000'" :label="pro.value" :value="pro.key" />
         </el-select>
       </el-form-item>
-      <el-form-item label="热度">
+      <el-form-item label="热度" prop="visitor">
         <el-input v-model="ruleForm.visitor" />
       </el-form-item>
-      <el-form-item label="状态">
+      <el-form-item label="状态" prop="status">
         <el-select v-model="ruleForm.status" placeholder="请选择">
           <el-option v-for="(st, index) in statusData" :key="index + '10000000'" :label="st.value" :value="st.key" />
         </el-select>
       </el-form-item>
-      <el-form-item label="新建时间">
+      <el-form-item label="新建时间" prop="createTime">
         <el-date-picker
-          v-model="ruleForm.createTime"
+          v-model="createTime"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
         />
       </el-form-item>
       <el-form-item>
@@ -48,6 +49,7 @@
       :total="total"
       :table-data="tableData"
       :th-data="thData"
+      :limit="ruleForm.pageSize"
       @handleClick="chooseOperation"
       @pagination="changePage"
       @cell-click="publishOrOutSell"
@@ -84,9 +86,8 @@ export default {
         createTime: '',
         visitor: ''
       },
+      createTime: '',
       total: 0,
-      page: 1,
-      pageSize: 20,
       thData: [
         { name: '学校ID', indexs: 'id' },
         { name: '学校代码', indexs: 'universityCode' },
@@ -147,10 +148,11 @@ export default {
         })
     },
     searchList() {
-      this.page = 1
+      this.ruleForm.page = 1
       this.getList()
     },
     getList() {
+      this.ruleForm.createTime = this.createTime ? this.createTime[0] + '~' + this.createTime[1] : ''
       schoolList(this.ruleForm).then((res) => {
         let operateName = ''
         let clickEvent = ''
@@ -204,6 +206,8 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.createTime = ''
+      this.getList()
     },
     addSchool() {
       this.dialogVisible = true

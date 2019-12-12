@@ -30,6 +30,7 @@
       :th-data="thData"
       :table-operation="tableOperation"
       :total="totalNumber"
+      :limit="pageSize"
       @cell-click="toUserDetail"
       @pagination="changePage"
       @handleClick="chooseOperation"
@@ -201,8 +202,8 @@ export default {
       })
     },
     searchUserList() {
-      this.ruleForm.page = 1
-      this.ruleForm.pageSize = 20
+      this.page = 1
+      this.pageSize = 20
       this.getUserList()
     },
     addUser() {
@@ -247,12 +248,13 @@ export default {
       this.getUserList(this.ruleForm)
     },
     getUrlSuccess(file) {
-      console.log(file)
-      console.log('123')
       this.userLogoInfo = file.data.path
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.page = 1
+      this.pageSize = 20
+      this.getUserList(this.ruleForm)
     }
   }
 }

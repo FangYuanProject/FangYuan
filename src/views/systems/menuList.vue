@@ -2,11 +2,11 @@
   <div class="menu-list">
     <h2 class="title">菜单列表</h2>
     <add-method-btn name="菜单" style="float: right; margin-right: 30px;" @click="AddRole" />
-
     <tableComponents
       :table-data="tableData"
       :th-data="thData"
       :total="total"
+      :showPages="false"
       cell-color="#1EAB00"
       @handleClick="editRole"
     />
