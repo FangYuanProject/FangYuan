@@ -36,10 +36,54 @@ import variables from '@/styles/variables.scss'
 
 export default {
   components: { SidebarItem, Logo },
+  data() {
+    return {
+      routesArr: this.$router.options.routes
+    }
+  },
   computed: {
     ...mapGetters(['sidebar']),
     routes() {
-      return this.$router.options.routes
+      const vipRoute = ['/', '/login'] // 白名单，不受权限控制
+      let routers = JSON.parse(JSON.stringify(this.routesArr))
+      const auth = JSON.parse(localStorage.getItem('_menu')) || []
+      if (!auth.length) { // 没菜单，就是没权限
+        this.$router.push({ path: '/login' })
+      } else {
+        routers.forEach(route => {
+          if (route.children && route.children.length) {
+            route.children = route.children.filter(item => {
+              let matchUrl = false
+              for (let ies = 0; ies < auth.length; ies++) {
+                if (auth[ies] === item.path) {
+                  matchUrl = true
+                  break
+                }
+              }
+              return matchUrl
+            })
+          }
+        })
+        routers = routers.filter(item => {
+          if (item.children && item.children.length) {
+            return true
+          }
+          for (let vip = 0; vip < vipRoute.length; vip++) {
+            if (vipRoute[vip] === item.path) {
+              return true
+            }
+          }
+          let matchUrl = false
+          for (let is = 0; is < auth.length; is++) {
+            if (auth[is] === item.path) {
+              matchUrl = true
+              break
+            }
+          }
+          return matchUrl
+        })
+      }
+      return routers
     },
     activeMenu() {
       const route = this.$route
@@ -59,11 +103,6 @@ export default {
     isCollapse() {
       return !this.sidebar.opened
     }
-  },
-  mounted() {
-    let menuList = window.localStorage.getItem('_menu') || '[]'
-    menuList = JSON.parse(menuList)
-    console.log(menuList)
   }
 }
 </script>

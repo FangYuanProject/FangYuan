@@ -493,11 +493,18 @@ export default {
       this.modalForm.questionName = file.data.name
     },
     operationCell(type, data) {
-      console.log(data)
       if (type === 'download') {
-        uploadDown({ id: data.questionId, hash: data.questionHash })
+        uploadDown({ id: data.questionId, hash: data.questionHash }).then(res => {
+          const blob = new Blob([res])
+          const blobUrl = window.URL.createObjectURL(blob)
+          this.downloadFile(blobUrl, data.testName)
+        })
       } else if (type === 'answer') {
-        uploadDown({ id: data.answerId, hash: data.answerHash })
+        uploadDown({ id: data.answerId, hash: data.answerHash }).then(res => {
+          const blob = new Blob([res])
+          const blobUrl = window.URL.createObjectURL(blob)
+          this.downloadFile(blobUrl, data.testName)
+        })
       } else if (type === 'publish') {
         publishTest({ id: data.id }).then(res => {
           AlertBox('success', '发布成功')
@@ -506,6 +513,17 @@ export default {
       } else {
         this.outSell('', data.id)
       }
+    },
+    downloadFile(blobUrl, name) {
+      const aLink = document.createElement('a')
+      aLink.style.display = 'block'
+      aLink.target = '_blank'
+      aLink.download = name || '文件下载'
+      aLink.href = blobUrl
+      const bodys = document.getElementById('app')
+      bodys.appendChild(aLink)
+      aLink.click()
+      // bodys.removeChild(aLink)
     },
     editDocument(row, colum) {
       if (colum.label === '试题ID') {

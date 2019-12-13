@@ -54,7 +54,7 @@
         <add-method-btn name="新闻" @click="addNews" />
       </el-form-item>
     </el-form>
-    <tableComponents :table-data="tableData" :th-data="thData" :total="total" :limit="pageSize" @cell-click="editNews" @pagination="changePage" @handleClick="chooseOperation" />
+    <tableComponents :table-data="tableData" :th-data="thData" :total="total" :limit="ruleForm.pageSize" @cell-click="editNews" @pagination="changePage" @handleClick="chooseOperation" />
   </div>
 </template>
 <script>

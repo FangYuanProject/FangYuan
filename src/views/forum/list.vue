@@ -152,10 +152,10 @@ export default {
         id: ''
       },
       outSellForm: {
-        id: '1',
-        type: '334',
-        title: '333',
-        reason: '3333'
+        id: '',
+        type: '',
+        title: '',
+        reason: ''
       },
       outSellFormRules: {
         reason: [{ required: true, message: '请输入下架原因', trigger: 'blur' }]

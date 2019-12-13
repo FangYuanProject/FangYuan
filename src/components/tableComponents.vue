@@ -6,6 +6,7 @@
           <span v-if="item.indexs==='operation'">
             <a v-for="(tab,num) in scope.row['operation']" :key="num+10" class="tab-margin" @click="chooseTab(tab.clickEvent,scope.row)" v-html="tab.name"></a>
           </span>
+          <span v-else-if="item.indexs==='statusStr'" v-html="scope.row[item.indexs]" />
           <span v-else v-html="calcWordLen(scope.row[item.indexs])" />
         </template>
       </el-table-column>
@@ -31,7 +32,7 @@ export default {
   // components: { Pagination },
   props: {
     showPages: {
-      tyep: Boolean,
+      type: Boolean,
       default: true
     },
     tableData: {

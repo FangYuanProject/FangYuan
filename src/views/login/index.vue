@@ -89,7 +89,7 @@ export default {
             userMenu({ roleCode: res.data.roleCode }).then(resList => {
               if (resList.data && resList.data.menuList) {
                 localStorage.setItem('_menu', JSON.stringify(resList.data.menuList))
-                this.$router.push({ path: '/' })
+                this.$router.push({ path: resList.data.menuList[0] })
               } else {
                 // 没菜单权限退出登录
               }

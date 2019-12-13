@@ -164,3 +164,10 @@ export const uploadFile = () => axios.post('/file/upload?privilege=PUBLIC')
 // 文件下载
 export const uploadDown = data => axios.post('/file/download', data)
 
+// 文件下载备份
+// export const uploadDown = data => axios({
+//     method: 'post',
+//     url: '/file/download',
+//     params: data,
+//     responseType: 'blob'
+// })
