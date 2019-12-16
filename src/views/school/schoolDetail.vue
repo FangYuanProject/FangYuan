@@ -411,7 +411,7 @@ export default {
               levelFour.name = levelFour.research
             })
             li.children = li.researchResps
-            li.name = li.majorName
+            li.name = '（' + li.majorCode + '）' + li.majorName
             hasYear = false
             yearIndex = 0
             list.children.forEach((yearData, indYear) => {
