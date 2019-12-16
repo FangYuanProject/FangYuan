@@ -497,13 +497,13 @@ export default {
         uploadDown({ id: data.questionId, hash: data.questionHash }).then(res => {
           const blob = new Blob([res])
           const blobUrl = window.URL.createObjectURL(blob)
-          this.downloadFile(blobUrl, data.testName)
+          this.downloadFile(blobUrl, data.questionName)
         })
       } else if (type === 'answer') {
         uploadDown({ id: data.answerId, hash: data.answerHash }).then(res => {
           const blob = new Blob([res])
           const blobUrl = window.URL.createObjectURL(blob)
-          this.downloadFile(blobUrl, data.testName)
+          this.downloadFile(blobUrl, data.answerName)
         })
       } else if (type === 'publish') {
         publishTest({ id: data.id }).then(res => {
@@ -518,12 +518,12 @@ export default {
       const aLink = document.createElement('a')
       aLink.style.display = 'block'
       aLink.target = '_blank'
-      aLink.download = name || '文件下载'
+      aLink.download = name
       aLink.href = blobUrl
       const bodys = document.getElementById('app')
       bodys.appendChild(aLink)
       aLink.click()
-      // bodys.removeChild(aLink)
+      bodys.removeChild(aLink)
     },
     editDocument(row, colum) {
       if (colum.label === '试题ID') {
