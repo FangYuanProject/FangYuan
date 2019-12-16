@@ -266,18 +266,19 @@ export default {
         this.dialogTitle = '编辑商品'
         this.goodsId = row.id
         this.status = row.status
-        this.$refs['courseModal'].resetFields()
-
-        goodsDetail({ goodsId: row.id }).then(res => {
-          this.editForm = {
-            content: res.data.content,
-            goodsName: res.data.goodsName,
-            price: res.data.price,
-            taobaoUrl: res.data.taobaoUrl,
-            goodsId: res.data.id,
-            type: res.data.type.key
-          }
-        })
+        setTimeout(() => {
+          this.$refs['courseModal'].resetFields()
+          goodsDetail({ goodsId: row.id }).then(res => {
+            this.editForm = {
+              content: res.data.content,
+              goodsName: res.data.goodsName,
+              price: res.data.price,
+              taobaoUrl: res.data.taobaoUrl,
+              goodsId: res.data.id,
+              type: res.data.type.key
+            }
+          })
+        }, 10)
       }
     },
     delDocument() {

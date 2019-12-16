@@ -248,7 +248,7 @@ export default {
     },
     publishOrOutSell(row, column, cell, event) {
       if (column.label === '学校ID') {
-        this.$router.push({ path: '/school/detail', query: { id: row.id }})
+        this.$router.push({ path: '/school-detail', query: { id: row.id }})
       }
     }
   }
