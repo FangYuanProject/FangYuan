@@ -9,9 +9,10 @@
  * docs:
  * https://panjiachen.github.io/vue-element-admin-site/feature/component/rich-editor.html#tinymce
  */
+import axios from '@/utils/request.js'
 import tinymce from 'tinymce/tinymce'
 import Editor from '@tinymce/tinymce-vue'
-import { uploadFile } from '@/api/index'
+// import { uploadFile } from '@/api/index'
 import 'tinymce/themes/silver'
 // 插件引入
 import 'tinymce/plugins/image'// 插入上传图片插件
@@ -111,8 +112,14 @@ export default {
         images_upload_handler: (blobInfo, success, failure) => {
           const formData = new FormData()
           formData.append('file', blobInfo.blob())
-          uploadFile(formData).then(res => {
+          let config = {
+            headers:{'Content-Type':'multipart/form-data'}
+          }
+          axios.post('/file/upload?privilege=PUBLIC', formData, config).then(res => {
+            success(res.data.path)
           })
+          // uploadFile(formData).then(res => {
+          // })
         }
 
       },
