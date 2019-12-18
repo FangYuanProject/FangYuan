@@ -221,7 +221,7 @@ export default {
     },
     toUserDetail(row, column, cell, event) {
       if (column.label === '用户ID') {
-        this.$router.push({ path: '/user/home', query: { id: row.id }})
+        this.$router.push({ path: '/user-profile', query: { id: row.id }})
       }
     },
     getUserList() {
