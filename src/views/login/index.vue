@@ -1,7 +1,6 @@
 <template>
-  <div class="login-container">
+  <div ref="loginDiv" class="login-container" tabIndex="-1" @keydown="checkClick">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
       <div class="title-container">
         <div class="logo_img">
           <img src="@/assets/logo.png" alt="">
@@ -33,9 +32,9 @@
         />
       </el-form-item>
       <!-- <el-checkbox :checked="isAutoLogin" label="自动登录" fill="#455A64" /> -->
-
-      <el-button :loading="loading" type="primary" class="login-btn" @click.native.prevent="handleLogin" @keyup.enter.native="handleLogin">登录</el-button>
+      <el-button :loading="loading" type="primary" class="login-btn" @click.native.prevent="handleLogin">登录</el-button>
     </el-form>
+    <input v-focus type="text" style="position: absolute; opacity: 0;">
   </div>
 </template>
 
@@ -48,6 +47,13 @@ import { login, userMenu } from '@/api/index'
 export default {
   name: 'Login',
   // components: { SocialSign },
+  directives: {
+    focus: {
+      inserted: el => {
+        el.focus()
+      }
+    }
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (validEmail(value)) {
@@ -77,9 +83,13 @@ export default {
       isAutoLogin: true
     }
   },
-  destroyed() {
-  },
   methods: {
+    checkClick($el) {
+      if ($el.keyCode === 13) {
+        this.handleLogin()
+        return false
+      }
+    },
     handleLogin() {
       const data = this.loginForm
       this.$refs['loginForm'].validate((valid) => {

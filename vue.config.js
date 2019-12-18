@@ -43,7 +43,7 @@ module.exports = {
       '/api': {
         // target: `http://127.0.0.1:${port}/mock`,
         // target: 'http://140.143.235.123:8080',
-        target: 'http://defunction.cn/web/',
+        target: 'https://defunction.cn/cms/',
         changeOrigin: true,
         pathRewrite: {
           '/api': ''
