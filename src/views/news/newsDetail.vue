@@ -33,9 +33,9 @@
             <el-option v-for="(item,index) in newsTypeOptions" :key="index+10" :label="item.value" :value="item.key" />
           </el-select>
         </el-form-item>
-        <el-form-item label="相关学校" class="relate-school" prop="correlation">
-          <el-select v-model="params.correlation" filterable remote :remote-method="getSchoolList" placeholder="请选择">
-            <el-option v-for="(item,index) in schoolOptions" :key="item+index" :label="item.universityName" :value="item.universityName" />
+        <el-form-item label="相关学校" class="relate-school" prop="universityCode">
+          <el-select v-model="params.universityCode" filterable remote :remote-method="getSchoolList" placeholder="请选择">
+            <el-option v-for="(item,index) in schoolOptions" :key="item+index" :label="item.universityName" :value="item.universityCode" />
           </el-select>
         </el-form-item>
         <el-form-item label="新闻摘要" prop="summary">
@@ -67,7 +67,7 @@ export default {
     return {
       params: {
         content: '',
-        correlation: '',
+        universityCode: '',
         summary: '',
         title: '',
         type: '',
@@ -76,7 +76,7 @@ export default {
       },
       newsContent: {
         content: [{ required: true, message: '请输入新闻内容', trigger: 'blur', max: '256' }],
-        correlation: [{ required: true, message: '请选择相关学校', trigger: 'change' }],
+        universityCode: [{ required: true, message: '请选择相关学校', trigger: 'change' }],
         summary: [{ required: true, message: '请输入摘要', trigger: 'blur', max: '128' }],
         title: [{ required: true, message: '请输入新闻标题', trigger: 'blur', max: '32' }],
         type: [{ required: true, message: '请选择新闻类型', trigger: 'change' }]
@@ -145,7 +145,7 @@ export default {
       newsDetail({ id: this.params.id }).then(res => {
         this.params = {
           content: res.data.content,
-          correlation: res.data.correlation,
+          universityCode: res.data.universityCode,
           summary: res.data.summary,
           title: res.data.title,
           type: res.data.type.key,
