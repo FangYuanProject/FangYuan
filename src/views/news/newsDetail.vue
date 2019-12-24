@@ -98,12 +98,12 @@ export default {
           if (type === 'save') {
             saveNews(this.params).then(res => {
               AlertBox('success', '保存成功')
-              this.$router.push({ name: 'new-list' })
+              this.$router.push({ name: 'news-list' })
             })
           } else if (type === 'publish') {
             publishNews(this.params).then(res => {
               AlertBox('success', '发布成功')
-              this.$router.push({ name: 'new-list' })
+              this.$router.push({ name: 'news-list' })
             })
           } else {
             editNews(this.params).then(res => {
@@ -116,7 +116,7 @@ export default {
                 id: this.$route.query.id ? this.$route.query.id : ''
               }
               AlertBox('success', '发布成功')
-              this.$router.push({ name: 'new-list' })
+              this.$router.push({ name: 'news-list' })
             })
           }
         }
@@ -147,18 +147,19 @@ export default {
           id: res.data.id,
           status: res.data.status.key
         }
+        console.log(this.params)
       })
     },
     delOffNews(type) {
       if (type === 'del') {
         deleteNews({ id: this.params.id }).then(res => {
           AlertBox('success', '删除成功')
-          this.$router.push({ name: 'new-list' })
+          this.$router.push({ name: 'news-list' })
         })
       } else {
         unshelveNews({ id: this.params.id }).then(res => {
           AlertBox('success', '下架成功')
-          this.$router.push({ name: 'new-list' })
+          this.$router.push({ name: 'news-list' })
         })
       }
     }
