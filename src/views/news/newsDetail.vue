@@ -12,7 +12,12 @@
           <button type="primary" class="save-news" @click="saveNewsEvent('edit')">更新</button>
           <button type="primary" class="off-sale" @click="delOffNews('off')"><span class="iconfont iconxiajia" />&nbsp;下架</button>
         </div>
-        <div v-else-if="params.id===''">
+        <div v-else-if="params.id!==''&&params.status===2001">
+          <button type="primary" class="del-news" @click="delOffNews('del')">删除</button>
+          <button type="primary" class="save-news" @click="saveNewsEvent('edit')">保存</button>
+          <button type="primary" class="publish-news" @click="saveNewsEvent('publish')"><span class="iconfont iconfabu" />&nbsp;发布</button>
+        </div>
+        <div v-else>
           <button type="primary" class="save-news" @click="saveNewsEvent('save')">保存</button>
           <button type="primary" class="publish-news" @click="saveNewsEvent('publish')"><span class="iconfont iconfabu" />&nbsp;发布</button>
         </div>
@@ -115,7 +120,7 @@ export default {
                 type: '',
                 id: this.$route.query.id ? this.$route.query.id : ''
               }
-              AlertBox('success', '发布成功')
+              AlertBox('success', '保存成功')
               this.$router.push({ name: 'news-list' })
             })
           }
@@ -169,6 +174,10 @@ export default {
 <style lang="scss" scoped>
 button {
   outline: none;
+}
+
+.news-detail button {
+  cursor: pointer;
 }
 
 .title {
