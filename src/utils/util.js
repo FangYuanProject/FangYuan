@@ -71,3 +71,7 @@ export async function vaildForm(form) {
 
   return flag
 }
+
+export function calcWordLength(str, length) {
+
+}

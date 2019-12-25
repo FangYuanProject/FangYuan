@@ -7,7 +7,6 @@
           <span class="user-head">
             <img :src="headChat ? headChat : require('@/assets/user-head-default.png')" alt="">
           </span>
-          <upload-pic-btn btn-name="上传头像" @getUrlSuccess="getUrlSuccess" />
         </div>
         <div class="edit-user-info float-right">
           <p>
@@ -36,7 +35,9 @@
     <div class="float-right user-collect">
       <div class="tab">
         <ul>
-          <li v-for="(tab,key) in tabList" :key="key" :class="[tabIndex===key ? 'active' :'']" class="cp" @click="changeTab(key,tab.index)"><span :class="['iconfont',tab.icon]" />&nbsp;{{ tab.name }}&nbsp;<em>{{ tabContentList[tabContentShow].length }}</em></li>
+          <li v-for="(tab,key) in tabList" :key="key" :class="[tabIndex===key ? 'active' :'']" class="cp" @click="changeTab(key,tab.index)">
+            <span :class="['iconfont',tab.icon]" />&nbsp;{{ tab.name }}&nbsp;<em>{{ tab.collectNum }}</em>
+          </li>
         </ul>
       </div>
       <div class="tab-content">
@@ -46,9 +47,9 @@
               {{ item.title }}
               <span class="float-right iconfont iconyishoucang" />
             </p>
-            <p class="list-content">{{ item.content }}</p>
+            <p class="list-content" v-html="item.content" />
             <p class="list-info">
-              <span class="date float-left">{{ item.date }}</span>
+              <span class="date float-left">{{ item.updateTime }}</span>
               <span class="float-right">
                 收藏<em>{{ item.collect }}</em> <em>|&nbsp;&nbsp;</em>浏览<em>{{ item.view }}</em>
               </span>
@@ -67,14 +68,12 @@
 </template>
 <script>
 import { userDetail, collectNews, collectSchool, collectExamList, collectPostList } from '@/api/index'
-import { AlertBox } from '@/utils/util'
+import { AlertBox, dateTimeStr } from '@/utils/util'
 import Pagination from '@/components/Pagination'
 import Clipboard from 'clipboard'
-import UploadPicBtn from '@/components/UploadPictureBtn'
 export default {
   components: {
-    Pagination,
-    UploadPicBtn
+    Pagination
   },
   data() {
     return {
@@ -93,10 +92,10 @@ export default {
       headChat: '',
       referralCode: '',
       tabList: [
-        { index: 'news', name: '新闻', icon: 'iconxinwen', collectNum: '2' },
-        { index: 'school', name: '学校', icon: 'iconxuexiao', collectNum: '2' },
-        { index: 'document', name: '真题', icon: 'iconzhenti', collectNum: '2' },
-        { index: 'forum', name: '帖子', icon: 'iconluntan', collectNum: '2' }
+        { index: 'news', name: '新闻', icon: 'iconxinwen', collectNum: '0' },
+        { index: 'school', name: '学校', icon: 'iconxuexiao', collectNum: '0' },
+        { index: 'document', name: '真题', icon: 'iconzhenti', collectNum: '0' },
+        { index: 'forum', name: '帖子', icon: 'iconluntan', collectNum: '0' }
       ],
       tabIndex: 0,
       tabContentShow: 'news',
@@ -117,6 +116,9 @@ export default {
     if (this.$route.query.id) {
       this.getUserInfo()
       this.getCollectNews()
+      this.getCollectSchool()
+      this.getCollectExam()
+      this.getCollectPost()
     }
   },
   methods: {
@@ -127,15 +129,6 @@ export default {
         page: 1,
         pageSize: 20,
         userId: this.$route.query.id
-      }
-      if (this.tabContentShow === 'news') {
-        this.getCollectNews()
-      } else if (this.tabContentShow === 'school') {
-        this.getCollectSchool()
-      } else if (this.tabContentShow === 'document') {
-        this.getCollectExam()
-      } else {
-        this.getCollectPost()
       }
     },
     getUserInfo() {
@@ -149,7 +142,6 @@ export default {
             this.userInfo[i][0].text = res.data[i]
           }
         }
-        console.log(this.userInfo)
       })
     },
     copyCode() {
@@ -171,31 +163,34 @@ export default {
     },
     getCollectNews() {
       collectNews(this.tabListParams).then(res => {
+        res.data.data.foreach((list) => {
+          list.updateTime = dateTimeStr(list.updateTime)
+        })
         this.tabContentList.news = res.data
+        this.tabList[0].collectNum = res.data.length
       })
     },
     getCollectSchool() {
       collectSchool(this.tabListParams).then(res => {
         this.tabContentList.school = res.data
+        this.tabList[1].collectNum = res.data.length
       })
     },
     getCollectExam() {
       collectExamList(this.tabListParams).then(res => {
         this.tabContentList.document = res.data
+        this.tabList[2].collectNum = res.data.length
       })
     },
     getCollectPost() {
       collectPostList(this.tabListParams).then(res => {
         this.tabContentList.forum = res.data
+        this.tabList[3].collectNum = res.data.length
       })
     },
     selectPage(pageData) {
       this.tabListParams.page = pageData.page
       this.tabListParams.pageSize = pageData.pageSize
-    },
-    getUrlSuccess(file) {
-      console.log(file)
-      this.headChat = file.data.path
     }
   }
 }
@@ -237,6 +232,7 @@ export default {
     position: absolute;
     top: 15px;
     display: inline-block;
+    overflow: hidden;
     text-align: -webkit-center;
 
     .user-head {
@@ -372,17 +368,23 @@ export default {
 
       li {
         padding-top: 10px;
-        padding-bottom: 30px;
+        padding-bottom: 10px;
         list-style: none;
         border-bottom: 1px solid #ebeef5;
 
         .list-title {
+          margin-bottom: 10px;
           font-size: 18px;
           font-weight: 600;
           color: rgba(69, 90, 100, 1);
+
+          .iconyishoucang {
+            color: #1eab00;
+          }
         }
 
         .list-content {
+          margin-bottom: 10px;
           font-size: 16px;
           font-weight: 400;
           line-height: 28px;
@@ -390,8 +392,10 @@ export default {
         }
 
         .list-info {
+          height: 20px;
           font-size: 13px;
           font-weight: 400;
+          line-height: 20px;
           color: rgba(69, 90, 100, 1);
 
           em {
