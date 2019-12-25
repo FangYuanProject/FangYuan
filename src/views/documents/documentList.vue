@@ -108,13 +108,14 @@
           />
         </el-form-item>
         <el-form-item label="上传试题" prop="questionName">
-          <el-input v-model="modalForm.questionName" readonly="readonly" placeholder="支持扩展名jpg，jpeg，png，pdf">
+          <el-input v-model="modalForm.questionName" readonly="readonly" placeholder="支持扩展名.pdf">
             <template slot="append">
               <!-- <upload-pic-btn btn-name="上传" :upload-type="uploadType" :accept="uploadAcceptType" @getUrlSuccess.native="uploadDocument" /> -->
               <el-upload
                 ref="uploadQ"
-                accept=".jpg,.jpeg,.png,.pdf,.JPG,.JPEG,.GIF,.PDF"
+                accept=".pdf,.PDF"
                 class="upload-demo"
+                :before-upload="beforeUploadQuestion"
                 :on-remove="handleRemoveUploadDocument"
                 :on-success="uploadDocument"
                 :limit="1"
@@ -127,13 +128,14 @@
           </el-input>
         </el-form-item>
         <el-form-item label="上传答案" prop="answerName">
-          <el-input v-model="modalForm.answerName" readonly="readonly" placeholder="支持扩展名jpg，jpeg，png，pdf">
+          <el-input v-model="modalForm.answerName" readonly="readonly" placeholder="支持扩展名.pdf">
             <template slot="append">
               <!-- <upload-pic-btn btn-name="上传" :upload-type="uploadType" :accept="uploadAcceptType" @getUrlSuccess.native="uploadDocumentAnswer" /> -->
               <el-upload
                 ref="uploadA"
-                accept=".jpg,.jpeg,.png,.pdf,.JPG,.JPEG,.GIF,.PDF"
+                accept=".pdf,.PDF"
                 class="upload-demo"
+                :before-upload="beforeUploadAnswer"
                 :on-remove="handleRemoveUploadDocumentAnswer"
                 :on-success="uploadDocumentAnswer"
                 :limit="1"
@@ -299,6 +301,20 @@ export default {
     this.getSearchOption()
   },
   methods: {
+    beforeUploadQuestion(file) {
+      const fileLimit = file.size / 1024 / 1024 < 1
+      if (!fileLimit) {
+        AlertBox('error', '文件大小不能超过1MB！')
+        return false
+      }
+    },
+    beforeUploadAnswer(file) {
+      const fileLimit = file.size / 1024 / 1024 < 1
+      if (!fileLimit) {
+        AlertBox('error', '文件大小不能超过1MB！')
+        return false
+      }
+    },
     handleRemoveUploadDocument() {
       this.modalForm.questionHash = ''
       this.modalForm.questionId = ''
