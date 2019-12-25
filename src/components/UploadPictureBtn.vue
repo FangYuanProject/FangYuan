@@ -11,7 +11,7 @@
       :limit="1"
       :action="baseURLFileUpload + '/file/upload?privilege=' + uploadType"
     >
-      <el-button size="small" type="primary" class="upload-pic">{{ btnName }}</el-button>
+      <el-button size="small" type="primary" class="upload-pic" :style="{'background':bgColor,'color':textColor}">{{ btnName }}</el-button>
       <span slot="tip" class="el-upload__tip" :style="{'display':uploadTips===''?'none' :'inline'}">{{ uploadTips }}</span>
     </el-upload>
   </div>
@@ -40,6 +40,14 @@ export default {
     accept: {
       type: String,
       default: 'image/png,image/jpg,image/jpeg'
+    },
+    bgColor: {
+      type: String,
+      default: '#fff'
+    },
+    textColor: {
+      type: String,
+      default: '#455a64'
     }
   },
   data() {
@@ -78,9 +86,7 @@ export default {
     margin-left: 20px;
     font-size: 14px;
     line-height: 40px;
-    color: rgba(69, 90, 100, 1);
     text-align: center;
-    background-color: #fff;
     border: 1px solid rgba(69, 90, 100, 1);
     border-radius: 4px;
   }

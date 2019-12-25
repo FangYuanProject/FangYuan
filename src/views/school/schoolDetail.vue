@@ -7,7 +7,8 @@
           <img v-if="school && !school.badgeUrl" src="@/assets/schoolBadge@2x.png">
           <img v-if="school && school.badgeUrl" :src="school.badgeUrl">
         </div>
-        <el-button type="primary" class="change-badge" @click="changeLogo">更换校徽</el-button>
+        <UploadPicBtn class="change-badge" bg-color="#455a64" text-color="#fff" btn-name="更换校徽" @getUrlSuccess="changeLogo" />
+        <!-- <el-button type="primary" class="change-badge" @click="changeLogo">更换校徽</el-button> -->
       </div>
       <div class="edit-scholl-info">
         <div>
@@ -200,23 +201,6 @@
       </span>
     </el-dialog>
     <SchoolInfo ref="schoolInfo" :title="modalTitle" :dialog-visible="dialogVisible" @submitForm="submitForm" @closeHandel="closeModal" />
-    <el-dialog title="更换校徽" :visible.sync="dialogVisibleLogo" width="508px" class="add-school-modal" :close-on-click-modal="false">
-      <el-form>
-        <el-form-item label="校徽">
-          <span v-if="schoolLogoInfo" class="school-head">
-            <img :src="schoolLogoInfo">
-          </span>
-          <div style="display: inline-block; width: calc(100% - 90px); margin-top: 10px; vertical-align: top;">
-            <upload-pic-btn upload-tips="大小不得大于5M" btn-name="上传校徽" @getUrlSuccess="getUrlSuccess" />
-          </div>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" class="edit-data-btn" @click="submitLogo">
-          <span>保存</span>
-        </el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -676,27 +660,16 @@ export default {
         console.log('取消', err)
       })
     },
-    getUrlSuccess(file) {
-      this.schoolLogoInfo = file.data.path
-    },
-    changeLogo() {
-      this.dialogVisibleLogo = true
-      this.schoolLogoInfo = this.school.badgeUrl || ''
-    },
-    submitLogo() {
-      if (this.schoolLogoInfo) {
-        const data = {
-          badgeUrl: this.schoolLogoInfo,
-          id: this.school.universityId
-        }
-        schoolEdit(data).then(res => {
-          this.dialogVisibleLogo = false
-          AlertBox('success', '更换成功！')
-          this.init()
-        })
-      } else {
-        AlertBox('warning', '请选择校徽！')
-      }
+
+    changeLogo(file) {
+      console.log(file)
+      this.school.badgeUrl = 'http://defunction.cn/' + file.data.path
+      schoolEdit({ badgeUrl: file.data.path, id: this.$route.query.id }).then((res) => {
+        AlertBox('success', '更换校徽成功')
+      })
+
+      // this.dialogVisibleLogo = true
+      // this.schoolLogoInfo = this.school.badgeUrl || ''
     }
   }
 }
@@ -747,17 +720,18 @@ export default {
   }
 
   .change-badge {
-    display: block;
-    width: 87px;
-    height: 28px;
-    padding: 0;
-    margin-top: 32px;
-    margin-left: 22px;
-    line-height: 28px;
-    text-align: center;
-    background: rgba(69, 90, 100, 1);
-    border: 1px solid rgba(69, 90, 100, 1);
-    border-radius: 4px;
+    .upload-pic {
+      display: block;
+      width: 87px;
+      height: 28px;
+      padding: 0;
+      margin-top: 32px;
+      margin-left: 22px;
+      line-height: 28px;
+      text-align: center;
+      border: 1px solid rgba(69, 90, 100, 1);
+      border-radius: 4px;
+    }
   }
 }
 

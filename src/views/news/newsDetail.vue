@@ -2,7 +2,7 @@
   <div class="news-detail">
     <div class="title">
       <span v-if="params.id===''">新建新闻</span>
-      <span v-else>编辑新闻{{ params.status }}</span>
+      <span v-else>编辑新闻</span>
       <div>
         <div v-if="params.id!==''&&params.status===2003">
           <button type="primary" class="del-news" @click="delOffNews('del')">删除</button>
@@ -49,7 +49,7 @@
           />
         </el-form-item>
         <el-form-item label="新闻内容" prop="content">
-          <tinymce id="tinymce" v-model="params.content" :content-html="params.content" @click="clickToolbar" />
+          <tinymce id="tinymce" v-model="params.content" :content-html="params.content" />
         </el-form-item>
       </el-form>
     </div>
@@ -97,6 +97,10 @@ export default {
   },
   methods: {
     saveNewsEvent(type) {
+      if (this.params.content.length > 4000) {
+        AlertBox('error', '新闻内容字数不能超过4000')
+        return
+      }
       vaildForm(this.$refs['newsContent']).then(res => {
         if (res) {
           delete this.params.status
@@ -133,7 +137,6 @@ export default {
         this.newsTypeOptions = res.data
       })
     },
-    clickToolbar() {},
     getSchoolList(query) {
       this.searchSchoolParam.universityName = query || ''
       schoolCorrelation(this.searchSchoolParam).then(res => {
