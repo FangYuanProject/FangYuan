@@ -6,7 +6,7 @@
       :table-data="tableData"
       :th-data="thData"
       :total="total"
-      :showPages="false"
+      :show-pages="false"
       cell-color="#1EAB00"
       @handleClick="editRole"
     />

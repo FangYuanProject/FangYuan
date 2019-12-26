@@ -7,7 +7,7 @@
       :table-data="tableData"
       :th-data="thData"
       :total="tableData.length"
-      :showPages="false"
+      :show-pages="false"
       @handleClick="chooseOperation"
     />
     <el-dialog title="权限" :visible.sync="dialogVisible" width="508px" class="add-course-modal">
@@ -87,6 +87,7 @@ export default {
               })
             } else { // 编辑
               editRole(subData).then(res => {
+                // this.$refs[data].resetFields()
                 AlertBox('success', '编辑成功！')
                 this.dialogVisible = false
                 this.getRoleList()
@@ -105,6 +106,7 @@ export default {
       this.modal.roleName = ''
       this.modal.roleCode = ''
       this.dialogVisible = true
+      // this.$refs['validContent'].resetFields()
     },
     setCheckedNodes(data) {
       this.$refs.tree.setCheckedNodes(data)
@@ -151,9 +153,6 @@ export default {
         }
       })
       return arr
-    },
-    changeRoleVisible() {
-
     },
     getRoleList() {
       roleList().then(res => {

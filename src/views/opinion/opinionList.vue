@@ -132,7 +132,7 @@ export default {
           list.statusStr = list.status.value
           if (list.status.value === '未回复') {
             list.operation = [
-              { name: '短信回复', clickEvent: 'textReply' },
+              { name: '消息回复', clickEvent: 'textReply' },
               { name: '邮件回复', clickEvent: 'emailReply' }
             ]
           } else {
