@@ -41,18 +41,62 @@
         </ul>
       </div>
       <div class="tab-content">
-        <ul>
-          <li v-for="(item,index) in tabContentList[tabContentShow]" :key="index+10">
+        <ul v-if="tabContentShow === 'news'">
+          <li v-for="(item,index) in tabContentList[tabContentShow]" :key="index+10" class="list">
             <p class="list-title">
               {{ item.title }}
               <span class="float-right iconfont iconyishoucang" />
             </p>
-            <p class="list-content" v-html="item.content" />
+            <p class="list-content" v-html="contentSubstring(item.content,100)" />
             <p class="list-info">
-              <span class="date float-left">{{ item.updateTime }}</span>
+              <span class="date float-left" v-html="processDate(item.updateTime)" />
               <span class="float-right">
-                收藏<em>{{ item.collect }}</em> <em>|&nbsp;&nbsp;</em>浏览<em>{{ item.view }}</em>
+                收藏<em>{{ item.collect }}</em> <em>|&nbsp;&nbsp;</em>浏览<em>{{ item.visitor }}</em>
               </span>
+            </p>
+          </li>
+        </ul>
+        <ul v-if="tabContentShow === 'school'">
+          <li v-for="(item,index) in tabContentList[tabContentShow]" :key="index+item" class="card">
+            <p>
+              <span
+                v-if="item.badgeUrl"
+                class="badge"
+                :style="{'background-image':'url(http://defunction.cn/' + item.badgeUrl + ')'}"
+              />
+              <span class="school-name" :style="{ position: item.badgeUrl ? 'absolute' : 'initial',top: item.badgeUrl ? '25%' : '0'}">{{ item.universityName }}</span>
+              <span class="iconfont iconyishoucang is_active" />
+            </p>
+
+            <p class="font12">
+              所在地区：<span class="color-gray">{{ item.location }}</span>
+            </p>
+            <p class="font12 ">
+              浏览&nbsp;<span class="color-gray">{{ item.visitor }}</span>
+            </p>
+          </li>
+        </ul>
+        <ul v-if="tabContentShow === 'document'">
+          <li v-for="(item,index) in tabContentList[tabContentShow]" :key="index+item" class="card">
+            <p>
+              <span class="school-name">{{ item.testName }}</span>
+              <span class="iconfont iconyishoucang is_active" />
+            </p>
+            <p class="color-gray" style="position: absolute; bottom: 10px;">
+              <span class="color-gray font12"> 下载&nbsp;{{ item.year }}</span> &nbsp;|&nbsp; <span class="color-gray font12"> 浏览&nbsp;{{ item.year }}</span>
+            </p>
+
+          </li>
+        </ul>
+        <ul v-if="tabContentShow === 'forum'">
+          <li v-for="(item,index) in tabContentList[tabContentShow]" :key="index+item" class="list">
+            <p class="list-title">
+              <span class="school-name">{{ item.title }}</span>
+              <span class="float-right iconfont iconyishoucang is_active" />
+            </p>
+            <p class="list-content" v-html="contentSubstring(item.content,200)" />
+            <p class="list-info">
+              <span class="color-gray font12" v-html="processDate(item.updateTime)">&nbsp;</span><span class="float-right">浏览&nbsp;&nbsp;&nbsp;{{ !item.visitor? 0 : item.visitor }}</span>
             </p>
           </li>
         </ul>
@@ -68,7 +112,7 @@
 </template>
 <script>
 import { userDetail, collectNews, collectSchool, collectExamList, collectPostList } from '@/api/index'
-import { AlertBox, dateTimeStr } from '@/utils/util'
+import { AlertBox, dateTimeStr, calcWordLength } from '@/utils/util'
 import Pagination from '@/components/Pagination'
 import Clipboard from 'clipboard'
 export default {
@@ -92,10 +136,10 @@ export default {
       headChat: '',
       referralCode: '',
       tabList: [
-        { index: 'news', name: '新闻', icon: 'iconxinwen', collectNum: '0' },
-        { index: 'school', name: '学校', icon: 'iconxuexiao', collectNum: '0' },
-        { index: 'document', name: '真题', icon: 'iconzhenti', collectNum: '0' },
-        { index: 'forum', name: '帖子', icon: 'iconluntan', collectNum: '0' }
+        { index: 'news', name: '新闻', icon: 'iconxinwen', collectNum: '0', type: 'list' },
+        { index: 'school', name: '学校', icon: 'iconxuexiao', collectNum: '0', type: 'card' },
+        { index: 'document', name: '真题', icon: 'iconzhenti', collectNum: '0', type: 'card' },
+        { index: 'forum', name: '帖子', icon: 'iconluntan', collectNum: '0', type: 'list' }
       ],
       tabIndex: 0,
       tabContentShow: 'news',
@@ -161,36 +205,48 @@ export default {
     editUserInfo() {
       this.dialogVisible = true
     },
+    processDate(time) {
+      return dateTimeStr(time)
+    },
     getCollectNews() {
       collectNews(this.tabListParams).then(res => {
-        res.data.data.foreach((list) => {
-          list.updateTime = dateTimeStr(list.updateTime)
-        })
         this.tabContentList.news = res.data
-        this.tabList[0].collectNum = res.data.length
+        this.tabList[0].collectNum = res.total
       })
     },
     getCollectSchool() {
       collectSchool(this.tabListParams).then(res => {
         this.tabContentList.school = res.data
-        this.tabList[1].collectNum = res.data.length
+        this.tabList[1].collectNum = res.total
       })
     },
     getCollectExam() {
       collectExamList(this.tabListParams).then(res => {
         this.tabContentList.document = res.data
-        this.tabList[2].collectNum = res.data.length
+        this.tabList[2].collectNum = res.total
       })
     },
     getCollectPost() {
       collectPostList(this.tabListParams).then(res => {
         this.tabContentList.forum = res.data
-        this.tabList[3].collectNum = res.data.length
+        this.tabList[3].collectNum = res.total
       })
     },
     selectPage(pageData) {
       this.tabListParams.page = pageData.page
       this.tabListParams.pageSize = pageData.pageSize
+      if (this.tabContentShow === 'news') {
+        this.getCollectNews()
+      } else if (this.tabContentShow === 'school') {
+        this.getCollectSchool()
+      } else if (this.tabContentShow === 'document') {
+        this.getCollectExam()
+      } else {
+        this.getCollectPost()
+      }
+    },
+    contentSubstring(str, length) {
+      return calcWordLength(str, length)
     }
   }
 }
@@ -244,6 +300,10 @@ export default {
       background: #fbfbfb;
       border-radius: 10px;
       opacity: .5;
+
+      img {
+        width: 100%;
+      }
     }
   }
 
@@ -366,7 +426,7 @@ export default {
     ul {
       padding: 0;
 
-      li {
+      li.list {
         padding-top: 10px;
         padding-bottom: 10px;
         list-style: none;
@@ -403,6 +463,64 @@ export default {
             margin: 0  15px;
             font-style: normal;
           }
+        }
+      }
+
+      li.card {
+        position: relative;
+        float: left;
+        width: 265px;
+        height: 130px;
+        padding: 10px;
+        margin: 20px 10px;
+        text-align: left;
+        list-style: none;
+        background: rgba(255, 255, 255, 1);
+        border: 1px solid rgba(238, 238, 238, 1);
+        border-radius: 5px;
+
+        a {
+          text-decoration: none;
+        }
+
+        & > p:first-child {
+          height: 64px;
+          margin: 0;
+
+          .badge {
+            display: inline-block;
+            width: 64px;
+            height: 64px;
+            margin-right: 10px;
+            overflow: hidden;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            border-radius: 50%;
+          }
+
+          .iconfont {
+            float: right;
+
+            &.is_active {
+              color: #1eab00;
+            }
+          }
+
+          .school-name {
+            font-size: 19px;
+            font-weight: 600;
+            color: rgba(69, 90, 100, 1);
+          }
+        }
+
+        .font12 {
+          font-size: 12px;
+          color: #9b9b9b;
+        }
+
+        .color-gray {
+          color: #455a64;
         }
       }
     }

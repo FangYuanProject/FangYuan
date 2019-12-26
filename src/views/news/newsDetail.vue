@@ -1,6 +1,7 @@
 <template>
   <div class="news-detail">
     <div class="title">
+      {{ params.id }}
       <span v-if="params.id===''">新建新闻</span>
       <span v-else>编辑新闻</span>
       <div>

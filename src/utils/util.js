@@ -73,5 +73,10 @@ export async function vaildForm(form) {
 }
 
 export function calcWordLength(str, length) {
-
+  console.log(length)
+  if (str && str.length > length) {
+    return str.substring(0, length) + '...'
+  } else {
+    return str
+  }
 }
