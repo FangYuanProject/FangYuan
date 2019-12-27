@@ -20,13 +20,22 @@
       </div>
       <div style="border-top: 1px solid #ebeef5;">
         <div class="bottom float-right">
-          <div class="recommand-code">
-            <p>我的推荐码</p>
-            <p>{{ referralCode }} &nbsp;<span class="iconfont iconfuzhi copy-code" :data-clipboard-text="referralCode" @click="copyCode" /></p>
-          </div>
-          <div class="my-score">
-            <p>我的积分</p>
-            <p>{{ point }}</p>
+          <div style=" display: inline-block; width: 132px; height: 132px;" />
+          <div style=" display: inline-block; float: right; width: 45%;">
+            <div class="recommand-code">
+              <p>我的推荐码</p>
+              <p>
+                {{ referralCode }} &nbsp;<span
+                  class="iconfont iconfuzhi copy-code"
+                  :data-clipboard-text="referralCode"
+                  @click="copyCode"
+                />
+              </p>
+            </div>
+            <div class="my-score">
+              <p>我的积分</p>
+              <p>{{ point }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -108,8 +117,7 @@
         </div>
       </div>
     </div>
-  </div>
-</template>
+  </div></template>
 <script>
 import { userDetail, collectNews, collectSchool, collectExamList, collectPostList } from '@/api/index'
 import { AlertBox, dateTimeStr, calcWordLength } from '@/utils/util'
@@ -309,6 +317,7 @@ export default {
 
   .edit-user-info {
     display: inline-block;
+    width: 45%;
 
     .user-name {
       margin-bottom: 0;
@@ -343,7 +352,7 @@ export default {
   }
 
   .bottom {
-    padding-right: 100px;
+    width: 100%;
     margin-top: 10px;
     clear: both;
 
