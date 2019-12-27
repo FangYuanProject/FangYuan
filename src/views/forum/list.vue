@@ -256,10 +256,18 @@ export default {
         }
       })
     },
-    comfirmOutSell() {
-      unsellForum({ id: this.outSellForm.id, reason: this.outSellForm.reason }).then(res => {
+    comfirmOutSell(type) {
+      let id = this.outSellForm.id
+      if (type === 'publishForm') {
+        id = this.forumId
+      }
+      unsellForum({ id: id, reason: this.outSellForm.reason }).then(res => {
         AlertBox('success', '下架成功')
-        this.outSellDialogVisible = false
+        if (type === 'publishForm') {
+          this.publishDialogVisible = false
+        } else {
+          this.outSellDialogVisible = false
+        }
         this.getForumList()
       })
     },
@@ -375,10 +383,12 @@ export default {
       }
     },
     cancelSetTop(formName, operation) {
+      const text = operation === 2005 ? '置顶' : '取消置顶'
       vaildForm(this.$refs[formName]).then((res) => {
         if (res) {
           setTopForum({ id: this.publishForm.id, operation: operation }).then(res => {
-            AlertBox('success', '取消成功')
+            AlertBox('success', text + '成功')
+            this.btnStatus = operation === 2005 ? '置顶' : '发布中'
             this.getForumList()
           })
         }
