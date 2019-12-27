@@ -44,11 +44,12 @@ export default {
   computed: {
     ...mapGetters(['sidebar']),
     routes() {
+      const that = this
       const vipRoute = ['/', '/login'] // 白名单，不受权限控制
       let routers = JSON.parse(JSON.stringify(this.routesArr))
       const auth = JSON.parse(localStorage.getItem('_menu')) || []
       if (!auth.length) { // 没菜单，就是没权限
-        this.$router.push({ path: '/login' })
+        that.$router.push({ path: '/login' })
       } else {
         routers.forEach(route => {
           if (route.children && route.children.length) {

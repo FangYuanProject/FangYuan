@@ -21,19 +21,26 @@ export const constantRoutes = [
     path: '/user',
     component: Layout,
     redirect: '/user-list',
-    meta: { title: '用户管理', icon: 'yonghu', noCache: true },
+    meta: { title: '用户管理', icon: 'yonghu', affix: true },
     children: [
       {
         path: '/user-list',
         component: () => import('@/views/user/list'),
         name: 'user-list',
-        meta: { title: '用户列表', noCache: true }
+        meta: { title: '用户列表', affix: true }
       },
       {
         path: '/user-profile',
         component: () => import('@/views/user/home'),
         name: 'user-profile',
-        meta: { title: '用户主页', noCache: true }
+        hidden: true,
+        meta: { title: '用户主页', affix: true }
+      },
+      {
+        path: '/user-analysis',
+        component: () => import('@/views/user/analysis'),
+        name: 'user-analysis',
+        meta: { title: '用户分析', affix: true }
       }
     ]
   },
@@ -82,13 +89,15 @@ export const constantRoutes = [
   {
     path: '/test',
     component: Layout,
-    redircet: '/test-list',
+    redirect: '/test-list',
+    meta: { title: '试题管理', icon: 'zhenti', affix: true },
     children: [
       {
         path: '/test-list',
         component: () => import('@/views/documents/documentList'),
         name: 'document-list',
-        meta: { title: '试题管理', icon: 'zhenti', affix: true }
+        hidden: true,
+        meta: { title: '试题列表', affix: true }
       }
     ]
   },
@@ -96,25 +105,29 @@ export const constantRoutes = [
     path: '/post',
     component: Layout,
     redirect: '/post-list',
+    meta: { title: '论坛管理', icon: 'luntan', affix: true },
     children: [
       {
         path: '/post-list',
         component: () => import('@/views/forum/list'),
         name: 'forum-list',
-        meta: { title: '论坛管理', icon: 'luntan', affix: true }
+        hidden: true,
+        meta: { title: '论坛列表', affix: true }
       }
     ]
   },
   {
     path: '/goods',
     component: Layout,
-    redircet: '/goods-list',
+    redirect: '/goods-list',
+    meta: { title: '商品管理', icon: 'kecheng', affix: true },
     children: [
       {
         path: '/goods-list',
         component: () => import('@/views/courses/courseList'),
         name: 'goods-list',
-        meta: { title: '商品管理', icon: 'kecheng', affix: true }
+        hidden: true,
+        meta: { title: '商品列表', affix: true }
       }
     ]
   },
@@ -142,12 +155,14 @@ export const constantRoutes = [
     path: '/feedback',
     component: Layout,
     redirect: '/feedback-list',
+    meta: { title: '意见反馈', icon: 'yijian', affix: true },
     children: [
       {
         path: '/feedback-list',
         component: () => import('@/views/opinion/opinionList'),
         name: 'feedback-list',
-        meta: { title: '意见反馈', icon: 'yijian', affix: true }
+        hidden: true,
+        meta: { title: '意见列表', affix: true }
       }
     ]
   }
