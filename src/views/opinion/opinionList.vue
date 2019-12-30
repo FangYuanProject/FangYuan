@@ -9,10 +9,10 @@
       @handleClick="chooseOperation"
       @pagination="changePage"
     />
-    <el-dialog :title="titleReply ? '短信回复' : '邮件回复'" :visible.sync="changeVisible" width="508px" class="change-user-role" :close-on-click-modal="false">
+    <el-dialog :title="titleReply ? '消息回复' : '邮件回复'" :visible.sync="changeVisible" width="508px" class="change-user-role" :close-on-click-modal="false">
       <el-form v-if="titleReply" ref="formTextReply" :model="formText" :rules="ruleText">
-        <el-form-item label="回复内容" prop="content">
-          <el-input v-model="formText.content" type="textarea" placeholder="请输入" autocomplete="off" />
+        <el-form-item label="回复内容" prop="replyContent">
+          <el-input v-model="formText.replyContent" type="textarea" placeholder="请输入" autocomplete="off" />
         </el-form-item>
       </el-form>
       <el-form v-else ref="formEmailReply" :model="formEmail" :rules="ruleEmail">
@@ -54,9 +54,9 @@ export default {
         pageSize: 20
       },
       changeVisible: false,
-      titleReply: true, // true： 短信回复 false：邮件回复
+      titleReply: true, // true： 消息回复 false：邮件回复
       formText: {
-        content: '',
+        replyContent: '',
         // phoneNumber: '',
         id: ''
       },
@@ -65,7 +65,7 @@ export default {
         replyContent: ''
       },
       ruleText: {
-        content: [{ required: true, trigger: 'blur', message: '请输入回复内容' }]
+        replyContent: [{ required: true, trigger: 'blur', message: '请输入回复内容' }]
         // phoneNumber: [{ required: true, trigger: 'blur', message: '请输入电话号码' }]
       },
       ruleEmail: {
@@ -106,7 +106,7 @@ export default {
       const formType = this.titleReply ? 'formTextReply' : 'formEmailReply'
       this.$refs[formType].validate((valid) => {
         if (valid) {
-          if (this.titleReply) { // 短信回复
+          if (this.titleReply) { // 消息回复
             messageFeedBack(this.formText).then(res => {
               this.changeVisible = false
               AlertBox('success', '回复成功！')
