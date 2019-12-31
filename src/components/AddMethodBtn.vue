@@ -27,7 +27,6 @@ export default {
 .add-btn {
   width: 109px;
   height: 40px;
-  margin-bottom: 40px;
   margin-left: 123px;
   font-size: 14px;
   color: #fff;

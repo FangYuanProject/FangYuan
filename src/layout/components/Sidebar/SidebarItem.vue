@@ -99,4 +99,25 @@ export default {
   font-weight: 600;
   color: #fff;
 }
+
+.el-submenu__title *,
+.el-menu-item {
+  color: #fff;
+}
+
+.el-menu-item.is-active {
+  color: #fff;
+  background-color: #353b50 !important;
+}
+
+.el-submenu.is-active.is-opened,
+.el-menu-item.is-active.submenu-title-noDropdown {
+  background-color: #001528;
+}
+
+.el-submenu.is-opened,
+.el-submenu.is-opened .nest-menu {
+  background-color: #202431 !important;
+}
+
 </style>

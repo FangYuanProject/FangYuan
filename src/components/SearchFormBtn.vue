@@ -1,7 +1,7 @@
 <template>
   <el-button type="primary" class="search-btn" @click="searchList">查询</el-button>
 </template>
-<style lang="scss" scoped>
+<style lang="scss">
 .search-btn {
   width: 87px;
   height: 40px;

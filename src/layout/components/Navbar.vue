@@ -55,7 +55,7 @@ export default {
 <style lang="scss" scoped>
 .navbar {
   position: relative;
-  height: 50px;
+  height: 70px;
   overflow: hidden;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
@@ -63,7 +63,7 @@ export default {
   .hamburger-container {
     float: left;
     height: 100%;
-    line-height: 46px;
+    line-height: 70px;
     cursor: pointer;
     transition: background .3s;
     -webkit-tap-highlight-color: transparent;
@@ -81,7 +81,7 @@ export default {
     float: right;
     height: 100%;
     padding-right: 30px;
-    line-height: 50px;
+    line-height: 70px;
 
     .user-name {
       font-size: 14px;

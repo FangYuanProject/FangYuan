@@ -5,7 +5,7 @@
       <div class="top">
         <div class="change-user-head">
           <span class="user-head">
-            <img :src="headChat ? headChat : require('@/assets/user-head-default.png')" alt="">
+            <img :src="headChat ? headChat : require('@/assets/user-head-default.png')" alt="用户头像" :style="{'width':headChat ? '65%' : 'auto'}">
           </span>
         </div>
         <div class="edit-user-info float-right">
@@ -20,8 +20,7 @@
       </div>
       <div style="border-top: 1px solid #ebeef5;">
         <div class="bottom float-right">
-          <div style=" display: inline-block; width: 132px; height: 132px;" />
-          <div style=" display: inline-block; float: right; width: 45%;">
+          <div style=" display: inline-block; float: right; width: 57%;">
             <div class="recommand-code">
               <p>我的推荐码</p>
               <p>
@@ -60,7 +59,8 @@
             <p class="list-info">
               <span class="date float-left" v-html="processDate(item.updateTime)" />
               <span class="float-right">
-                收藏<em>{{ item.collect }}</em> <em>|&nbsp;&nbsp;</em>浏览<em>{{ item.visitor }}</em>
+                <!-- 收藏<em>{{ item.collect }}</em> <em>|&nbsp;&nbsp;</em> -->
+                浏览<em>{{ item.visitor }}</em>
               </span>
             </p>
           </li>
@@ -280,7 +280,7 @@ export default {
 }
 
 .top {
-  height: 215px;
+  overflow: hidden;
   border-bottom: 1px solid #ebeef5;
 }
 
@@ -310,17 +310,18 @@ export default {
       opacity: .5;
 
       img {
-        width: 100%;
+        vertical-align: middle;
       }
     }
   }
 
   .edit-user-info {
     display: inline-block;
-    width: 45%;
+    width: 57%;
 
     .user-name {
-      margin-bottom: 0;
+      display: block;
+      margin: 32px 0;
       font-size: 24px;
       font-weight: 600;
       color: rgba(32, 36, 49, 1);
@@ -347,7 +348,7 @@ export default {
     }
 
     p:not(:first-child) {
-      margin: 10px 0;
+      margin: 20px 0;
     }
   }
 
@@ -433,11 +434,10 @@ export default {
     padding: 0 10px;
 
     ul {
-      padding: 0;
+      padding: 30px 0 10px 30px;
 
       li.list {
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding: 10px 0;
         list-style: none;
         border-bottom: 1px solid #ebeef5;
 

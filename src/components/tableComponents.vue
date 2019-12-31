@@ -179,7 +179,7 @@ export default {
 <style lang="scss">
 
 #table-render {
-  margin-top: 40px;
+  margin-top: 30px;
   text-align: center;
 
   .tab-margin {
