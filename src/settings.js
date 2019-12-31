@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '方圆考研',
+  title: '考研知识服务',
 
   /**
    * @type {boolean} true | false
