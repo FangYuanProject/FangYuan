@@ -2,7 +2,7 @@
   <div :class="{'has-logo':showLogo}">
     <logo v-if="showLogo" :collapse="isCollapse" />
     <div class="system-name">
-      <span>方圆考研 &nbsp;</span>
+      <span>考研知识服务 &nbsp;</span>
 
       <span>管理系统</span>
     </div>
