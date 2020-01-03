@@ -112,8 +112,8 @@ export default {
         images_upload_handler: (blobInfo, success, failure) => {
           const formData = new FormData()
           formData.append('file', blobInfo.blob())
-          let config = {
-            headers:{'Content-Type':'multipart/form-data'}
+          const config = {
+            headers: { 'Content-Type': 'multipart/form-data' }
           }
           axios.post('/file/upload?privilege=PUBLIC', formData, config).then(res => {
             success(res.data.path)

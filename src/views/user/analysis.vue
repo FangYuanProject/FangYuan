@@ -45,13 +45,27 @@
       </div>
     </div>
     <bar-chart id="bar" ref="barCharts" width="100%" :opt="options" />
+    <ul class="pies">
+      <li>
+        <pie-chart id="pie-cross" ref="pieCross" width="100%" :opt="optCross" />
+      </li>
+      <li>
+        <pie-chart id="pie-grade" ref="pieGrade" width="100%" :opt="optGrade" />
+      </li>
+      <li>
+        <pie-chart id="pie-school" ref="pieSchool" width="100%" :opt="optSchool" />
+      </li>
+    </ul>
   </div>
 </template>
 <script>
+import { analysisCross, analysisGrade, analysisSchool } from '@/api/secIndex'
 import BarChart from '@/components/echarts/bar'
+import PieChart from '@/components/echarts/pie'
 export default {
   components: {
-    BarChart
+    BarChart,
+    PieChart
   },
   data() {
     return {
@@ -61,11 +75,17 @@ export default {
       timeRange: ['2010-01-01', '2019-12-30'],
       valueFormat: 'yyyy-MM-dd',
       timeType: 'daterange',
-      dataFade: 20
+      dataFade: 20,
+      optCross: {},
+      optGrade: {},
+      optSchool: {}
     }
   },
   created() {
     this.goGetBar()
+    this.getCross()
+    this.getGrade()
+    this.getSchool()
   },
   methods: {
     chooseTab(ind) {
@@ -177,7 +197,31 @@ export default {
         color: ['#dde8ed']
       }
       this.$nextTick(() => {
-        this.$refs.barCharts.drawBar()
+        this.$refs.barCharts.drawChart()
+      })
+    },
+    getCross() {
+      analysisCross().then(res => {
+        const data = res.data.data
+        this.optCross = {
+
+        }
+      })
+    },
+    getGrade() {
+      analysisGrade().then(res => {
+        const data = res.data.data
+        this.optGrade = {
+
+        }
+      })
+    },
+    getSchool() {
+      analysisSchool().then(res => {
+        const data = res.data.data
+        this.optSchool = {
+
+        }
       })
     },
     goClear() {

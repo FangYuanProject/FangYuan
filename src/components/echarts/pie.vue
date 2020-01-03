@@ -3,14 +3,13 @@
 </template>
 <script>
 const echarts = require('echarts/lib/echarts')
-require('echarts/lib/chart/bar')
-require('echarts/lib/component/dataZoom')
+require('echarts/lib/chart/pie')
 export default {
-  name: 'BarCharts',
+  name: 'PieCharts',
   props: {
     id: {
       type: String,
-      default: 'eBar'
+      default: 'ePie'
     },
     width: {
       type: String,

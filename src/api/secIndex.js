@@ -227,3 +227,30 @@ export async function schoolLogoUpload(data) {
     contentType: false
   })
 }
+
+/**
+ *  用户分析
+ */
+// 跨考比例
+export async function analysisCross() {
+  return request({
+    url: '/auth/analysis/cross-profession',
+    method: 'post'
+  })
+}
+
+// 年级分布
+export async function analysisGrade() {
+  return request({
+    url: '/auth/analysis/grade-distribution',
+    method: 'post'
+  })
+}
+
+// 学校分布
+export async function analysisSchool() {
+  return request({
+    url: '/auth/analysis/school-distribution',
+    method: 'post'
+  })
+}
