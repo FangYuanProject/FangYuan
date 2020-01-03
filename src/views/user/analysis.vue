@@ -44,16 +44,20 @@
         <el-button class="btn btn-clear" @click="goClear">清空</el-button>
       </div>
     </div>
-    <bar-chart id="bar" ref="barCharts" width="100%" :opt="options" />
+    <bar-chart v-show="active===1" id="bar" ref="barCharts" width="100%" :opt="options" />
+    <line-chart v-show="active===3" id="line" ref="lineCharts" width="100%" :opt="optLine" />
     <ul class="pies">
       <li>
-        <pie-chart id="pie-cross" ref="pieCross" width="100%" :opt="optCross" />
+        <h6>用户跨考比例</h6>
+        <pie-chart id="pie-cross" ref="pieCross" width="100%" height="300px" :opt="optCross" />
       </li>
       <li>
-        <pie-chart id="pie-grade" ref="pieGrade" width="100%" :opt="optGrade" />
+        <h6>用户年级分布</h6>
+        <pie-chart id="pie-grade" ref="pieGrade" width="100%" height="300px" :opt="optGrade" />
       </li>
       <li>
-        <pie-chart id="pie-school" ref="pieSchool" width="100%" :opt="optSchool" />
+        <h6>用户本科院校分布</h6>
+        <pie-chart id="pie-school" ref="pieSchool" width="100%" height="300px" :opt="optSchool" />
       </li>
     </ul>
   </div>
@@ -61,10 +65,12 @@
 <script>
 import { analysisCross, analysisGrade, analysisSchool } from '@/api/secIndex'
 import BarChart from '@/components/echarts/bar'
+import LineChart from '@/components/echarts/line'
 import PieChart from '@/components/echarts/pie'
 export default {
   components: {
     BarChart,
+    LineChart,
     PieChart
   },
   data() {
@@ -72,13 +78,13 @@ export default {
       active: 1,
       acTime: 1,
       options: {},
+      optLine: {},
       timeRange: ['2010-01-01', '2019-12-30'],
       valueFormat: 'yyyy-MM-dd',
       timeType: 'daterange',
-      dataFade: 20,
-      optCross: {},
-      optGrade: {},
-      optSchool: {}
+      optCross: [],
+      optGrade: [],
+      optSchool: []
     }
   },
   created() {
@@ -91,8 +97,11 @@ export default {
     chooseTab(ind) {
       this.active = ind
       if (this.active === 1) {
-        this.dataFade *= 2
         this.goGetBar()
+      } else if (this.active ===3) {
+        this.goGetLine()
+      } else {
+        this.goGetMap()
       }
     },
     chooseTime(index, type, format) {
@@ -113,9 +122,15 @@ export default {
     },
     goSearch() {
       if (this.active === 1) {
-        this.dataFade = 30
         this.goGetBar()
+      } else if (this.active === 3) {
+        this.goGetLine()
+      } else {
+        this.goGetMap()
       }
+    },
+    goGetMap() {
+
     },
     goGetBar() {
       // 优先时间判断
@@ -192,7 +207,7 @@ export default {
               color: '#445a64'
             }
           },
-          data: [5, 20, 36, 10, 10, this.dataFade, 30, 50, 40, 22, 31]
+          data: [5, 20, 36, 10, 10, 22, 30, 50, 40, 22, 31]
         }],
         color: ['#dde8ed']
       }
@@ -200,28 +215,142 @@ export default {
         this.$refs.barCharts.drawChart()
       })
     },
+    goGetLine() {
+      // 优先时间判断
+      this.optLine = {
+        title: { show: false },
+        grid: {
+          left: 120,
+          right: 80,
+          bottom: 80
+        },
+        legend: {
+          top: 20,
+          right: 80,
+          icon: 'circle',
+          itemWidth: 7,
+          itemHeight: 7,
+          data: ['用户PV', '用户UV']
+        },
+        tooltip: {},
+        xAxis: {
+          data: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
+          axisLine: {
+            lineStyle: {
+              color: '#e6e6e6'
+            }
+          },
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+            fontSize: '10px',
+            color: '#9b9b9b',
+            padding: [10, 0]
+          }
+        },
+        yAxis: {
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+            fontSize: '10px',
+            color: '#9b9b9b',
+            padding: [0, 20]
+          },
+          splitLine: {
+            lineStyle: {
+              color: '#e6e6e6'
+            }
+          }
+        },
+        dataZoom: [{
+          type: 'slider',
+          id: 'dataZoomX',
+          show: true,
+          height: 30,
+          xAxisIndex: 0,
+          orient: 'horizontal',
+          bottom: 0,
+          start: 10,
+          end: 90,
+          handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+          handleSize: '80%',
+          handleStyle: {
+            color: '#455a64'
+          },
+          textStyle: {
+            color: '#455a64'
+          },
+          fillerColor: '#dde8ed',
+          backgroundColor: '#f9f9f9',
+          borderColor: '#90979c'
+        }],
+        series: [{
+          name: '用户PV',
+          type: 'line',
+          data: [5, 20, 36, 10, 10, 20, 30, 50, 40, 22, 31]
+        },
+        {
+          name: '用户UV',
+          type: 'line',
+          data: [15, 2, 6, 1, 1, 2, 33, 10, 46, 2, 33]
+        }],
+        color: ['#108ee9', '#2fc25b']
+      }
+      this.$nextTick(() => {
+        this.$refs.lineCharts.drawChart()
+      })
+    },
     getCross() {
       analysisCross().then(res => {
-        const data = res.data.data
-        this.optCross = {
-
-        }
+        const data = res.data
+        this.optCross = []
+        data.forEach(da => {
+          this.optCross.push({
+            value: da.number,
+            name: da.crossProfession,
+            pro: da.proportion
+          })
+        })
+        this.$nextTick(() => {
+          this.$refs.pieCross.drawChart()
+        })
       })
     },
     getGrade() {
       analysisGrade().then(res => {
-        const data = res.data.data
-        this.optGrade = {
-
-        }
+        const data = res.data
+        this.optGrade = []
+        data.forEach(da => {
+          this.optGrade.push({
+            value: da.number,
+            name: da.grade,
+            pro: da.proportion
+          })
+        })
+        this.$nextTick(() => {
+          this.$refs.pieGrade.drawChart()
+        })
       })
     },
     getSchool() {
       analysisSchool().then(res => {
-        const data = res.data.data
-        this.optSchool = {
-
-        }
+        const data = res.data
+        this.optSchool = []
+        data.forEach(da => {
+          this.optSchool.push({
+            value: da.number,
+            name: da.property,
+            pro: da.proportion
+          })
+        })
+        this.$nextTick(() => {
+          this.$refs.pieSchool.drawChart()
+        })
       })
     },
     goClear() {
@@ -247,6 +376,30 @@ export default {
       border-bottom: 1px solid #ebeef5;
     }
 
+    .pies {
+      padding: 20px 0;
+      margin: 20px 30px;
+      border-top: 1px solid #ebeef5;
+
+      & > li {
+        display: inline-block;
+        width: 33%;
+        list-style: none;
+
+        &:nth-child(2) {
+          border-right: 1px solid #ebeef5;
+          border-left: 1px solid #ebeef5;
+        }
+
+        h6 {
+          padding-left: 30px;
+          font-size: 16px;
+          font-weight: bold;
+          color: #455a64;
+        }
+      }
+    }
+
     .nav {
       height: 76px;
       padding: 0;
@@ -260,13 +413,26 @@ export default {
         li {
           display: inline-block;
           float: left;
-          padding: 0 36px;
+          padding: 0 5px;
+          overflow: hidden;
           font-size: 16px;
           font-weight: bold;
           line-height: 75px;
           color: #455a64;
+          text-align: center;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           list-style: none;
           cursor: pointer;
+
+          &:first-child,
+          &:nth-child(3) {
+            width: 30%;
+          }
+
+          &:nth-child(2) {
+            width: 38%;
+          }
 
           &:hover,
           &.actived {
@@ -278,11 +444,12 @@ export default {
 
       .time-picker {
         float: right;
-        width: 51%;
+        width: 60%;
+        text-align: right;
 
         .time-btn {
           display: inline-block;
-          width: 300px;
+          width: 275px;
           line-height: 75px;
 
           li {
