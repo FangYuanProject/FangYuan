@@ -143,8 +143,13 @@ $light_gray:#eee;
     position: relative;
 
     .logo_img {
+      width: 179px;
       margin: 40px auto 50px;
       text-align: center;
+
+      img {
+        width: 100%;
+      }
     }
   }
 
