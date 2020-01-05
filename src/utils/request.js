@@ -2,19 +2,16 @@ import axios from 'axios'
 import { AlertBox } from '@/utils/util.js'
 import router from '@/router'
 import { Loading } from 'element-ui'
-// import store from '@/store'
-// import { getToken } from '@/utils/auth'
 
-// const baseURL = window.APP_CONFIG.BASE_URL
-const baseURL = process.env.VUE_APP_BASE_API
+const baseURL = window.APP_CONFIG.BASE_URL
+// const baseURL = process.env.VUE_APP_BASE_API
 
 // create an axios instance
 const service = axios.create({
   baseURL: baseURL, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
+
   timeout: 30000 // request timeout
 })
-console.log(router)
 
 const allowUrls = [
   '/file/download'

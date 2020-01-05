@@ -145,6 +145,10 @@ $light_gray:#eee;
     .logo_img {
       margin: 40px auto 50px;
       text-align: center;
+
+      img {
+        width: 179px;
+      }
     }
   }
 
