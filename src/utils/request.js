@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { AlertBox } from '@/utils/util.js'
 import router from '@/router'
+import { Loading } from 'element-ui'
 // import store from '@/store'
 // import { getToken } from '@/utils/auth'
 
@@ -18,20 +19,40 @@ console.log(router)
 const allowUrls = [
   '/file/download'
 ]
+// 因为loading加上target将变为数组
+let loading
+let loadingCount = 0
+const loadingArray = []
+const openLoading = () => {
+  loading = Loading.service({
+    target: document.querySelector('#table-render'),
+    text: '加载中'
+  })
+}
 
-// service.interceptors.request.use(
-//   config => {
-//     if (config.url.indexOf('/file/download') > -1) {
-//       config.responseType = 'blob'
-//     }
-//     return config
-//   }
-// )
+service.interceptors.request.use(
+  config => {
+    loadingCount++
+    openLoading()
+    loadingArray.push(loading)
+    return config
+  },
+  err => {
+    loadingCount--
+    if (!loadingCount) {
+      loadingArray.forEach(item => item.close())
+    }
+    return Promise(err)
+  })
 
 // response interceptor
 service.interceptors.response.use(
   response => {
     const res = response.data
+    loadingCount--
+    if (!loadingCount) {
+      loadingArray.forEach(item => item.close())
+    }
     // 白名单路径不需要任何code判断
     for (let urlA = 0; urlA < allowUrls.length; urlA++) {
       if (response.config.url.indexOf(allowUrls[urlA]) > -1) {
@@ -54,6 +75,10 @@ service.interceptors.response.use(
     }
   },
   error => {
+    loadingCount--
+    if (!loadingCount) {
+      loadingArray.forEach(item => item.close())
+    }
     AlertBox('error', error.message)
     return Promise.reject(error)
   }

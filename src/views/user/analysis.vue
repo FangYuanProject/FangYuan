@@ -63,10 +63,11 @@
   </div>
 </template>
 <script>
-import { analysisCross, analysisGrade, analysisSchool } from '@/api/secIndex'
+import { analysisRegister, analysisLocation, analysisActive, analysisCross, analysisGrade, analysisSchool } from '@/api/secIndex'
 import BarChart from '@/components/echarts/bar'
 import LineChart from '@/components/echarts/line'
 import PieChart from '@/components/echarts/pie'
+import { timeStr } from '@/utils/util'
 export default {
   components: {
     BarChart,
@@ -98,7 +99,7 @@ export default {
       this.active = ind
       if (this.active === 1) {
         this.goGetBar()
-      } else if (this.active ===3) {
+      } else if (this.active === 3) {
         this.goGetLine()
       } else {
         this.goGetMap()
@@ -133,89 +134,109 @@ export default {
 
     },
     goGetBar() {
-      // 优先时间判断
-      this.options = {
-        title: { show: false },
-        grid: {
-          left: 120,
-          right: 80,
-          bottom: 80
-        },
-        tooltip: {},
-        xAxis: {
-          data: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
-          axisLine: {
-            lineStyle: {
-              color: '#e6e6e6'
-            }
-          },
-          axisTick: {
-            show: false
-          },
-          axisLabel: {
-            fontSize: '10px',
-            color: '#9b9b9b',
-            padding: [10, 0]
-          }
-        },
-        yAxis: {
-          axisLine: {
-            show: false
-          },
-          axisTick: {
-            show: false
-          },
-          axisLabel: {
-            fontSize: '10px',
-            color: '#9b9b9b',
-            padding: [0, 20]
-          },
-          splitLine: {
-            lineStyle: {
-              color: '#e6e6e6'
-            }
-          }
-        },
-        dataZoom: [{
-          type: 'slider',
-          id: 'dataZoomX',
-          show: true,
-          height: 30,
-          xAxisIndex: 0,
-          orient: 'horizontal',
-          bottom: 0,
-          start: 10,
-          end: 90,
-          handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-          handleSize: '80%',
-          handleStyle: {
-            color: '#455a64'
-          },
-          textStyle: {
-            color: '#455a64'
-          },
-          fillerColor: '#dde8ed',
-          backgroundColor: '#f9f9f9',
-          borderColor: '#90979c'
-        }],
-        series: [{
-          name: '销量',
-          type: 'bar',
-          barWidth: '32',
-          emphasis: {
-            itemStyle: {
-              color: '#445a64'
-            }
-          },
-          data: [5, 20, 36, 10, 10, 22, 30, 50, 40, 22, 31]
-        }],
-        color: ['#dde8ed']
+      const data = {
+        registerTime: timeStr(this.timeRange[0] || new Date('2000-01-01')) + '~' + timeStr(this.timeRange[1] || new Date())
       }
-      this.$nextTick(() => {
-        this.$refs.barCharts.drawChart()
+      analysisRegister(data).then(res => {
+        const data = res.data
+        this.options = {
+          title: { show: false },
+          grid: {
+            left: 120,
+            right: 80,
+            bottom: 80
+          },
+          tooltip: {},
+          xAxis: {
+            data: (() => {
+              let arr = []
+              for(let key in data) {
+                arr.push(key)
+              }
+              return arr
+            })(),
+            axisLine: {
+              lineStyle: {
+                color: '#e6e6e6'
+              }
+            },
+            axisTick: {
+              show: false
+            },
+            axisLabel: {
+              fontSize: '10px',
+              color: '#9b9b9b',
+              padding: [10, 0]
+            }
+          },
+          yAxis: {
+            axisLine: {
+              show: false
+            },
+            axisTick: {
+              show: false
+            },
+            axisLabel: {
+              fontSize: '10px',
+              color: '#9b9b9b',
+              padding: [0, 20]
+            },
+            splitLine: {
+              lineStyle: {
+                color: '#e6e6e6'
+              }
+            }
+          },
+          dataZoom: [{
+            type: 'slider',
+            id: 'dataZoomX',
+            show: true,
+            height: 30,
+            xAxisIndex: 0,
+            orient: 'horizontal',
+            bottom: 0,
+            start: 10,
+            end: 90,
+            handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+            handleSize: '80%',
+            handleStyle: {
+              color: '#455a64'
+            },
+            textStyle: {
+              color: '#455a64'
+            },
+            fillerColor: '#dde8ed',
+            backgroundColor: '#f9f9f9',
+            borderColor: '#90979c'
+          }],
+          series: [{
+            name: '销量',
+            type: 'bar',
+            barWidth: '32',
+            emphasis: {
+              itemStyle: {
+                color: '#445a64'
+              }
+            },
+            data: (() => {
+              let arr = []
+              for(let key in data) {
+                arr.push(data[key])
+              }
+              return arr
+            })()
+          }],
+          color: ['#dde8ed']
+        }
+        this.$nextTick(() => {
+          this.$refs.barCharts.drawChart()
+        })
       })
     },
     goGetLine() {
+      analysisActive().then(res => {
+        debugger
+      })
       // 优先时间判断
       this.optLine = {
         title: { show: false },

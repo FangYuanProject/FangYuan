@@ -59,6 +59,21 @@ export function dateTimeStr(time) {
   timeStr = year + '-' + (month > 9 ? month : ('0' + month)) + '-' + (day > 9 ? day : ('0' + day)) + ' ' + (hour > 9 ? hour : ('0' + hour)) + ':' + (min > 9 ? min : ('0' + min)) + ':' + (sec > 9 ? sec : ('0' + sec))
   return timeStr
 }
+/**
+ * 时间格式转换年月日格式
+ */
+export function timeStr(time) {
+  if (!time) {
+    return ''
+  }
+  let timeStr = ''
+  const dateStr = new Date(time)
+  const year = dateStr.getFullYear()
+  const month = dateStr.getMonth() + 1
+  const day = dateStr.getDate()
+  timeStr = year + '-' + (month > 9 ? month : ('0' + month)) + '-' + (day > 9 ? day : ('0' + day))
+  return timeStr
+}
 /** 验证表单参数是否通过
    * @param {String} formName
    * @returns {Function} callback

@@ -231,6 +231,31 @@ export async function schoolLogoUpload(data) {
 /**
  *  用户分析
  */
+// 用户注册数
+export async function analysisRegister(data) {
+  return request({
+    url: '/auth/analysis/register-number',
+    method: 'post',
+    data: data
+  })
+}
+
+// 用户地区登录分布
+export async function analysisLocation() {
+  return request({
+    url: '/auth/analysis/login-location',
+    method: 'post'
+  })
+}
+
+// 用户活跃度
+export async function analysisActive() {
+  return request({
+    url: '/auth/analysis/active-page',
+    method: 'post'
+  })
+}
+
 // 跨考比例
 export async function analysisCross() {
   return request({
