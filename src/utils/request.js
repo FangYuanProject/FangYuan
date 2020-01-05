@@ -56,12 +56,8 @@ service.interceptors.response.use(
         return res
       }
     }
-    // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 0) {
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       if (res.code === 10 && res.message === '业务异常,根据token查询用户异常' || res.message === '无权限' && res.code === 40) {
-        // // to re-login
-        // AlertBox('error', '登录超时，请重新登录')
         router.push({ path: '/login' })
       } else {
         AlertBox('error', res.message || 'Error')
