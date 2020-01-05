@@ -1,6 +1,5 @@
 import request from '@/utils/request'
 import { clearNullValue } from '@/utils/util'
-
 /** **********
  *  学校接口
 ********** **/
@@ -241,18 +240,20 @@ export async function analysisRegister(data) {
 }
 
 // 用户地区登录分布
-export async function analysisLocation() {
+export async function analysisLocation(data) {
   return request({
     url: '/auth/analysis/login-location',
-    method: 'post'
+    method: 'post',
+    data: data
   })
 }
 
 // 用户活跃度
-export async function analysisActive() {
+export async function analysisActive(data) {
   return request({
     url: '/auth/analysis/active-page',
-    method: 'post'
+    method: 'post',
+    data: data
   })
 }
 

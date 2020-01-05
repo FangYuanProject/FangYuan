@@ -1,9 +1,10 @@
 <template>
-  <div :id="id" :style="{width:width,height:height}"></div>
+  <div :id="id" :style="{width:width,height:height}" />
 </template>
 <script>
 const echarts = require('echarts/lib/echarts')
 require('echarts/lib/component/legend')
+require('echarts/lib/component/tooltip')
 require('echarts/lib/chart/pie')
 export default {
   name: 'PieCharts',
@@ -14,7 +15,7 @@ export default {
     },
     width: {
       type: String,
-      default: '400px'
+      default: '100%'
     },
     height: {
       type: String,
@@ -27,15 +28,15 @@ export default {
   },
   data() {
     return {
-      data: ''
+      myChart: ''
     }
   },
   mounted() {
+    this.myChart = echarts.init(document.getElementById(this.id))
   },
   methods: {
     drawChart() {
       const that = this
-      const myChart = echarts.init(document.getElementById(this.id))
       const option = {
         title: { show: false },
         grid: {
@@ -92,7 +93,8 @@ export default {
         }],
         color: ['#2E269D', '#4D80E3', '#46B4E6', '#EE8240', '#FBDC8A']
       }
-      myChart.setOption(option)
+      this.myChart.hideLoading()
+      this.myChart.setOption(option)
     }
   }
 }

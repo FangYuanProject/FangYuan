@@ -1,10 +1,11 @@
 <template>
-  <div :id="id" :style="{width:width,height:height}"></div>
+  <div :id="id" :style="{width:width,height:height}" />
 </template>
 <script>
 const echarts = require('echarts/lib/echarts')
 require('echarts/lib/chart/line')
 require('echarts/lib/component/dataZoom')
+require('echarts/lib/component/tooltip')
 export default {
   name: 'LineCharts',
   props: {
@@ -14,7 +15,7 @@ export default {
     },
     width: {
       type: String,
-      default: '400px'
+      default: '100%'
     },
     height: {
       type: String,
@@ -27,15 +28,17 @@ export default {
   },
   data() {
     return {
-      data: ''
+      myChart: ''
     }
   },
   mounted() {
+    this.myChart = echarts.init(document.getElementById(this.id))
   },
   methods: {
     drawChart() {
-      const myChart = echarts.init(document.getElementById(this.id))
-      myChart.setOption(this.opt)
+      // this.myChart.hideLoading()
+      this.myChart.setOption(this.opt)
+      // this.myChart.resize()
     }
   }
 }
