@@ -3,8 +3,8 @@ import { AlertBox } from '@/utils/util.js'
 import router from '@/router'
 import { Loading } from 'element-ui'
 
-const baseURL = window.APP_CONFIG.BASE_URL
-// const baseURL = process.env.VUE_APP_BASE_API
+// const baseURL = window.APP_CONFIG.BASE_URL
+const baseURL = process.env.VUE_APP_BASE_API
 
 // create an axios instance
 const service = axios.create({
