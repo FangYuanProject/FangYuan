@@ -86,7 +86,7 @@ export default {
       options: {},
       optLine: {},
       optMap: {},
-      timeRange: ['2010-01-01', '2019-12-30'],
+      timeRange: ['2010-01-01', timeStr(new Date())],
       valueFormat: 'yyyy-MM-dd',
       timeType: 'daterange',
       optCross: [],
@@ -151,8 +151,8 @@ export default {
         const data = []
         for (const key in province) {
           data.push({
-            // value: province[key],
-            value: parseInt(Math.random() * 100),
+            value: province[key],
+            // value: parseInt(Math.random() * 100),
             name: key
           })
         }
@@ -454,7 +454,14 @@ export default {
         })
       })
       analysisActive(data).then(res => {
-        // const userData = res.data
+        const userData = res.data
+        const lineData = [[], []]
+        const xData = []
+        for (const key in userData) {
+          xData.push(key)
+          lineData[0].push(userData[key][1])
+          lineData[1].push(userData[key][0])
+        }
         this.optLine = {
           title: { show: false },
           grid: {
@@ -474,7 +481,7 @@ export default {
             trigger: 'axis'
           },
           xAxis: {
-            data: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
+            data: xData,
             axisLine: {
               lineStyle: {
                 color: '#e6e6e6'
@@ -490,6 +497,7 @@ export default {
             }
           },
           yAxis: {
+            minInterval: 1,
             axisLine: {
               show: false
             },
@@ -532,12 +540,12 @@ export default {
           series: [{
             name: '用户PV',
             type: 'line',
-            data: [5, 20, 36, 10, 10, 20, 30, 50, 40, 22, 31]
+            data: lineData[0]
           },
           {
             name: '用户UV',
             type: 'line',
-            data: [15, 2, 6, 1, 1, 2, 33, 10, 46, 2, 33]
+            data: lineData[1]
           }],
           color: ['#108ee9', '#2fc25b']
         }
