@@ -36,9 +36,9 @@ export default {
   },
   methods: {
     drawChart() {
-      // this.myChart.hideLoading()
+      this.myChart.hideLoading()
       this.myChart.setOption(this.opt)
-      // this.myChart.resize()
+      this.myChart.resize()
     }
   }
 }

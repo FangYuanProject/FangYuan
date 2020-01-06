@@ -384,6 +384,8 @@ export default {
         tData.forEach(list => {
           list.level = 1
           list.name = list.collegeName
+          list.universityCode = res.data.universityCode
+          list.universityName = res.data.universityName
           list.children = []
           list.detailMajorRespList.forEach(li => {
             const theYear = li.year
@@ -451,6 +453,9 @@ export default {
       this.$nextTick(() => {
         this.$refs['formMajor'].resetFields()
         this.formMajor.collegeId = data.collegeId
+        this.formMajor.collegeName = data.collegeName
+        this.formMajor.universityCode = data.universityCode
+        this.formMajor.universityName = data.universityName
       })
     },
     // 编辑专业弹窗打开

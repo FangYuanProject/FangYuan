@@ -133,7 +133,7 @@ export default {
       publishFormRules: {
         type: [{ required: true, message: '请输入帖子类型', trigger: 'change' }],
         title: [{ required: true, message: '请输入帖子标题', trigger: 'blur' }],
-        content:[{required:true,message:'请输入帖子内容',trigger:'blur'}]
+        content: [{ required: true, message: '请输入帖子内容', trigger: 'blur' }]
       },
       status: 'checkReason', // 判断帖子是否已下架
       searchForm: {

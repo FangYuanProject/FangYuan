@@ -2,7 +2,6 @@ import axios from 'axios'
 import { AlertBox } from '@/utils/util.js'
 import router from '@/router'
 import { Loading } from 'element-ui'
-import Cookies from 'js-cookie'
 
 // const baseURL = window.APP_CONFIG.BASE_URL
 const baseURL = process.env.VUE_APP_BASE_API
@@ -35,8 +34,6 @@ service.interceptors.request.use(
       openLoading()
       loadingArray.push(loading)
     }
-    console.log(returnCitySN['cip'])
-    Cookies.set('IPv4', returnCitySN['cip'])
     return config
   },
   err => {

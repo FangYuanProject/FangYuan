@@ -8,6 +8,7 @@ require('echarts/lib/chart/bar')
 require('echarts/lib/component/tooltip')
 require('echarts/lib/component/visualMap')
 require('echarts/lib/component/geo')
+require('echarts/lib/component/dataZoom')
 import chinaMap from 'echarts/map/json/china.json'
 export default {
   name: 'MapCharts',
@@ -22,7 +23,7 @@ export default {
     },
     height: {
       type: String,
-      default: '400px'
+      default: '600px'
     },
     opt: {
       type: Object,
@@ -35,8 +36,10 @@ export default {
     }
   },
   mounted() {
-    echarts.registerMap('china', chinaMap)
-    this.myChart = echarts.init(document.getElementById(this.id))
+    this.$nextTick(() => {
+      echarts.registerMap('china', chinaMap)
+      this.myChart = echarts.init(document.getElementById(this.id))
+    })
   },
   methods: {
     drawChart() {
