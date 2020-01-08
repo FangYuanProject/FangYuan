@@ -667,8 +667,7 @@ export default {
     },
 
     changeLogo(file) {
-      console.log(file)
-      this.school.badgeUrl = 'http://defunction.cn/' + file.data.path
+      this.school.badgeUrl = file.data.path
       schoolEdit({ badgeUrl: file.data.path, id: this.$route.query.id }).then((res) => {
         AlertBox('success', '更换校徽成功')
       })
