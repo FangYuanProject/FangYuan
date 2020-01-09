@@ -302,16 +302,16 @@ export default {
   },
   methods: {
     beforeUploadQuestion(file) {
-      const fileLimit = file.size / 1024 / 1024 < 1
+      const fileLimit = file.size / 1024 / 1024 < 10
       if (!fileLimit) {
-        AlertBox('error', '文件大小不能超过1MB！')
+        AlertBox('error', '文件大小不能超过10MB！')
         return false
       }
     },
     beforeUploadAnswer(file) {
-      const fileLimit = file.size / 1024 / 1024 < 1
+      const fileLimit = file.size / 1024 / 1024 < 10
       if (!fileLimit) {
-        AlertBox('error', '文件大小不能超过1MB！')
+        AlertBox('error', '文件大小不能超过10MB！')
         return false
       }
     },
