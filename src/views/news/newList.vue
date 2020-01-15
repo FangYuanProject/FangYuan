@@ -62,7 +62,7 @@ import tableComponents from '@/components/tableComponents'
 import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 import { newsList, newsType, publishNews, unshelveNews, newsStatus } from '@/api/index'
-import { AlertBox, dateTimeStr } from '@/utils/util'
+import { AlertBox, dateTimeStr, comfirmBox } from '@/utils/util'
 
 export default {
   components: {
@@ -171,9 +171,11 @@ export default {
     },
     chooseOperation(type, data) {
       if (type === 'publish') {
-        publishNews({ id: data.id }).then(res => {
-          AlertBox('success', '发布成功')
-          this.getNewsList()
+        comfirmBox('warning', '是否确定发布新闻', () => {
+          publishNews({ id: data.id }).then(res => {
+            AlertBox('success', '发布成功')
+            this.getNewsList()
+          })
         })
       } else {
         unshelveNews({ id: data.id }).then(res => {

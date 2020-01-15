@@ -222,19 +222,23 @@ export default {
       if (this.publishForm.type !== '') {
         vaildForm(this.$refs['publishForm']).then(res => {
           if (res) {
-            publishForum(params).then(res => {
-              this.publishDialogVisible = false
-              AlertBox('success', '发布成功')
-              this.getForumList()
+            comfirmBox('warning', '是否确定发布帖子？', () => {
+              publishForum(params).then(res => {
+                this.publishDialogVisible = false
+                AlertBox('success', '发布成功')
+                this.getForumList()
+              })
             })
           }
         })
       } else {
-        publishForum(params).then(res => {
-          AlertBox('success', '发布成功')
-          this.publishDialogVisible = false
-          this.outSellDialogVisible = false
-          this.getForumList()
+        comfirmBox('warning', '是否确定发布帖子？', () => {
+          publishForum(params).then(res => {
+            AlertBox('success', '发布成功')
+            this.publishDialogVisible = false
+            this.outSellDialogVisible = false
+            this.getForumList()
+          })
         })
       }
       this.isDisabled = false

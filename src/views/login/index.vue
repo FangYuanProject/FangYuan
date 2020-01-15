@@ -31,7 +31,7 @@
           autocomplete="on"
         />
       </el-form-item>
-      <!-- <el-checkbox :checked="isAutoLogin" label="自动登录" fill="#455A64" /> -->
+      <el-checkbox v-model="isAutoLoginStatus" label="自动登录" fill="#455A64" />
       <el-button :loading="loading" type="primary" class="login-btn" @click.native.prevent="handleLogin">登录</el-button>
     </el-form>
     <input v-focus type="text" style="position: absolute; opacity: 0;">
@@ -54,6 +54,7 @@ export default {
       }
     }
   },
+
   data() {
     const validateUsername = (rule, value, callback) => {
       if (validEmail(value)) {
@@ -69,6 +70,7 @@ export default {
         callback()
       }
     }
+
     return {
       loginForm: {
         email: '',
@@ -80,7 +82,12 @@ export default {
       },
       loading: false,
       showDialog: false,
-      isAutoLogin: true
+      isAutoLoginStatus: false
+    }
+  },
+  watch: {
+    isAutoLoginStatus(val) {
+      console.log(val)
     }
   },
   methods: {

@@ -182,7 +182,7 @@ import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 // import UploadPicBtn from '@/components/UploadPictureBtn'
 import { addTest, delTest, testDetail, editTest, publishTest, testList, outsellTest, testStatus, testType, uploadDown, schoolCorrelation, majorList, collegeList } from '@/api/index'
-import { AlertBox, dateTimeStr } from '../../utils/util'
+import { AlertBox, dateTimeStr, comfirmBox } from '../../utils/util'
 import { baseURLFileUpload } from '@/utils/request'
 export default {
   components: {
@@ -445,15 +445,17 @@ export default {
               this.getTestList()
             })
           } else if (type === 'publish') {
-            publishTest(modalData).then(res => {
-              this.dialogVisible = false
-              AlertBox('success', '发布成功')
-              this.getTestList()
+            comfirmBox('warning', '是否确定发布试题', () => {
+              publishTest(modalData).then(res => {
+                this.dialogVisible = false
+                AlertBox('success', '发布成功')
+                this.getTestList()
+              })
             })
           } else if (type === 'update') {
             editTest(modalData).then(res => {
               this.dialogVisible = false
-              AlertBox('success', '发布成功')
+              AlertBox('success', '更新成功')
               this.getTestList()
             })
           }
@@ -522,9 +524,11 @@ export default {
           this.downloadFile(blobUrl, data.answerName)
         })
       } else if (type === 'publish') {
-        publishTest({ id: data.id }).then(res => {
-          AlertBox('success', '发布成功')
-          this.getTestList()
+        comfirmBox('warning', '是否确定发布试题', () => {
+          publishTest({ id: data.id }).then(res => {
+            AlertBox('success', '发布成功')
+            this.getTestList()
+          })
         })
       } else {
         this.outSell('', data.id)

@@ -9,7 +9,8 @@ export function comfirmBox(type, title, successCallBack, failCallBack) {
   MessageBox.confirm(title, '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: type
+    type: type,
+    center: true
   }).then(() => {
     successCallBack()
   }).catch(() => {

@@ -59,7 +59,7 @@
 <script>
 import Tinymce from '@/components/Tinymce/Editor'
 import { publishNews, saveNews, unshelveNews, deleteNews, newsDetail, editNews, newsType, schoolCorrelation } from '@/api/index'
-import { AlertBox, vaildForm } from '@/utils/util'
+import { AlertBox, vaildForm, comfirmBox } from '@/utils/util'
 export default {
   name: 'NewsDetail',
   components: { Tinymce },
@@ -111,9 +111,11 @@ export default {
               this.$router.push({ name: 'news-list' })
             })
           } else if (type === 'publish') {
-            publishNews(this.params).then(res => {
-              AlertBox('success', '发布成功')
-              this.$router.push({ name: 'news-list' })
+            comfirmBox('warning', '是否确定发布新闻', () => {
+              publishNews(this.params).then(res => {
+                AlertBox('success', '发布成功')
+                this.$router.push({ name: 'news-list' })
+              })
             })
           } else {
             editNews(this.params).then(res => {
