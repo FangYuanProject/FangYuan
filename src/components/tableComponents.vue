@@ -14,6 +14,7 @@
             <a v-for="(tab,num) in scope.row['operation']" :key="num+10" class="tab-margin" @click="chooseTab(tab.clickEvent,scope.row)" v-html="tab.name" />
           </span>
           <span v-else-if="item.indexs==='statusStr'" v-html="scope.row[item.indexs]" />
+          <span v-else-if="item.indexs==='content'" v-html="scope.row[item.indexs]" />
           <span v-else v-html="calcWordLen(scope.row[item.indexs])" />
         </template>
       </el-table-column>
