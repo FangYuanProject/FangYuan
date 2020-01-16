@@ -4,6 +4,7 @@
       ref="upload"
       :accept="accept"
       class="upload-demo"
+      :before-upload="beforeUpload"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
@@ -18,6 +19,7 @@
 </template>
 <script>
 import { baseURLFileUpload } from '@/utils/request'
+import { AlertBox } from '@/utils/util'
 export default {
   name: 'Upload',
   props: {
@@ -67,6 +69,13 @@ export default {
     handleUploadSuccess(file) {
       this.$refs.upload.clearFiles()
       this.$emit('getUrlSuccess', file)
+    },
+    beforeUpload(file) {
+      const fileLimit = file.size / 1024 / 1024 < 5
+      if (!fileLimit) {
+        AlertBox('error', '文件大小不能超过5MB！')
+        return false
+      }
     }
   }
 }

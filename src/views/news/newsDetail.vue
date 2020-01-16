@@ -49,6 +49,15 @@
             maxlength="200"
           />
         </el-form-item>
+        <el-form-item label="摘要图片" prop="coverImage">
+          <div class="news-img">
+            <div class="empty-img">
+              <div v-show="!params.coverImage">图片大小不能大于5MB</div>
+              <img v-show="params.coverImage" :src="params.coverImage">
+            </div>
+            <UploadPicBtn class="change-badge" bg-color="#455a64" text-color="#fff" btn-name="摘要图片" @getUrlSuccess="changeLogo" />
+          </div>
+        </el-form-item>
         <el-form-item label="新闻内容" prop="content">
           <tinymce id="tinymce" v-model="params.content" :content-html="params.content" />
         </el-form-item>
@@ -60,15 +69,17 @@
 import Tinymce from '@/components/Tinymce/Editor'
 import { publishNews, saveNews, unshelveNews, deleteNews, newsDetail, editNews, newsType, schoolCorrelation } from '@/api/index'
 import { AlertBox, vaildForm, comfirmBox } from '@/utils/util'
+import UploadPicBtn from '@/components/UploadPictureBtn'
 export default {
   name: 'NewsDetail',
-  components: { Tinymce },
+  components: { Tinymce, UploadPicBtn },
   data() {
     // const id = this.$route.query.id
     return {
       params: {
         content: '',
         universityCode: '',
+        coverImage: '',
         summary: '',
         title: '',
         type: '',
@@ -77,6 +88,7 @@ export default {
       },
       newsContent: {
         content: [{ required: true, message: '请输入新闻内容', trigger: 'blur', max: '256' }],
+        coverImage: [{ required: true, message: '请上传摘要图片', trigger: 'change' }],
         universityCode: [{ required: true, message: '请选择相关学校', trigger: 'change' }],
         summary: [{ required: true, message: '请输入摘要', trigger: 'blur', max: '128' }],
         title: [{ required: true, message: '请输入新闻标题', trigger: 'blur', max: '32' }],
@@ -152,6 +164,7 @@ export default {
         this.params = {
           content: res.data.content,
           universityCode: res.data.universityCode,
+          coverImage: res.data.coverImage,
           summary: res.data.summary,
           title: res.data.title,
           type: res.data.type.key,
@@ -173,6 +186,10 @@ export default {
           this.$router.push({ name: 'news-list' })
         })
       }
+    },
+    changeLogo(file) {
+      // this.params.coverImage = file.data.path
+      this.$set(this.params, 'coverImage', file.data.path)
     }
   }
 }
@@ -263,6 +280,34 @@ button {
 .news-content .el-input,
 .news-content .el-textarea {
   width: 95%;
+}
+
+.news-content .news-img {
+  position: relative;
+}
+
+.news-content .empty-img {
+  display: table-cell;
+  width: 325px;
+  height: 300px;
+  margin-right: 20px;
+  color: #757575;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid rgba(220, 223, 230, 1);
+  border-radius: 4px;
+}
+
+.news-content .change-badge {
+  position: absolute;
+  top: 0;
+  left: 346px;
+}
+
+.news-content .empty-img img {
+  max-width: 100%;
+  max-height: 100%;
+  vertical-align: middle;
 }
 
 .relate-school {

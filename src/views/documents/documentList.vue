@@ -182,7 +182,7 @@ import AddMethodBtn from '@/components/AddMethodBtn'
 import SearchFormBtn from '@/components/SearchFormBtn'
 // import UploadPicBtn from '@/components/UploadPictureBtn'
 import { addTest, delTest, testDetail, editTest, publishTest, testList, outsellTest, testStatus, testType, uploadDown, schoolCorrelation, majorList, collegeList } from '@/api/index'
-import { AlertBox, dateTimeStr, comfirmBox } from '../../utils/util'
+import { AlertBox, dateTimeStr, comfirmBox } from '@/utils/util'
 import { baseURLFileUpload } from '@/utils/request'
 export default {
   components: {
