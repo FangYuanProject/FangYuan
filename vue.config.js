@@ -24,7 +24,7 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: 'https://defunction.cn:553/cms/',
+        target: 'https://106.12.209.214:553/cms',
         changeOrigin: true,
         pathRewrite: {
           '/api': ''

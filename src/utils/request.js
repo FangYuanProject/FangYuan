@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { AlertBox } from '@/utils/util.js'
-import router from '@/router'
+import { AlertBox, delCookies } from '@/utils/util.js'
+import router from '../router/index.js'
 import { Loading } from 'element-ui'
 
 // const baseURL = window.APP_CONFIG.BASE_URL
@@ -19,28 +19,47 @@ const allowUrls = [
 // 因为loading加上target将变为数组
 let loading
 let loadingCount = 0
-const loadingArray = []
 const openLoading = () => {
   loading = Loading.service({
-    target: document.querySelector('#table-render'),
-    text: '加载中'
+    text: '加载中',
+    background: 'rgba(0, 0, 0,0)'
   })
 }
+const endLoading = () => {
+  loading.close()
+}
 
+const showLoading = () => {
+  if (loadingCount === 0) {
+    openLoading()
+  }
+  loadingCount += 1
+}
+const hideLoading = () => {
+  if (loadingCount <= 0) {
+    return
+  }
+  loadingCount -= 1
+  if (loadingCount === 0) {
+    endLoading()
+  }
+}
+console.log(router)
+
+// 切换路由时关闭loading
+// router.beforeEach((to, from, next) => {
+//   hideLoading()
+//   next()
+// })
 service.interceptors.request.use(
   config => {
     if (!router.history.current.name === 'user-analysis') {
-      loadingCount++
-      openLoading()
-      loadingArray.push(loading)
+      showLoading()
     }
     return config
   },
   err => {
-    loadingCount--
-    if (!loadingCount) {
-      loadingArray.forEach(item => item.close())
-    }
+    hideLoading()
     return Promise(err)
   })
 
@@ -48,10 +67,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    loadingCount--
-    if (!loadingCount) {
-      loadingArray.forEach(item => item.close())
-    }
+    hideLoading()
     // 白名单路径不需要任何code判断
     for (let urlA = 0; urlA < allowUrls.length; urlA++) {
       if (response.config.url.indexOf(allowUrls[urlA]) > -1) {
@@ -61,6 +77,7 @@ service.interceptors.response.use(
     if (res.code !== 0) {
       if (res.code === 10 && res.message === '业务异常,根据token查询用户异常' || res.message === '无权限' && res.code === 40) {
         router.push({ path: '/login' })
+        delCookies('Admin-Token', '', -1)
       } else {
         AlertBox('error', res.message || 'Error')
       }
@@ -70,10 +87,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    loadingCount--
-    if (!loadingCount) {
-      loadingArray.forEach(item => item.close())
-    }
+    hideLoading()
     AlertBox('error', error.message)
     return Promise.reject(error)
   }
