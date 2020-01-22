@@ -40,6 +40,7 @@
 
 <script>
 import { validEmail } from '@/utils/validate'
+import Cookies from 'js-cookie'
 import { login, userMenu } from '@/api/index'
 //  validPhone, validEmail,
 // import SocialSign from './components/SocialSignin'
@@ -89,6 +90,9 @@ export default {
     isAutoLoginStatus(val) {
       console.log(val)
     }
+  },
+  mounted() {
+    Cookies.remove('User-Token')
   },
   methods: {
     checkClick($el) {

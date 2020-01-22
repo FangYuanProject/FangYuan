@@ -44,13 +44,12 @@ const hideLoading = () => {
     endLoading()
   }
 }
-console.log(router)
 
 // 切换路由时关闭loading
-// router.beforeEach((to, from, next) => {
-//   hideLoading()
-//   next()
-// })
+router && router.beforeEach((to, from, next) => {
+  hideLoading()
+  next()
+})
 service.interceptors.request.use(
   config => {
     if (!router.history.current.name === 'user-analysis') {
@@ -77,7 +76,12 @@ service.interceptors.response.use(
     if (res.code !== 0) {
       if (res.code === 10 && res.message === '业务异常,根据token查询用户异常' || res.message === '无权限' && res.code === 40) {
         router.push({ path: '/login' })
-        delCookies('Admin-Token', '', -1)
+        // delCookies('IPv4', '', -1)
+      } else if (res.message === '前台系统与运管系统不能同时登录' && res.code === 40) {
+        const dates = new Date()
+        dates.setTime(dates.getTime() - 100)
+        document.cookie = 'User-Token=a;expires=' + dates.toGMTString()
+        AlertBox('error', res.message || 'Error')
       } else {
         AlertBox('error', res.message || 'Error')
       }
