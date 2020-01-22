@@ -96,3 +96,12 @@ export function calcWordLength(str, length) {
     return str
   }
 }
+/**
+ * @param {string} name
+ * @returns {Object}
+ */
+export function delCookies(name, value, time) {
+  var date = new Date()
+  date.setSeconds(date.getSeconds() + time)
+  document.cookie = name + '=' + escape(value) + '; expires=' + date.toGMTString()
+}
